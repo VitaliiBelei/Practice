@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<head>
+    <title></title>
+    
+</head>
+<body>
+    <div>
+        <form id="form">
+            <input type = "text" id = "input" placeholder = "input">
+            <button type = "submit">Submit</button>
+        </form>
+        <p id="output"></p>
+    </div>
+    <script type = "text/javascript">
+        const input = document.getElementById("input");
+        const p = document.getElementById("output");
+        input.addEventListener("input", () => p.textContent = input.value);
+    </script>
+</body>
