@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Авторизація</title>
+    <link href="StyleSheet1.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript">
+      window.onload = function() {
+    let savedLogin = localStorage.getItem("login");
+    let savedPassword = localStorage.getItem("password");
+    if (savedLogin) document.getElementById("login").value = savedLogin;
+    if (savedPassword) document.getElementById("password").value = savedPassword;
+
+    let button = document.getElementById("button1");
+    button.onclick = function () {
+        var login = document.getElementById("login").value;
+        var password = document.getElementById("password").value;
+        if (login === "" || password === "") {
+            alert("Будь ласка, заповніть усі поля.");
+            return false;
+        }
+        if (login === "admin" && password === "12345") {
+            alert("Вітаємо, ви успішно увійшли!");
+            if (document.getElementById("checkbox1").checked) {
+                localStorage.setItem("login", login);
+                localStorage.setItem("password", password);
+            } else {
+                localStorage.removeItem("login");
+                localStorage.removeItem("password");
+            }
+        } else {
+            alert("Неправильний логін або пароль.");
+        }
+    }
+}
+    </script>
+</head>
+<body>
+    <div id="div1">
+        <input type="text" id="login" placeholder="Введіть логін" />
+        <br />
+        <input type="text" id="password" placeholder="Введіть пароль" />
+        <br />
+        <button id="button1">Signup</button>
+        <br />
+        <input type="checkbox" id="checkbox1" />Запам'ятати мене
+        <br />
+    </div>
+</body>
+
+</html>

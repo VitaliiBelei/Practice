@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    
+    <script type="text/javascript">
+       window.onload = function() {
+            var get = function (id){
+            return document.getElementById(id);
+            }
+            let count = 0;
+            var timerId;
+            let result = [0,0,count];
+                
+            get("timeStart").onclick = function () {
+                timerId = setInterval(function() {
+                    count++;
+                    result[2] = count;
+                    if (count === 60) {
+                    result[1] += 1;
+                    count = 0;
+                    }
+                    
+                    if (result[1] === 60) {
+                    result[0] += 1;
+                    result[1] = 0;
+                    }
+                    get("timer").innerHTML = result.map(n => String(n).padStart(2, '0')).join(":");
+                    document.getElementById("output").innerHTML = count;
+                }, 1000);
+            };
+            get("timeStop").onclick = function () {
+                clearInterval(timerId);
+            };
+            get("timeClear").onclick = function () {
+                clearInterval(timerId);
+                count = 0;
+                result = [0, 0, count];
+                document.getElementById("output").innerHTML = count;
+                get("timer").innerHTML = result.map(n => String(n).padStart(2, '0')).join(":");
+            };
+                 
+            
+            };
+        
+    </script>
+</head>
+<body>
+    <p id="output">0</p>
+    <p id="timer">00:00:00</p>
+    <div>
+        <input type="button" value="Start" id="timeStart" />
+        <input type="button" value="Stop" id="timeStop" />
+        <input type="button" value="Clear" id="timeClear" />
+    </div>
+
+</body>
+
+
+</html>

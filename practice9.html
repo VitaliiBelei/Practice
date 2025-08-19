@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    
+    <script type="text/javascript">
+        window.onload = function () {
+            let win = Math.floor(Math.random() * (100 - 1 + 1)) + 1
+            let button = document.getElementById("button1");
+            let div1 = document.getElementById("div1");
+            button.onclick = function () {
+                let input = document.getElementById("myInput");
+                let value = parseInt(input.value);
+                if (isNaN(value) || value < 1 || value > 100) {
+                    alert("Будь ласка, введіть число від 1 до 100.");
+                } else if (value === win) {
+                    myInput.style.backgroundColor = "green";
+                    alert("Вітаємо! Ви вгадали число!");
+                } else if (value < win) {
+                    myInput.style.backgroundColor = "red";
+                    alert("Ваше число менше за загаданe.");
+                } else {
+                    myInput.style.backgroundColor = "red";
+                    alert("Ваше число більше за загаданe.");
+                }
+                input.value = ""; 
+
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="div1">
+        <input type="text" id="myInput" placeholder="Введіть число від 1 до 100" background-color="white" />;
+        <button id = "button1">Тисни</button>
+    </div>
+</body>
+
+</html>

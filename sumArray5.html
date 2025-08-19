@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    
+<script type="text/javascript">
+
+    var addTwoNumbers = function(l1, l2) {
+    var summ;
+    var summString1 = "";
+    var summString2 = "";
+    for (i=0; i< l1.length; i++) {
+        summString1 += String(l1[i]);
+        //summString = l1.reduce((acc, val) => acc + String(val), "");
+    };
+    for (i=0; i<l2.length; i++) {
+        summString2 += String(l2[i]);
+    };
+    summ = parseInt(summString1) + parseInt(summString2);
+
+    var result;
+
+    result = String(summ).split("").map(Number);
+    console.log(result);
+
+};
+    
+
+    console.time('twoSum');
+
+    addTwoNumbers([2, 4, 3], [5, 6, 4]);
+
+    console.timeEnd('twoSum');
+
+
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

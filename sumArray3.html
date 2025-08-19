@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    
+<script type="text/javascript">
+
+    function generateRandomArray(length, min = 1, max = 10) {
+        return Array.from({length}, () => Math.floor(Math.random() * (max - min + 1)) + min);
+    }
+
+    const nums = generateRandomArray(1000); 
+    const target = 6;
+
+    var twoSum = function(nums, target) {
+    let result = [];
+    let found = false;
+    for (let i = 0; i < nums.length; i++) {
+        for (let j = i + 1; j < nums.length; j++) {
+            if (nums[i] + nums[j] === target) {
+                result.push([i, j]);
+                found = true;
+                continue;
+            }
+        }
+        if (found) break;
+    }
+    return result;
+};
+    console.time('twoSum');
+
+    const pairs = twoSum(nums, target); // ← зберігаємо результат у змінну
+
+    console.timeEnd('twoSum');
+
+    console.log("Знайдені пари індексів:", pairs);
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>
