@@ -1,5 +1,6 @@
-div div{
+.r{
     display: flex;
+    margin-left: 10px;
 }
 #foto {
     object-fit: cover;
