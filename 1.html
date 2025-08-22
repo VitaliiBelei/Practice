@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Position demo</title>
+  <style>
+    body {
+      height: 200vh; /* щоб було видно скрол */
+      padding: 20px;
+      font-family: sans-serif;
+    }
+
+    .box {
+      width: 150px;
+      height: 80px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .static   { background: gray; }
+    .relative { background: blue; position: relative; top: 10px; left: 20px; }
+    .absolute { background: green; position: absolute; top: 150px; left: 250px; }
+    .fixed    { background: red; position: fixed; bottom: 20px; right: 20px; }
+    .sticky   { background: orange; position: sticky; top: 0; }
+  </style>
+</head>
+<body>
+  <div class="box static">static</div>
+  <div class="box relative">relative</div>
+  <div class="box sticky">sticky</div>
+  <div class="box absolute">absolute</div>
+  <div class="box fixed">fixed</div>
+
+  <p>Прокрути сторінку, щоб побачити різницю:</p>
+  <p>— <b>static</b> лишається на місці, як звичайний блок</p>
+  <p>— <b>relative</b> трохи зсунутий від свого місця</p>
+  <p>— <b>absolute</b> вирваний із потоку й сидить у конкретних координатах</p>
+  <p>— <b>sticky</b> прилипає зверху, коли дійде до краю</p>
+  <p>— <b>fixed</b> завжди у правому нижньому куті, навіть при скролі</p>
+</body>
+</html>
