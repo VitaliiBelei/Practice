@@ -1,0 +1,10 @@
+/* Стилі пунктів меню */
+#nav a {
+    padding:10px 14px; border-radius: var(--radius); line-height:1;
+}
+
+#nav a:hover { background: rgba(0,0,0,0.05); }
+
+#nav a.is-active { font-weight:700; border-bottom:2px solid var(--primary); }
+
+#nav a:focus-visible { outline-color: var(--primary); }
