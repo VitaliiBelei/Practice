@@ -67,39 +67,97 @@ function saveRecipes(list) {
 }
 
 function addRecipe(recipe) {
+    if (!recipe.title || !recipe.category) {    //доробити валідацію
+        console.error("The fields is empty");
+        return;
+    }  
     const list = loadRecipes();
+    recipe.id = "r_" + Date.now().toString();
+    recipe.isFavorite = false;
+    recipe.createdAt = new Date().toISOString()
+    recipe.updatedAt = recipe.createdAt;
     list.push(recipe);
     saveRecipes(list);
 }
 
+function getRecipeById(id) {
+    const list = loadRecipes();
+    return list.find(recipe => recipe.id === id) || null;
+}
 
-// Модель рецепта (описово):
-// {
-//   id: string,              // унікальний ідентифікатор
-//   title: string,           // назва (обов’язково)
-//   category: string,        // категорія (обов’язково, зі списку)
-//   time: number,            // час у хвилинах (≥0)
-//   servings: number,        // кількість порцій (≥1)
-//   ingredients: [           // масив інгредієнтів
-//     { name: string, qty: number, unit: string }
-//   ],
-//   steps: [ string ],       // масив рядків із кроками
-//   notes: string,           // опціонально
-//   isFavorite: boolean,     // true/false
-//   type: "local"|"external",// джерело рецепта
-//   sourceUrl: string,       // якщо зовнішній
-//   previewImage: string,    // URL прев’ю
-//   embedCode: string,       // для YouTube/Instagram
-//   createdAt: string,       // ISO-дата
-//   updatedAt: string        // ISO-дата
-// }
+function updateRecipe(id, patch) {
+    const list = loadRecipes();
+    const index = list.findIndex(r => r.id === id);
+    if (index === -1) return console.error("Рецепт не знайдено");
 
-// Публічні інтерфейси (API):
+    list[index] = {
+        ...list[index],
+        ...patch,
+        updatedAt: new Date().toISOString()
+    };
 
-// - updateRecipe(id, patch)
-// - deleteRecipe(id)
-// - toggleFavorite(id)
-// - loadSettings()
-// - saveSettings(settings)
-// - hydrate()        // підкинути seed-дані при першому запуску
-// - clearAll()       // очистити все (для дев/тестів)
+    saveRecipes(list);
+}
+
+function deleteRecipe(id) {
+    const list = loadRecipes();
+    const newList = list.filter(r => r.id !== id);
+    saveRecipes(newList);
+}
+
+function toggleFavorite(id) {
+    const list = loadRecipes();
+    const index = list.findIndex(r => r.id === id);
+    if (index === -1) return console.error("Рецепт не знайдено");
+    
+    list[index] = {
+        ...list[index],
+        isFavorite: !list[index].isFavorite,
+        updatedAt: new Date().toISOString()
+    };
+
+    saveRecipes(list);
+}
+
+function loadSettings() {
+    const raw = localStorage.getItem(LS_KEY_SETTINGS);
+    if (!raw) {
+        return {
+            category: "all",
+            sortBy: "createdAt",
+            theme: "light"
+        };
+    }
+    try {
+       return JSON.parse(raw);
+    } catch (e) {
+        console.error("Помилка читання з localStorage", e);
+        return {
+            category: "all",
+            sortBy: "createdAt",
+            theme: "light"
+        };
+    }
+}
+
+function saveSettings(settings) {
+    try {
+        const raw = JSON.stringify(settings);
+        localStorage.setItem(LS_KEY_SETTINGS, raw);
+    } catch (e) {
+        console.error("Помилка збереження в localStorage", e);
+    }
+}
+
+function hydrate() {
+    const list = loadRecipes();
+    if (list.length === 0) {
+        saveRecipes(demoRecipes);
+    }
+}
+hydrate();
+
+function clearAll () {
+    localStorage.removeItem(LS_KEY_RECIPES);
+    localStorage.removeItem(LS_KEY_SETTINGS);
+}
