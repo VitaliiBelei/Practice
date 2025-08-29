@@ -1,3 +1,5 @@
+import {recipesPage} from "./app.js";
+
 const app = document.getElementById("app");
 const routes = new Set(['#/home', '#/recipes', '#/add', '#/favorites']);
 
@@ -5,7 +7,7 @@ function handleRoute() {
     const hash = window.location.hash;
     if (!hash || hash === '#') {
         window.location.replace('#/home');
-        const hash = '#/home';
+        return;
     }
     if (!routes.has(hash)) {
         app.innerHTML = `<h1>404</h1><p>Page not found</p>`;
@@ -18,18 +20,19 @@ function handleRoute() {
 }
 
 function render(hash) {
+    app.innerHTML = "";
     switch (hash) {
     case "#/home":
-        HomePage();
+        homePage();
         break;
     case "#/recipes":
-        RecipesPage();
+        recipesPage();
         break;
     case "#/add":
-        AddPage();
+        addPage();
         break;
     case "#/favorites":
-        FavoritesPage();
+        favoritesPage();
         break;
   }
 }

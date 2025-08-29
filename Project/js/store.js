@@ -44,7 +44,7 @@ const demoRecipes = [
 
 
 
-function loadRecipes() {
+export function loadRecipes() {
     const recipe = localStorage.getItem(LS_KEY_RECIPES);
     if (!recipe) {
         return [];
@@ -57,7 +57,7 @@ function loadRecipes() {
     }
 }
 
-function saveRecipes(list) {
+export function saveRecipes(list) {
     try {
         const raw = JSON.stringify(list);
         localStorage.setItem(LS_KEY_RECIPES, raw);
@@ -66,7 +66,7 @@ function saveRecipes(list) {
     }
 }
 
-function addRecipe(recipe) {
+export function addRecipe(recipe) {
     if (!recipe.title || !recipe.category) {    //доробити валідацію
         console.error("The fields is empty");
         return;
@@ -80,12 +80,12 @@ function addRecipe(recipe) {
     saveRecipes(list);
 }
 
-function getRecipeById(id) {
+export function getRecipeById(id) {
     const list = loadRecipes();
     return list.find(recipe => recipe.id === id) || null;
 }
 
-function updateRecipe(id, patch) {
+export function updateRecipe(id, patch) {
     const list = loadRecipes();
     const index = list.findIndex(r => r.id === id);
     if (index === -1) return console.error("Рецепт не знайдено");
@@ -99,13 +99,13 @@ function updateRecipe(id, patch) {
     saveRecipes(list);
 }
 
-function deleteRecipe(id) {
+export function deleteRecipe(id) {
     const list = loadRecipes();
     const newList = list.filter(r => r.id !== id);
     saveRecipes(newList);
 }
 
-function toggleFavorite(id) {
+export function toggleFavorite(id) {
     const list = loadRecipes();
     const index = list.findIndex(r => r.id === id);
     if (index === -1) return console.error("Рецепт не знайдено");
@@ -119,7 +119,7 @@ function toggleFavorite(id) {
     saveRecipes(list);
 }
 
-function loadSettings() {
+export function loadSettings() {
     const raw = localStorage.getItem(LS_KEY_SETTINGS);
     if (!raw) {
         return {
@@ -140,7 +140,7 @@ function loadSettings() {
     }
 }
 
-function saveSettings(settings) {
+export function saveSettings(settings) {
     try {
         const raw = JSON.stringify(settings);
         localStorage.setItem(LS_KEY_SETTINGS, raw);
@@ -157,7 +157,7 @@ function hydrate() {
 }
 hydrate();
 
-function clearAll () {
+export function clearAll () {
     localStorage.removeItem(LS_KEY_RECIPES);
     localStorage.removeItem(LS_KEY_SETTINGS);
 }
