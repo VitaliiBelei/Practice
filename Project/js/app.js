@@ -99,9 +99,10 @@ export function recipesPage() {
         if (event.target.classList.contains("delete-btn")) {
             const article = event.target.closest("article");
             const id = article.dataset.id;
-
+            if (confirm("Delete recipe?")) {
             deleteRecipe(id);
             searchRecipe({ type: "refresh", preventDefault(){} });
+            }
         }
     } );
 
