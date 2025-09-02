@@ -1,4 +1,4 @@
-import {loadRecipes,toggleFavorite,deleteRecipe} from "./store.js";
+import {loadRecipes,toggleFavorite,deleteRecipe,updateRecipe} from "./store.js";
 
 function renderRecipes(recipes) {
     const container = document.getElementById("recipes");
@@ -17,10 +17,11 @@ function renderRecipes(recipes) {
         const card = document.createElement("article");
         card.classList.add("recipe-card");
         card.dataset.id = recipe.id;
+        const category = recipe.category.charAt(0).toUpperCase() + recipe.category.slice(1);
 
         card.innerHTML = `
         <h2>${recipe.title}</h2>
-        <p>Category: ${recipe.category}</p>
+        <p>Category: ${category}</p>
         <p>Time: ${recipe.time}</p>
         <button class="fav-btn">${recipe.isFavorite ? "★" : "☆"}</button>
         <button class="edit-btn">Edit</button>
@@ -33,7 +34,7 @@ function renderRecipes(recipes) {
     if (c) c.textContent = `Знайдено: ${recipes.length}`;
 }
 
-export function recipesPage() {
+export function recipesPage() {                        
     const app = document.getElementById("app");
     app.innerHTML = `
         <div id="controls">
@@ -42,7 +43,7 @@ export function recipesPage() {
                 <button type="submit">Search</button>
             </form>
         <select id="category">
-            <option value="all">All categories</option>
+            <option value="all">All categories</option>       
             <option value="breakfasts">Breakfasts</option>
             <option value="dinners">Dinners</option>
             <option value="salads">Salads</option>
@@ -103,6 +104,71 @@ export function recipesPage() {
             searchRecipe({ type: "refresh", preventDefault(){} });
         }
     } );
+
+    recipesContainer.addEventListener("click", event => {
+        if (event.target.classList.contains("edit-btn")) {
+            const article = event.target.closest("article");
+            const id = article.dataset.id;
+            const recipe = allRecipes.find(recipe => recipe.id === id);
+                               
+            article.insertAdjacentHTML("afterend", 
+            ` <form id="editForm-${id}">
+                <label>
+                    Title
+                    <input id="editTitle-${id}" name="editTitle" value="${recipe.title}">
+                </label>
+
+                <label>
+                    Time
+                    <input id="editTime-${id}" name="editTime" type="number" min="0" value="${recipe.time}">
+                </label>
+
+                <label>
+                    Category
+                    <select id="editCategory-${id}" name="editCategory">
+                        <option value="breakfasts">Breakfasts</option>
+                        <option value="dinners">Dinners</option>
+                        <option value="salads">Salads</option>
+                        <option value="soups">Soups</option>
+                        <option value="meat">Meat</option>
+                        <option value="fish">Fish</option>
+                    </select>
+                </label>
+
+                <button type="submit" id="editButton-${id}">Confirm</button>
+            </form> `
+            );
+
+            const editForm = document.getElementById(`editForm-${id}`);
+            const editTitle = document.getElementById(`editTitle-${id}`);
+            const editTime = document.getElementById(`editTime-${id}`);
+            const editCategory = document.getElementById(`editCategory-${id}`);
+            editCategory.value = recipe.category; 
+
+            editForm.addEventListener("submit", (event) => {                //доробити валідацію
+            event.preventDefault();
+
+            const patch = {
+                title: editTitle.value.trim(),
+                time: Number(editTime.value),
+                category: editCategory.value,
+            };
+
+
+            if (!patch.title) {
+                alert("Title is required");
+            return;
+            }
+
+            updateRecipe(id, patch);
+
+            searchRecipe({ type: "refresh", preventDefault(){} });
+
+            editForm.remove();
+});
+            
+        }
+    })
 }
 
 
