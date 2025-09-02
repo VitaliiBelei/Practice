@@ -1,4 +1,4 @@
-import {loadRecipes} from "./store.js";
+import {loadRecipes,toggleFavorite} from "./store.js";
 
 function renderRecipes(recipes) {
     const container = document.getElementById("recipes");
@@ -16,6 +16,7 @@ function renderRecipes(recipes) {
     recipes.forEach(recipe => {
         const card = document.createElement("article");
         card.classList.add("recipe-card");
+        card.dataset.id = recipe.id;
 
         card.innerHTML = `
         <h2>${recipe.title}</h2>
@@ -81,8 +82,18 @@ export function recipesPage() {
     )
     renderRecipes(filtered);
     }
-}
 
+    const recipesContainer = document.getElementById("recipes");
+    recipesContainer.addEventListener("click", event => {
+        if (event.target.classList.contains("fav-btn")) {
+            const article = event.target.closest("article");
+            const id = article.dataset.id;
+
+            toggleFavorite(id);
+            searchRecipe({ type: "refresh", preventDefault(){} });
+        }
+    } );
+}
 
 
 export function homePage(){ document.getElementById("app").innerHTML="<h2>Home</h2>"; }
