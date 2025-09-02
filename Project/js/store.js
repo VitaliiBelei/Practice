@@ -5,14 +5,14 @@ const demoRecipes = [
   {
     id: "r1",
     title: "Омлет",
-    category: "Сніданок",
+    category: "breakfasts",
     time: 10,
     servings: 2,
     ingredients: [
         { name: "Яйця", qty: 3, unit: "шт" }
     ],
     steps: ["Збити яйця", "Посмажити"],
-    isFavorite: false,
+    isFavorite: true,
     type: "local",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
@@ -20,7 +20,7 @@ const demoRecipes = [
   {
     id: "r2",
     title: "Овочевий салат",
-    category: "Салати",
+    category: "salads",
     time: 15,
     servings: 3,
     ingredients: [
