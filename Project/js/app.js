@@ -1,4 +1,4 @@
-import {loadRecipes,toggleFavorite} from "./store.js";
+import {loadRecipes,toggleFavorite,deleteRecipe} from "./store.js";
 
 function renderRecipes(recipes) {
     const container = document.getElementById("recipes");
@@ -90,6 +90,16 @@ export function recipesPage() {
             const id = article.dataset.id;
 
             toggleFavorite(id);
+            searchRecipe({ type: "refresh", preventDefault(){} });
+        }
+    } );
+
+    recipesContainer.addEventListener("click", event => {
+        if (event.target.classList.contains("delete-btn")) {
+            const article = event.target.closest("article");
+            const id = article.dataset.id;
+
+            deleteRecipe(id);
             searchRecipe({ type: "refresh", preventDefault(){} });
         }
     } );
