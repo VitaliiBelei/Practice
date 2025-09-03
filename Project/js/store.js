@@ -4,14 +4,14 @@ const LS_KEY_SETTINGS = 'cookbook_settings';
 const demoRecipes = [
   {
     id: "r1",
-    title: "Омлет",
+    title: "Omelet",
     category: "breakfasts",
     time: 10,
     servings: 2,
     ingredients: [
-        { name: "Яйця", qty: 3, unit: "шт" }
+        { name: "Aggs", qty: 3, unit: "pcs" }
     ],
-    steps: ["Збити яйця", "Посмажити"],
+    steps: ["Beat the eggs", "Fry"],
     isFavorite: true,
     type: "local",
     createdAt: new Date().toISOString(),
@@ -19,21 +19,21 @@ const demoRecipes = [
   },
   {
     id: "r2",
-    title: "Овочевий салат",
+    title: "Vegetable salad",
     category: "salads",
     time: 15,
     servings: 3,
     ingredients: [
-        { name: "Огірок", qty: 2, unit: "шт" },
-        { name: "Помідор", qty: 2, unit: "шт" },
-        { name: "Цибуля", qty: 0.5, unit: "шт" },
-        { name: "Олія", qty: 2, unit: "ст.л." },
-        { name: "Сіль", qty: 1, unit: "щіпка" }
+        { name: "Cucumber", qty: 2, unit: "шт" },
+        { name: "Tomato", qty: 2, unit: "шт" },
+        { name: "Onion", qty: 0.5, unit: "шт" },
+        { name: "Sunflowers oil", qty: 2, unit: "ст.л." },
+        { name: "Salt", qty: 1, unit: "щіпка" }
     ],
     steps: [
-        "Нарізати овочі кубиками",
-        "Додати олію та сіль",
-        "Перемішати"
+        "Cut the vegetables into cubes",
+        "Add oil and salt",
+        "Stir"
     ],
     isFavorite: false,
     type: "local",
@@ -52,7 +52,7 @@ export function loadRecipes() {
     try {
        return JSON.parse(recipe);
     } catch (e) {
-        console.error("Помилка читання з localStorage", e);
+        console.error("Error reading from localStorage", e);
         return [];
     }
 }
@@ -62,7 +62,7 @@ export function saveRecipes(list) {
         const raw = JSON.stringify(list);
         localStorage.setItem(LS_KEY_RECIPES, raw);
     } catch (e) {
-        console.error("Помилка збереження в localStorage", e);
+        console.error("Error saving to localStorage", e);
     }
 }
 
@@ -88,7 +88,7 @@ export function getRecipeById(id) {
 export function updateRecipe(id, patch) {
     const list = loadRecipes();
     const index = list.findIndex(r => r.id === id);
-    if (index === -1) return console.error("Рецепт не знайдено");
+    if (index === -1) return console.error("Resipe is not found");
 
     list[index] = {
         ...list[index],
@@ -108,7 +108,7 @@ export function deleteRecipe(id) {
 export function toggleFavorite(id) {
     const list = loadRecipes();
     const index = list.findIndex(r => r.id === id);
-    if (index === -1) return console.error("Рецепт не знайдено");
+    if (index === -1) return console.error("Resipe is not found");
     
     list[index] = {
         ...list[index],
@@ -130,8 +130,8 @@ export function loadSettings() {
     }
     try {
        return JSON.parse(raw);
-    } catch (e) {
-        console.error("Помилка читання з localStorage", e);
+    } catch (error) {
+        console.error("Error reading from localStorage", error);
         return {
             category: "all",
             sortBy: "createdAt",
@@ -144,8 +144,8 @@ export function saveSettings(settings) {
     try {
         const raw = JSON.stringify(settings);
         localStorage.setItem(LS_KEY_SETTINGS, raw);
-    } catch (e) {
-        console.error("Помилка збереження в localStorage", e);
+    } catch (error) {
+        console.error("Error saving to localStorage", error);
     }
 }
 

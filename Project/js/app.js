@@ -7,9 +7,9 @@ function renderRecipes(recipes) {
     container.innerHTML ="";
 
     if (!recipes || recipes.length === 0) {
-        container.innerHTML = `<p>Немає рецептів</p>`;
+        container.innerHTML = `<p>No recipes</p>`;
         const c = document.getElementById("counter");
-    if (c) c.textContent = "Знайдено: 0";
+    if (c) c.textContent = "Find: 0";
     return;
     }
 
@@ -23,15 +23,15 @@ function renderRecipes(recipes) {
         <h2>${recipe.title}</h2>
         <p>Category: ${category}</p>
         <p>Time: ${recipe.time}</p>
-        <button class="fav-btn">${recipe.isFavorite ? "★" : "☆"}</button>
-        <button class="edit-btn">Edit</button>
-        <button class="delete-btn">Delete</button>
+        <button type="button" class="fav-btn" aria-label="${recipe.isFavorite ? 'Unmark as favorite' : 'Mark as favorite'}" aria-pressed="${recipe.isFavorite ? 'true' : 'false'}" >${recipe.isFavorite ? "★" : "☆"}</button>
+        <button type="button" class="edit-btn" aria-label="Edit recipe">Edit</button>
+        <button type="button" class="delete-btn" aria-label="Delete recipe">Delete</button>
         `;
 
         container.appendChild(card);
     })
     const c = document.getElementById("counter");
-    if (c) c.textContent = `Знайдено: ${recipes.length}`;
+    if (c) c.textContent = `Find: ${recipes.length}`;
 }
 
 export function recipesPage() {                        
@@ -81,7 +81,7 @@ export function recipesPage() {
         (category.value === "all" || recipe.category === category.value) &&
         (q === "" || recipe.title.toLowerCase().includes(q))
     )
-    renderRecipes(filtered);
+    renderRecipes(filtered);             //доробити скидання фільтрів і сортування
     }
 
     const recipesContainer = document.getElementById("recipes");
@@ -91,6 +91,7 @@ export function recipesPage() {
             const id = article.dataset.id;
 
             toggleFavorite(id);
+            
             searchRecipe({ type: "refresh", preventDefault(){} });
         }
     } );
@@ -111,6 +112,8 @@ export function recipesPage() {
             const article = event.target.closest("article");
             const id = article.dataset.id;
             const recipe = allRecipes.find(recipe => recipe.id === id);
+            const existingForm = document.querySelector('[id^="editForm-"]');
+            if (existingForm) existingForm.remove();
                                
             article.insertAdjacentHTML("afterend", 
             ` <form id="editForm-${id}">
@@ -138,7 +141,7 @@ export function recipesPage() {
 
                 <button type="submit" id="editButton-${id}">Confirm</button>
             </form> `
-            );
+            ); 
 
             const editForm = document.getElementById(`editForm-${id}`);
             const editTitle = document.getElementById(`editTitle-${id}`);
