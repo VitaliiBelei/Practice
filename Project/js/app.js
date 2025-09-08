@@ -1,4 +1,5 @@
-import {loadRecipes,toggleFavorite,deleteRecipe,updateRecipe} from "./store.js";
+import {loadRecipes,toggleFavorite,deleteRecipe,updateRecipe,getRecipeById} from "./store.js";
+import {recipeFormHTML} from "./ui/recipeForm.js";
 
 function renderRecipes(recipes) {
     const container = document.getElementById("recipes");
@@ -39,7 +40,10 @@ export function recipesPage() {
     app.innerHTML = `
         <div id="controls">
             <form id="searchForm">
-                <input type="text" id="searchInput" placeholder="Recipe">
+                <lable for="searchInput">
+                    Search recipes
+                    <input type="text" id="searchInput" placeholder="Recipe">
+                </label>
                 <button type="submit">Search</button>
             </form>
         <select id="category">
@@ -54,7 +58,7 @@ export function recipesPage() {
         <label><input type="checkbox" id="onlyFav"> Only favorites</label>
         </div>
         <div id="recipes"></div>
-        <p id="counter"></p>
+        <p id="counter" aria-live="polite"></p>
     `;
 
     const allRecipes = loadRecipes();
@@ -84,64 +88,34 @@ export function recipesPage() {
     renderRecipes(filtered);             //доробити скидання фільтрів і сортування
     }
 
+    function refresh() {
+        searchRecipe({ type: "refresh", preventDefault(){} });
+    }
+
     const recipesContainer = document.getElementById("recipes");
     recipesContainer.addEventListener("click", event => {
-        if (event.target.classList.contains("fav-btn")) {
-            const article = event.target.closest("article");
-            const id = article.dataset.id;
-
+        const article = event.target.closest("article");
+        const btn = event.target.closest("button");
+        const id = article.dataset.id;
+        if (!btn) return;
+        if (btn.classList.contains("fav-btn")) {
             toggleFavorite(id);
-            
-            searchRecipe({ type: "refresh", preventDefault(){} });
+            refresh();
         }
-    } );
 
-    recipesContainer.addEventListener("click", event => {
-        if (event.target.classList.contains("delete-btn")) {
-            const article = event.target.closest("article");
-            const id = article.dataset.id;
+        else if (btn.classList.contains("delete-btn")) {
             if (confirm("Delete recipe?")) {
             deleteRecipe(id);
-            searchRecipe({ type: "refresh", preventDefault(){} });
+            refresh();
             }
         }
-    } );
 
-    recipesContainer.addEventListener("click", event => {
-        if (event.target.classList.contains("edit-btn")) {
-            const article = event.target.closest("article");
-            const id = article.dataset.id;
-            const recipe = allRecipes.find(recipe => recipe.id === id);
+        else if (btn.classList.contains("edit-btn")) {
+            const recipe = getRecipeById(id);
             const existingForm = document.querySelector('[id^="editForm-"]');
             if (existingForm) existingForm.remove();
                                
-            article.insertAdjacentHTML("afterend", 
-            ` <form id="editForm-${id}">
-                <label>
-                    Title
-                    <input id="editTitle-${id}" name="editTitle" value="${recipe.title}">
-                </label>
-
-                <label>
-                    Time
-                    <input id="editTime-${id}" name="editTime" type="number" min="0" value="${recipe.time}">
-                </label>
-
-                <label>
-                    Category
-                    <select id="editCategory-${id}" name="editCategory">
-                        <option value="breakfasts">Breakfasts</option>
-                        <option value="dinners">Dinners</option>
-                        <option value="salads">Salads</option>
-                        <option value="soups">Soups</option>
-                        <option value="meat">Meat</option>
-                        <option value="fish">Fish</option>
-                    </select>
-                </label>
-
-                <button type="submit" id="editButton-${id}">Confirm</button>
-            </form> `
-            ); 
+            article.insertAdjacentHTML("afterend", recipeFormHTML(recipe)); 
 
             const editForm = document.getElementById(`editForm-${id}`);
             const editTitle = document.getElementById(`editTitle-${id}`);
@@ -166,10 +140,10 @@ export function recipesPage() {
 
             updateRecipe(id, patch);
 
-            searchRecipe({ type: "refresh", preventDefault(){} });
+            refresh();
 
             editForm.remove();
-});
+            });
             
         }
     })
