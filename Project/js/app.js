@@ -137,6 +137,38 @@ export function recipesPage() {
             const editSteps = document.getElementById(`editSteps-${id}`);
             editCategory.value = recipe.category;
 
+            const addIngBtn = editForm.querySelector(".add-ingredient");
+
+            addIngBtn.addEventListener("click", () => {
+            const container = editForm.querySelector(`#editIngredients-${id}`);
+            const index = container.querySelectorAll(".ingredient-row").length;
+
+            container.insertAdjacentHTML("beforeend", `
+                <div class="ingredient-row" data-index="${index}">
+                    <input type="text" name="ing[${index}][name]" placeholder="Name">
+                    <input type="number" name="ing[${index}][qty]" min="0" step="0.01" placeholder="Qty">
+                    <select name="ing[${index}][unit]">
+                        <option value="pcs">pcs</option>
+                        <option value="tsp">tsp</option>
+                        <option value="tbsp">tbsp</option>
+                        <option value="g">g</option>
+                        <option value="ml">ml</option>
+                    </select>
+                </div>
+                `);
+            });
+
+            const addStepBtn = editForm.querySelector(".add-step");
+            addStepBtn.addEventListener("click", () => {
+                const container = editForm.querySelector(`#editSteps-${id}`);
+                const index = container.querySelectorAll(".step-row").length;
+                container.insertAdjacentHTML("beforeend", `
+                    <div class="step-row" data-index="${index}">
+                        <textarea name="step[${index}]" rows="2" placeholder="Step ${index+1}"></textarea>
+                    </div>
+                `);
+            });
+
             function collectIngredients(editIngredients) {
                 const rows = editIngredients.querySelectorAll(".ingredient-row");
                 const ingredients = [];
