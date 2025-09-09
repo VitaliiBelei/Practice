@@ -9,6 +9,7 @@ export function recipeFormHTML(recipe) {
             <select id="editIngUnit-${recipe.id}-${index}" name="ing[${index}][unit]">
             ${units.map(u => `<option value="${u}" ${ing.unit === u ? "selected" : ""}>${u}</option>`).join("")}
             </select>
+            <button type="button" class="remove-ingredient" data-recipe-id="${recipe.id}" data-index="${index}">-</button>
         </div>
         `).join("");
 
@@ -16,6 +17,7 @@ export function recipeFormHTML(recipe) {
         `
         <div class="step-row" data-index="${index}">
             <textarea id="editStep-${recipe.id}-${index}" name="step[${index}]" rows="2" placeholder="Step ${index + 1}">${step}</textarea>
+            <button type="button" class="remove-step" data-recipe-id="${recipe.id}" data-index="${index}">-</button>
         </div>
         `).join("");
 

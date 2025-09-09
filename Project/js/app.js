@@ -40,11 +40,11 @@ export function recipesPage() {
     app.innerHTML = `
         <div id="controls">
             <form id="searchForm">
-                <lable for="searchInput">
+                <label for="searchInput">
                     Search recipes
                     <input type="text" id="searchInput" placeholder="Recipe">
                 </label>
-                <button type="submit">Search</button>
+                <button type="reset" id="resetBtn">Reset</button>
             </form>
         <select id="category">
             <option value="all">All categories</option>       
@@ -69,15 +69,18 @@ export function recipesPage() {
     const onlyFav = document.getElementById("onlyFav");
     const search = document.getElementById("searchInput");  
 
-    searchForm.addEventListener("submit", searchRecipe);
     onlyFav.addEventListener("change", searchRecipe);
     category.addEventListener("change", searchRecipe);
     search.addEventListener("input", searchRecipe);
 
-    function searchRecipe (event) {
-    if (event.type === "submit") {
-        event.preventDefault();
-    }
+    searchForm.addEventListener("reset", () => {
+        onlyFav.checked = false;
+        category.value = "all";
+        search.value = "";
+        setTimeout(refresh, 0);
+    });
+
+    function searchRecipe () {
     const list = loadRecipes();
     const q = search.value.trim().toLowerCase();
     const filtered = list.filter(recipe => 
@@ -154,6 +157,7 @@ export function recipesPage() {
                         <option value="g">g</option>
                         <option value="ml">ml</option>
                     </select>
+                    <button type="button" class="remove-ingredient" data-recipe-id="${id}" data-index="${index}">-</button>
                 </div>
                 `);
             });
@@ -165,8 +169,24 @@ export function recipesPage() {
                 container.insertAdjacentHTML("beforeend", `
                     <div class="step-row" data-index="${index}">
                         <textarea name="step[${index}]" rows="2" placeholder="Step ${index+1}"></textarea>
+                        <button type="button" class="remove-step" data-recipe-id="${id}" data-index="${index}">-</button>
                     </div>
                 `);
+            });
+
+            editForm.addEventListener("click", (e) => {
+                const rmIngBtn = e.target.closest(".remove-ingredient");
+                if (rmIngBtn) {
+                    e.preventDefault();
+                    rmIngBtn.closest(".ingredient-row")?.remove();
+                    return;
+                }
+
+                const rmStepBtn = e.target.closest(".remove-step");
+                if (rmStepBtn) {
+                    e.preventDefault();
+                    rmStepBtn.closest(".step-row")?.remove();
+                }
             });
 
             function collectIngredients(editIngredients) {
@@ -177,7 +197,7 @@ export function recipesPage() {
                     const qtyInput = row.querySelector(`input[name^="ing"][name$="[qty]"]`);
                     const unitSelect = row.querySelector(`select[name^="ing"][name$="[unit]"]`);
                     const name = nameInput.value.trim();
-                    const qty = parseFloat(qtyInput.value);
+                    const qty = parseFloat(String(qtyInput.value).replace(",", "."));
                     const unit = unitSelect.value;
                     if (name) {
                         ingredients.push({ name, qty: isNaN(qty) ? 0 : qty, unit });
@@ -186,7 +206,7 @@ export function recipesPage() {
                 return ingredients;
             }
 
-                function collectSteps(editSteps) {
+            function collectSteps(editSteps) {
                 const rows = editSteps.querySelectorAll(".step-row");
                 const steps = [];
                 rows.forEach(row => {
@@ -201,6 +221,8 @@ export function recipesPage() {
 
             editForm.addEventListener("submit", (event) => {                //доробити валідацію
             event.preventDefault();
+
+            if (!editForm) return;
 
             const patch = {
                 title: editTitle.value.trim(),
@@ -228,6 +250,7 @@ export function recipesPage() {
 
             document.getElementById(`cancelEdit-${id}`).addEventListener("click", () => {
                 editForm.remove();
+                document.querySelector(`article[data-id="${id}"] .edit-btn`)?.focus();
             });
             
         }

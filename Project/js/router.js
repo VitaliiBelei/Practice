@@ -1,4 +1,4 @@
-import {recipesPage} from "./app.js";
+import {recipesPage, homePage, addPage, favoritesPage} from "./app.js";
 
 const app = document.getElementById("app");
 const routes = new Set(['#/home', '#/recipes', '#/add', '#/favorites']);
