@@ -1,42 +1,73 @@
 export function recipeFormHTML(recipe) {
-    return ` <form id="editForm-${recipe.id}">
-        <label>
-            Title
-            <input id="editTitle-${recipe.id}" name="editTitle" value="${recipe.title}">
-        </label>
+    const units = ["pcs", "tsp", "tbsp", "g", "ml"];
 
-        <label>
-            Category
-            <select id="editCategory-${recipe.id}" name="editCategory">
-                <option value="breakfasts">Breakfasts</option>
-                <option value="dinners">Dinners</option>
-                <option value="salads">Salads</option>
-                <option value="soups">Soups</option>
-                <option value="meat">Meat</option>
-                <option value="fish">Fish</option>
+    const ingRows = (recipe.ingredients?.length ? recipe.ingredients : [{ name: "", qty: "", unit: "pcs" }]).map((ing, index) => 
+        `
+        <div class="ingredient-row" data-index="${index}">
+            <input id="editIngName-${recipe.id}-${index}" name="ing[${index}][name]" type="text" placeholder="Name" value="${ing.name ?? ""}">
+            <input id="editIngQty-${recipe.id}-${index}"  name="ing[${index}][qty]"  type="number" placeholder="Qty" min="0" step="0.01" value="${ing.qty ?? ""}">
+            <select id="editIngUnit-${recipe.id}-${index}" name="ing[${index}][unit]">
+            ${units.map(u => `<option value="${u}" ${ing.unit === u ? "selected" : ""}>${u}</option>`).join("")}
             </select>
-        </label>
+        </div>
+        `).join("");
 
-        <label>
-            Time
-            <input id="editTime-${recipe.id}" name="editTime" type="number" min="0" value="${recipe.time}">
-        </label>
+    const stepsRows = (recipe.steps?.length ? recipe.steps : [""]).map((step, index) =>
+        `
+        <div class="step-row" data-index="${index}">
+            <textarea id="editStep-${recipe.id}-${index}" name="step[${index}]" rows="2" placeholder="Step ${index + 1}">${step}</textarea>
+        </div>
+        `).join("");
 
-        <label>
-            Servings
-            <input id="editServings-${recipe.id}" name="editServings" type="number" min="1" value="${recipe.servings}">
-        </label>
+    return `
+        <form id="editForm-${recipe.id}">
+            <label for="editTitle-${recipe.id}">
+                Title
+            </label>
+            <input id="editTitle-${recipe.id}" name="title" value="${recipe.title ?? ""}">
 
-        <label>
-            Ingredients (one per line, format: name, qty, unit)
-            <textarea id="editIngredients-${recipe.id}" name="editIngredients" rows="5">${recipe.ingredients.map(ing => `${ing.name}, ${ing.qty} ${ing.unit}`).join("\n")}</textarea>
-        </label>
+            <label for="editCategory-${recipe.id}">
+                Category
+            </label>
+            <select id="editCategory-${recipe.id}" name="category">
+                <option value="breakfasts" ${recipe.category === "breakfasts" ? "selected" : ""}>Breakfasts</option>
+                <option value="dinners"    ${recipe.category === "dinners"    ? "selected" : ""}>Dinners</option>
+                <option value="salads"     ${recipe.category === "salads"     ? "selected" : ""}>Salads</option>
+                <option value="soups"      ${recipe.category === "soups"      ? "selected" : ""}>Soups</option>
+                <option value="meat"       ${recipe.category === "meat"       ? "selected" : ""}>Meat</option>
+                <option value="fish"       ${recipe.category === "fish"       ? "selected" : ""}>Fish</option>
+            </select>
 
-        <label>
-            Steps (one per line)
-            <textarea id="editSteps-${recipe.id}" name="editSteps" rows="5">${recipe.steps.join("\n")}</textarea>
-        </label>
+            <label for="editTime-${recipe.id}">
+                Time
+            </label>
+            <input id="editTime-${recipe.id}" name="time" type="number" min="0" value="${recipe.time ?? 0}">
 
-        <button type="submit" id="editButton-${recipe.id}">Confirm</button>
-    </form> `;
+            <label for="editServings-${recipe.id}">
+                Servings
+            </label>
+            <input id="editServings-${recipe.id}" name="servings" type="number" min="1" value="${recipe.servings ?? 1}">
+
+            <fieldset>
+                <legend>Ingredients</legend>
+                <div id="editIngredients-${recipe.id}">
+                    ${ingRows}
+                </div>
+                <button type="button" class="add-ingredient" data-recipe-id="${recipe.id}">+ Add ingredient</button>
+            </fieldset>
+
+
+            <fieldset>
+                <legend>Steps</legend>
+                <div id="editSteps-${recipe.id}">
+                    ${stepsRows}
+                </div>
+                <button type="button" class="add-step" data-recipe-id="${recipe.id}">+ Add step</button>
+            </fieldset>
+            
+            <button type="submit" class="editButton" id="editButton-${recipe.id}">Confirm</button>
+
+            <button type="button" class="editButton" id="cancelEdit-${recipe.id}">Cancel</button>
+        </form>
+    `;
 }

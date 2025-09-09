@@ -24,11 +24,11 @@ const demoRecipes = [
     time: 15,
     servings: 3,
     ingredients: [
-        { name: "Cucumber", qty: 2, unit: "шт" },
-        { name: "Tomato", qty: 2, unit: "шт" },
-        { name: "Onion", qty: 0.5, unit: "шт" },
-        { name: "Sunflowers oil", qty: 2, unit: "ст.л." },
-        { name: "Salt", qty: 1, unit: "щіпка" }
+        { name: "Cucumber", qty: 2, unit: "pcs" },
+        { name: "Tomato", qty: 2, unit: "pcs" },
+        { name: "Onion", qty: 0.5, unit: "pcs" },
+        { name: "Sunflowers oil", qty: 2, unit: "tbsp" },
+        { name: "Salt", qty: 1, unit: "pinch" }
     ],
     steps: [
         "Cut the vegetables into cubes",
