@@ -1,5 +1,7 @@
 import {loadRecipes,toggleFavorite,deleteRecipe,updateRecipe,getRecipeById} from "./store.js";
 import {recipeFormHTML} from "./ui/recipeForm.js";
+import {recipeCard} from "./ui/recipeCard.js";
+import {validateRecipe} from "./ui/validation.js";
 
 function renderRecipes(recipes) {
     const container = document.getElementById("recipes");
@@ -14,23 +16,8 @@ function renderRecipes(recipes) {
     return;
     }
 
-    recipes.forEach(recipe => {
-        const card = document.createElement("article");
-        card.classList.add("recipe-card");
-        card.dataset.id = recipe.id;
-        const category = recipe.category.charAt(0).toUpperCase() + recipe.category.slice(1);
+    container.innerHTML = recipes.map(recipeCard).join("");
 
-        card.innerHTML = `
-        <h2>${recipe.title}</h2>
-        <p>Category: ${category}</p>
-        <p>Time: ${recipe.time}</p>
-        <button type="button" class="fav-btn" aria-label="${recipe.isFavorite ? 'Unmark as favorite' : 'Mark as favorite'}" aria-pressed="${recipe.isFavorite ? 'true' : 'false'}" >${recipe.isFavorite ? "★" : "☆"}</button>
-        <button type="button" class="edit-btn" aria-label="Edit recipe">Edit</button>
-        <button type="button" class="delete-btn" aria-label="Delete recipe">Delete</button>
-        `;
-
-        container.appendChild(card);
-    })
     const c = document.getElementById("counter");
     if (c) c.textContent = `Find: ${recipes.length}`;
 }
@@ -88,7 +75,7 @@ export function recipesPage() {
         (category.value === "all" || recipe.category === category.value) &&
         (q === "" || recipe.title.toLowerCase().includes(q))
     )
-    renderRecipes(filtered);             //доробити скидання фільтрів і сортування
+    renderRecipes(filtered);             // сортування
     }
 
     function refresh() {
@@ -219,7 +206,7 @@ export function recipesPage() {
                 return steps;
             }
 
-            editForm.addEventListener("submit", (event) => {                //доробити валідацію
+            editForm.addEventListener("submit", (event) => {                
             event.preventDefault();
 
             if (!editForm) return;
@@ -233,12 +220,10 @@ export function recipesPage() {
                 steps: collectSteps(editSteps),
             };
 
-
-            if (!patch.title) {
-                alert("Title is required");
-            return;
-            }
-
+            const valid = validateRecipe(patch);
+            if (!valid) return;
+            
+            
             updateRecipe(id, patch);
 
             refresh();
