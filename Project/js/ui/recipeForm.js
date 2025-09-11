@@ -1,3 +1,7 @@
+import {toggleFavorite,deleteRecipe,updateRecipe,getRecipeById} from "../store.js";
+import {validateRecipe} from "./validation.js";
+
+
 export function recipeFormHTML(recipe) {
     const units = ["pcs", "tsp", "tbsp", "g", "ml"];
 
@@ -74,11 +78,11 @@ export function recipeFormHTML(recipe) {
             <button type="button" class="editButton" id="cancelEdit-${formId}">Cancel</button>
         </form>
     `;
-}
+};
 
 
 // Add functionality to the edit form for adding/removing ingredients and steps
-export function editFormAdd(id) {
+function editFormAdd(id) {
     const editForm = document.getElementById(`editForm-${id}`);
     const addIngBtn = editForm.querySelector(".add-ingredient");
 
@@ -129,3 +133,126 @@ export function editFormAdd(id) {
         };
     });
 };
+
+
+// Collect ingredients and steps from the edit form
+function collectIngredients(editIngredients) {
+    const rows = editIngredients.querySelectorAll(".ingredient-row");
+    const ingredients = [];
+    rows.forEach(row => {
+        const nameInput = row.querySelector(`input[name^="ing"][name$="[name]"]`); 
+        const qtyInput = row.querySelector(`input[name^="ing"][name$="[qty]"]`);
+        const unitSelect = row.querySelector(`select[name^="ing"][name$="[unit]"]`);
+        const name = nameInput.value.trim();
+        const qty = parseFloat(String(qtyInput.value).replace(",", "."));
+        const unit = unitSelect.value;
+        if (name) {
+            ingredients.push({ name, qty: isNaN(qty) ? 0 : qty, unit });
+        };
+    });
+    return ingredients;
+};
+
+function collectSteps(editSteps) {
+    const rows = editSteps.querySelectorAll(".step-row");
+    const steps = [];
+    rows.forEach(row => {
+        const stepTextarea = row.querySelector(`textarea[name^="step"]`);
+        const step = stepTextarea.value.trim();
+        if (step) {
+            steps.push(step);
+        };
+    });
+    return steps;
+};
+
+
+
+
+// Handle buttons in recipe cards: favorite, delete, edit
+export function recipeFormButtons(onRefresh) {
+    const recipesContainer = document.getElementById("recipes");
+    recipesContainer.addEventListener("click", event => {
+        const btn = event.target.closest("button");
+        if (!btn) return;
+
+        if (btn.classList.contains("fav-btn")) {
+            const article = btn.closest("article");
+            if (!article) return;
+            const id = article.dataset.id;
+            if (!id) return;
+            toggleFavorite(id);
+            onRefresh();
+            return;
+        }
+
+        else if (btn.classList.contains("delete-btn")) {
+            const article = btn.closest("article");
+            if (!article) return;
+            const id = article.dataset.id;
+            if (confirm("Delete recipe?")) {
+            deleteRecipe(id);
+            onRefresh();
+            }
+            return;
+        }
+
+        else if (btn.classList.contains("edit-btn")) {
+            const article = btn.closest("article");
+            if (!article) return;
+            const id = article.dataset.id;
+            const recipe = getRecipeById(id);
+            const existingForm = document.querySelector('[id^="editForm-"]');
+            if (existingForm) existingForm.remove();
+                               
+            article.insertAdjacentHTML("afterend", recipeFormHTML(recipe)); 
+
+            const editForm = document.getElementById(`editForm-${id}`);
+            const editTitle = document.getElementById(`editTitle-${id}`);
+            const editTime = document.getElementById(`editTime-${id}`);
+            const editCategory = document.getElementById(`editCategory-${id}`);
+            const editServings = document.getElementById(`editServings-${id}`);
+            const editIngredients = document.getElementById(`editIngredients-${id}`);
+            const editSteps = document.getElementById(`editSteps-${id}`);
+            editCategory.value = recipe.category;
+
+            editFormAdd(id);
+
+            collectIngredients(editIngredients);
+
+            collectSteps(editSteps);
+
+            editForm.addEventListener("submit", (event) => {                
+            event.preventDefault();
+
+            if (!editForm) return;
+
+            const patch = {
+                title: editTitle.value.trim(),
+                time: Number(editTime.value),
+                category: editCategory.value,
+                servings: Number(editServings.value),
+                ingredients: collectIngredients(editIngredients),
+                steps: collectSteps(editSteps),
+            };
+
+            const valid = validateRecipe(patch);
+            if (!valid) return;
+            
+            updateRecipe(id, patch);
+
+            onRefresh();
+
+            editForm.remove();
+
+            return;
+            });
+
+            document.getElementById(`cancelEdit-${id}`).addEventListener("click", () => {
+                editForm.remove();
+                document.querySelector(`article[data-id="${id}"] .edit-btn`)?.focus();
+            });
+            
+        }
+    })
+}

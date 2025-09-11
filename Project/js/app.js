@@ -1,7 +1,6 @@
-import {loadRecipes,toggleFavorite,deleteRecipe,updateRecipe,getRecipeById} from "./store.js";
-import {recipeFormHTML, editFormAdd} from "./ui/recipeForm.js";
+import {loadRecipes} from "./store.js";
+import {recipeFormHTML, recipeFormButtons} from "./ui/recipeForm.js";
 import {recipeCard} from "./ui/recipeCard.js";
-import {validateRecipe} from "./ui/validation.js";
 
 
 // Render recipes to the #recipes container
@@ -23,38 +22,6 @@ function renderRecipes(recipes) {
     const c = document.getElementById("counter");
     if (c) c.textContent = `Find: ${recipes.length}`;
 }
-
-
-// Collect ingredients and steps from the edit form
-function collectIngredients(editIngredients) {
-    const rows = editIngredients.querySelectorAll(".ingredient-row");
-    const ingredients = [];
-    rows.forEach(row => {
-        const nameInput = row.querySelector(`input[name^="ing"][name$="[name]"]`); 
-        const qtyInput = row.querySelector(`input[name^="ing"][name$="[qty]"]`);
-        const unitSelect = row.querySelector(`select[name^="ing"][name$="[unit]"]`);
-        const name = nameInput.value.trim();
-        const qty = parseFloat(String(qtyInput.value).replace(",", "."));
-        const unit = unitSelect.value;
-        if (name) {
-            ingredients.push({ name, qty: isNaN(qty) ? 0 : qty, unit });
-        };
-    });
-    return ingredients;
-};
-
-function collectSteps(editSteps) {
-    const rows = editSteps.querySelectorAll(".step-row");
-    const steps = [];
-    rows.forEach(row => {
-        const stepTextarea = row.querySelector(`textarea[name^="step"]`);
-        const step = stepTextarea.value.trim();
-        if (step) {
-            steps.push(step);
-        };
-    });
-    return steps;
-};
 
 
 // Pages
@@ -112,96 +79,13 @@ export function recipesPage() {
         (q === "" || recipe.title.toLowerCase().includes(q))
     )
     renderRecipes(filtered);             // сортування
-    }
+    };
 
     function refresh() {
-        searchRecipe({ type: "refresh", preventDefault(){} });
-    }
+        searchRecipe();
+    };
 
-    const recipesContainer = document.getElementById("recipes");
-    recipesContainer.addEventListener("click", event => {
-        const btn = event.target.closest("button");
-        if (!btn) return;
-
-        if (btn.classList.contains("fav-btn")) {
-            const article = btn.closest("article");
-            if (!article) return;
-            const id = article.dataset.id;
-            if (!id) return;
-            toggleFavorite(id);
-            refresh();
-            return;
-        }
-
-        else if (btn.classList.contains("delete-btn")) {
-            const article = btn.closest("article");
-            if (!article) return;
-            const id = article.dataset.id;
-            if (confirm("Delete recipe?")) {
-            deleteRecipe(id);
-            refresh();
-            }
-            return;
-        }
-
-        else if (btn.classList.contains("edit-btn")) {
-            const article = btn.closest("article");
-            if (!article) return;
-            const id = article.dataset.id;
-            const recipe = getRecipeById(id);
-            const existingForm = document.querySelector('[id^="editForm-"]');
-            if (existingForm) existingForm.remove();
-                               
-            article.insertAdjacentHTML("afterend", recipeFormHTML(recipe)); 
-
-            const editForm = document.getElementById(`editForm-${id}`);
-            const editTitle = document.getElementById(`editTitle-${id}`);
-            const editTime = document.getElementById(`editTime-${id}`);
-            const editCategory = document.getElementById(`editCategory-${id}`);
-            const editServings = document.getElementById(`editServings-${id}`);
-            const editIngredients = document.getElementById(`editIngredients-${id}`);
-            const editSteps = document.getElementById(`editSteps-${id}`);
-            editCategory.value = recipe.category;
-
-            editFormAdd(id);
-
-            collectIngredients(editIngredients);
-
-            collectSteps(editSteps);
-
-            editForm.addEventListener("submit", (event) => {                
-            event.preventDefault();
-
-            if (!editForm) return;
-
-            const patch = {
-                title: editTitle.value.trim(),
-                time: Number(editTime.value),
-                category: editCategory.value,
-                servings: Number(editServings.value),
-                ingredients: collectIngredients(editIngredients),
-                steps: collectSteps(editSteps),
-            };
-
-            const valid = validateRecipe(patch);
-            if (!valid) return;
-            
-            updateRecipe(id, patch);
-
-            refresh();
-
-            editForm.remove();
-
-            return;
-            });
-
-            document.getElementById(`cancelEdit-${id}`).addEventListener("click", () => {
-                editForm.remove();
-                document.querySelector(`article[data-id="${id}"] .edit-btn`)?.focus();
-            });
-            
-        }
-    })
+    recipeFormButtons(refresh);
 }
 
 export function addPage() {
@@ -234,7 +118,7 @@ export function favoritesPage() {
     const list = loadRecipes();
     const filtered = list.filter(recipe => 
         (recipe.isFavorite === "true" || recipe.isFavorite === true)   
-    )
+    );
 
     renderRecipes(filtered);     
 
@@ -242,7 +126,14 @@ export function favoritesPage() {
         document.getElementById("recipes").innerHTML = `<p>No favorite recipes yet</p>`;
         const c = document.getElementById("counter");
         if (c) c.textContent = "Find: 0";
-    }        
-}
+    };
+    
+    function refresh() {
+        const filtered = loadRecipes().filter(r => !!r.isFavorite);
+        renderRecipes(filtered);
+    };
+
+    recipeFormButtons(refresh);       
+};
 
 export function homePage(){ document.getElementById("app").innerHTML="<h2>Home</h2>"; }
