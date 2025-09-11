@@ -1,8 +1,10 @@
 import {loadRecipes,toggleFavorite,deleteRecipe,updateRecipe,getRecipeById} from "./store.js";
-import {recipeFormHTML} from "./ui/recipeForm.js";
+import {recipeFormHTML, editFormAdd} from "./ui/recipeForm.js";
 import {recipeCard} from "./ui/recipeCard.js";
 import {validateRecipe} from "./ui/validation.js";
 
+
+// Render recipes to the #recipes container
 function renderRecipes(recipes) {
     const container = document.getElementById("recipes");
     if (!container) return;
@@ -22,6 +24,40 @@ function renderRecipes(recipes) {
     if (c) c.textContent = `Find: ${recipes.length}`;
 }
 
+
+// Collect ingredients and steps from the edit form
+function collectIngredients(editIngredients) {
+    const rows = editIngredients.querySelectorAll(".ingredient-row");
+    const ingredients = [];
+    rows.forEach(row => {
+        const nameInput = row.querySelector(`input[name^="ing"][name$="[name]"]`); 
+        const qtyInput = row.querySelector(`input[name^="ing"][name$="[qty]"]`);
+        const unitSelect = row.querySelector(`select[name^="ing"][name$="[unit]"]`);
+        const name = nameInput.value.trim();
+        const qty = parseFloat(String(qtyInput.value).replace(",", "."));
+        const unit = unitSelect.value;
+        if (name) {
+            ingredients.push({ name, qty: isNaN(qty) ? 0 : qty, unit });
+        };
+    });
+    return ingredients;
+};
+
+function collectSteps(editSteps) {
+    const rows = editSteps.querySelectorAll(".step-row");
+    const steps = [];
+    rows.forEach(row => {
+        const stepTextarea = row.querySelector(`textarea[name^="step"]`);
+        const step = stepTextarea.value.trim();
+        if (step) {
+            steps.push(step);
+        };
+    });
+    return steps;
+};
+
+
+// Pages
 export function recipesPage() {                        
     const app = document.getElementById("app");
     app.innerHTML = `
@@ -127,84 +163,11 @@ export function recipesPage() {
             const editSteps = document.getElementById(`editSteps-${id}`);
             editCategory.value = recipe.category;
 
-            const addIngBtn = editForm.querySelector(".add-ingredient");
+            editFormAdd(id);
 
-            addIngBtn.addEventListener("click", () => {
-            const container = editForm.querySelector(`#editIngredients-${id}`);
-            const index = container.querySelectorAll(".ingredient-row").length;
+            collectIngredients(editIngredients);
 
-            container.insertAdjacentHTML("beforeend", `
-                <div class="ingredient-row" data-index="${index}">
-                    <input type="text" name="ing[${index}][name]" placeholder="Name">
-                    <input type="number" name="ing[${index}][qty]" min="0" step="0.01" placeholder="Qty">
-                    <select name="ing[${index}][unit]">
-                        <option value="pcs">pcs</option>
-                        <option value="tsp">tsp</option>
-                        <option value="tbsp">tbsp</option>
-                        <option value="g">g</option>
-                        <option value="ml">ml</option>
-                    </select>
-                    <button type="button" class="remove-ingredient" data-recipe-id="${id}" data-index="${index}">-</button>
-                </div>
-                `);
-            });
-
-            const addStepBtn = editForm.querySelector(".add-step");
-            addStepBtn.addEventListener("click", () => {
-                const container = editForm.querySelector(`#editSteps-${id}`);
-                const index = container.querySelectorAll(".step-row").length;
-                container.insertAdjacentHTML("beforeend", `
-                    <div class="step-row" data-index="${index}">
-                        <textarea name="step[${index}]" rows="2" placeholder="Step ${index+1}"></textarea>
-                        <button type="button" class="remove-step" data-recipe-id="${id}" data-index="${index}">-</button>
-                    </div>
-                `);
-            });
-
-            editForm.addEventListener("click", (e) => {
-                const rmIngBtn = e.target.closest(".remove-ingredient");
-                if (rmIngBtn) {
-                    e.preventDefault();
-                    rmIngBtn.closest(".ingredient-row")?.remove();
-                    return;
-                }
-
-                const rmStepBtn = e.target.closest(".remove-step");
-                if (rmStepBtn) {
-                    e.preventDefault();
-                    rmStepBtn.closest(".step-row")?.remove();
-                }
-            });
-
-            function collectIngredients(editIngredients) {
-                const rows = editIngredients.querySelectorAll(".ingredient-row");
-                const ingredients = [];
-                rows.forEach(row => {
-                    const nameInput = row.querySelector(`input[name^="ing"][name$="[name]"]`); 
-                    const qtyInput = row.querySelector(`input[name^="ing"][name$="[qty]"]`);
-                    const unitSelect = row.querySelector(`select[name^="ing"][name$="[unit]"]`);
-                    const name = nameInput.value.trim();
-                    const qty = parseFloat(String(qtyInput.value).replace(",", "."));
-                    const unit = unitSelect.value;
-                    if (name) {
-                        ingredients.push({ name, qty: isNaN(qty) ? 0 : qty, unit });
-                    }
-                });
-                return ingredients;
-            }
-
-            function collectSteps(editSteps) {
-                const rows = editSteps.querySelectorAll(".step-row");
-                const steps = [];
-                rows.forEach(row => {
-                    const stepTextarea = row.querySelector(`textarea[name^="step"]`);
-                    const step = stepTextarea.value.trim();
-                    if (step) {
-                        steps.push(step);
-                    }
-                });
-                return steps;
-            }
+            collectSteps(editSteps);
 
             editForm.addEventListener("submit", (event) => {                
             event.preventDefault();
@@ -222,7 +185,6 @@ export function recipesPage() {
 
             const valid = validateRecipe(patch);
             if (!valid) return;
-            
             
             updateRecipe(id, patch);
 
@@ -242,7 +204,45 @@ export function recipesPage() {
     })
 }
 
+export function addPage() {
+    const recipe = {
+        id: "",
+        title: "",
+        category: "breakfasts",
+        time: 1,
+        servings: 1,
+        ingredients: [],
+        steps: [],
+        isFavorite: false
+    };
+    const app = document.getElementById("app");
+    app.innerHTML = `
+        <h2>Add New Recipe</h2>
+        ${recipeFormHTML(recipe)}
+    `;
+}
+    
+export function favoritesPage() {
+    const app = document.getElementById("app");
+
+    app.innerHTML = `
+        <h2>Favorites</h2>
+        <div id="recipes"></div>
+        <p id="counter" aria-live="polite"></p>
+    `;
+
+    const list = loadRecipes();
+    const filtered = list.filter(recipe => 
+        (recipe.isFavorite === "true" || recipe.isFavorite === true)   
+    )
+
+    renderRecipes(filtered);     
+
+    if (filtered.length === 0) {
+        document.getElementById("recipes").innerHTML = `<p>No favorite recipes yet</p>`;
+        const c = document.getElementById("counter");
+        if (c) c.textContent = "Find: 0";
+    }        
+}
 
 export function homePage(){ document.getElementById("app").innerHTML="<h2>Home</h2>"; }
-export function addPage(){ document.getElementById("app").innerHTML="<h2>Add</h2>"; }
-export function favoritesPage(){ document.getElementById("app").innerHTML="<h2>Favorites</h2>"; }
