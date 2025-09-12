@@ -9,7 +9,7 @@ const demoRecipes = [
     time: 10,
     servings: 2,
     ingredients: [
-        { name: "Aggs", qty: 3, unit: "pcs" }
+        { name: "Eggs", qty: 3, unit: "pcs" }
     ],
     steps: ["Beat the eggs", "Fry"],
     isFavorite: true,
@@ -27,7 +27,7 @@ const demoRecipes = [
         { name: "Cucumber", qty: 2, unit: "pcs" },
         { name: "Tomato", qty: 2, unit: "pcs" },
         { name: "Onion", qty: 0.5, unit: "pcs" },
-        { name: "Sunflowers oil", qty: 2, unit: "tbsp" },
+        { name: "Sunflower oil", qty: 2, unit: "tbsp" },
         { name: "Salt", qty: 1, unit: "pinch" }
     ],
     steps: [

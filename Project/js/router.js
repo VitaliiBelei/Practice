@@ -20,25 +20,28 @@ function handleRoute() {
 }
 
 function render(hash) {
-    app.innerHTML = "";
     switch (hash) {
-    case "#/home":
-        homePage();
-        break;
-    case "#/recipes":
-        recipesPage();
-        break;
-    case "#/add":
-        addPage();
-        break;
-    case "#/favorites":
-        favoritesPage();
-        break;
-  }
+        case "#/home":
+            homePage();
+            break;
+        case "#/recipes":
+            recipesPage();
+            break;
+        case "#/add":
+            addPage();
+            break;
+        case "#/favorites":
+            favoritesPage();
+            break;
+        default:
+            app.innerHTML = "<h1>404</h1><p>Page not found</p>";
+    }
 }
 
 function updateActiveNav(hash) {
-    document.querySelectorAll('#nav a').forEach(a => {
+    const nav = document.getElementById('nav');
+    if (!nav) return;
+    nav.querySelectorAll('a').forEach(a => {
         if (a.getAttribute('href') === hash) {
             a.classList.add('is-active');
             a.setAttribute('aria-current', 'page');
@@ -46,7 +49,7 @@ function updateActiveNav(hash) {
             a.classList.remove('is-active');
             a.removeAttribute('aria-current');
         }
-  });
+    });
 }
 
 window.addEventListener('load', handleRoute);

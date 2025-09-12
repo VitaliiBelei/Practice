@@ -157,9 +157,8 @@ export function collectIngredients(editIngredients) {
         const name = nameInput.value.trim();
         const qty = parseFloat(String(qtyInput.value).replace(",", "."));
         const unit = unitSelect.value;
-        if (name) {
-            ingredients.push({ name, qty: isNaN(qty) ? 0 : qty, unit });
-        };
+        ingredients.push({ name, qty: isNaN(qty) ? 0 : qty, unit });
+        
     });
     return ingredients;
 };
@@ -170,14 +169,10 @@ export function collectSteps(editSteps) {
     rows.forEach(row => {
         const stepTextarea = row.querySelector(`textarea[name^="step"]`);
         const step = stepTextarea.value.trim();
-        if (step) {
-            steps.push(step);
-        };
+        steps.push(step);
     });
     return steps;
 };
-
-
 
 
 // Handle buttons in recipe cards: favorite, delete, edit
@@ -248,10 +243,7 @@ export function recipeFormButtons(onRefresh) {
             };
 
             const valid = validateRecipe(patch);
-            if (!valid) {
-                alert("Please fix the errors in the form.");
-                return;
-            };
+            if (!valid) return;
             
             updateRecipe(id, patch);
 

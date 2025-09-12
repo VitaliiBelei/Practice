@@ -148,10 +148,8 @@ export function addPage() {
         };
         
         const valid = validateRecipe(newRecipe);
-        if (!valid) {
-            alert("Please fix the errors in the form.");
-            return;
-        };
+
+        if (!valid) return;
                     
         addRecipe(newRecipe);
 
