@@ -22,6 +22,6 @@ export function validateRecipe(patch) {
         alert("Add at least one step");
         return false;
     }
-
+   
     return true;
 }

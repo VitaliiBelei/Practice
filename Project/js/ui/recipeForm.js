@@ -2,7 +2,7 @@ import {toggleFavorite,deleteRecipe,updateRecipe,getRecipeById} from "../store.j
 import {validateRecipe} from "./validation.js";
 
 
-export function recipeFormHTML(recipe, mode = "add") {
+export function recipeFormHTML(recipe, mode = "edit") {
     const units = ["pcs", "tsp", "tbsp", "g", "ml"];
 
     const formId = recipe.id ?? "new";
@@ -248,7 +248,10 @@ export function recipeFormButtons(onRefresh) {
             };
 
             const valid = validateRecipe(patch);
-            if (!valid) return;
+            if (!valid) {
+                alert("Please fix the errors in the form.");
+                return;
+            };
             
             updateRecipe(id, patch);
 

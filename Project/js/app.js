@@ -135,11 +135,6 @@ export function addPage() {
         const editServings = document.getElementById("editServings-new");
         const editIngredients = document.getElementById("editIngredients-new");
         const editSteps = document.getElementById("editSteps-new");
-        
-
-         collectIngredients(editIngredients);
-
-         collectSteps(editSteps);
 
         const newRecipe = {
             title: editTitle.value.trim(),
@@ -153,7 +148,10 @@ export function addPage() {
         };
         
         const valid = validateRecipe(newRecipe);
-        if (!valid) return;
+        if (!valid) {
+            alert("Please fix the errors in the form.");
+            return;
+        };
                     
         addRecipe(newRecipe);
 
