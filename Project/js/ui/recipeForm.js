@@ -2,7 +2,7 @@ import {toggleFavorite,deleteRecipe,updateRecipe,getRecipeById} from "../store.j
 import {validateRecipe} from "./validation.js";
 
 
-export function recipeFormHTML(recipe) {
+export function recipeFormHTML(recipe, mode = "add") {
     const units = ["pcs", "tsp", "tbsp", "g", "ml"];
 
     const formId = recipe.id ?? "new";
@@ -56,6 +56,17 @@ export function recipeFormHTML(recipe) {
             </label>
             <input id="editServings-${formId}" name="servings" type="number" min="1" value="${recipe.servings ?? 1}">
 
+            ${mode === "add"
+                ? `<button 
+                    type="button" 
+                    class="fav-btn" 
+                    id="favBtn-${formId}"
+                    aria-label="${recipe.isFavorite ? 'Unmark as favorite' : 'Mark as favorite'}"
+                    aria-pressed="${recipe.isFavorite ? 'true' : 'false'}"
+                    >${recipe.isFavorite ? '★' : '☆'}</button>` 
+                : ""
+            }
+
             <fieldset>
                 <legend>Ingredients</legend>
                 <div id="editIngredients-${formId}">
@@ -63,7 +74,6 @@ export function recipeFormHTML(recipe) {
                 </div>
                 <button type="button" class="add-ingredient" data-recipe-id="${formId}">+ Add ingredient</button>
             </fieldset>
-
 
             <fieldset>
                 <legend>Steps</legend>
@@ -73,7 +83,7 @@ export function recipeFormHTML(recipe) {
                 <button type="button" class="add-step" data-recipe-id="${formId}">+ Add step</button>
             </fieldset>
             
-            <button type="submit" class="editButton" id="editButton-${formId}">Confirm</button>
+            <button type="submit" class="editButton" id="editButton-${formId}">${mode === "add" ? "Add recipe" : "Confirm"}</button>
 
             <button type="button" class="editButton" id="cancelEdit-${formId}">Cancel</button>
         </form>
@@ -82,8 +92,9 @@ export function recipeFormHTML(recipe) {
 
 
 // Add functionality to the edit form for adding/removing ingredients and steps
-function editFormAdd(id) {
+export function editFormAdd(id) {
     const editForm = document.getElementById(`editForm-${id}`);
+    if (!editForm) return;
     const addIngBtn = editForm.querySelector(".add-ingredient");
 
     addIngBtn.addEventListener("click", () => {
@@ -136,7 +147,7 @@ function editFormAdd(id) {
 
 
 // Collect ingredients and steps from the edit form
-function collectIngredients(editIngredients) {
+export function collectIngredients(editIngredients) {
     const rows = editIngredients.querySelectorAll(".ingredient-row");
     const ingredients = [];
     rows.forEach(row => {
@@ -153,7 +164,7 @@ function collectIngredients(editIngredients) {
     return ingredients;
 };
 
-function collectSteps(editSteps) {
+export function collectSteps(editSteps) {
     const rows = editSteps.querySelectorAll(".step-row");
     const steps = [];
     rows.forEach(row => {

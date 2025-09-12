@@ -67,13 +67,8 @@ export function saveRecipes(list) {
 }
 
 export function addRecipe(recipe) {
-    if (!recipe.title || !recipe.category) {    //доробити валідацію
-        console.error("The fields is empty");
-        return;
-    }  
     const list = loadRecipes();
     recipe.id = "r_" + Date.now().toString();
-    recipe.isFavorite = false;
     recipe.createdAt = new Date().toISOString()
     recipe.updatedAt = recipe.createdAt;
     list.push(recipe);

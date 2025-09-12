@@ -1,6 +1,7 @@
-import {loadRecipes} from "./store.js";
-import {recipeFormHTML, recipeFormButtons} from "./ui/recipeForm.js";
+import {loadRecipes, addRecipe} from "./store.js";
+import {recipeFormHTML, recipeFormButtons, editFormAdd, collectIngredients, collectSteps} from "./ui/recipeForm.js";
 import {recipeCard} from "./ui/recipeCard.js";
+import {validateRecipe} from "./ui/validation.js";
 
 
 // Render recipes to the #recipes container
@@ -89,22 +90,76 @@ export function recipesPage() {
 }
 
 export function addPage() {
-    const recipe = {
-        id: "",
+    const emptyRecipe = {
         title: "",
         category: "breakfasts",
         time: 1,
         servings: 1,
         ingredients: [],
         steps: [],
-        isFavorite: false
+        isFavorite: false,
     };
     const app = document.getElementById("app");
     app.innerHTML = `
         <h2>Add New Recipe</h2>
-        ${recipeFormHTML(recipe)}
+        ${recipeFormHTML(emptyRecipe, "add")}
+
     `;
-}
+    editFormAdd("new");
+
+    document.getElementById("cancelEdit-new").addEventListener("click", () => {
+        window.location.hash = "#/home";
+    });
+
+    const form = document.getElementById(`editForm-new`);
+
+    const favBtn = document.getElementById("favBtn-new");
+
+    let isFavorite = false;
+
+    if (favBtn) {
+        favBtn.addEventListener("click", () => {
+            isFavorite = !isFavorite;
+            favBtn.textContent = isFavorite ? "★" : "☆";
+            favBtn.setAttribute("aria-pressed", String(isFavorite));
+            favBtn.setAttribute("aria-label", isFavorite ? "Unmark as favorite" : "Mark as favorite");
+        });
+    };
+
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const editTitle = document.getElementById("editTitle-new");
+        const editTime = document.getElementById("editTime-new");
+        const editCategory = document.getElementById("editCategory-new");
+        const editServings = document.getElementById("editServings-new");
+        const editIngredients = document.getElementById("editIngredients-new");
+        const editSteps = document.getElementById("editSteps-new");
+        
+
+         collectIngredients(editIngredients);
+
+         collectSteps(editSteps);
+
+        const newRecipe = {
+            title: editTitle.value.trim(),
+            time: Number(editTime.value),
+            category: editCategory.value,
+            servings: Number(editServings.value),
+            ingredients: collectIngredients(editIngredients),
+            steps: collectSteps(editSteps),
+            type: "local",
+            isFavorite,
+        };
+        
+        const valid = validateRecipe(newRecipe);
+        if (!valid) return;
+                    
+        addRecipe(newRecipe);
+
+        window.location.hash = "#/recipes";
+    });
+};
     
 export function favoritesPage() {
     const app = document.getElementById("app");
