@@ -149,7 +149,10 @@ export function addPage() {
         
         const valid = validateRecipe(newRecipe);
 
-        if (!valid) return;
+        if (!valid) {
+            //firstInvalidFocus(form);
+            return;
+        };
                     
         addRecipe(newRecipe);
 

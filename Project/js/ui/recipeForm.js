@@ -49,12 +49,12 @@ export function recipeFormHTML(recipe, mode = "edit") {
             <label for="editTime-${formId}">
                 Time
             </label>
-            <input id="editTime-${formId}" name="time" type="number" min="0" value="${recipe.time ?? 0}">
+            <input id="editTime-${formId}" name="time" type="number" value="${recipe.time ?? 1}">
 
             <label for="editServings-${formId}">
                 Servings
             </label>
-            <input id="editServings-${formId}" name="servings" type="number" min="1" value="${recipe.servings ?? 1}">
+            <input id="editServings-${formId}" name="servings" type="number" value="${recipe.servings ?? 1}">
 
             ${mode === "add"
                 ? `<button 
@@ -67,7 +67,7 @@ export function recipeFormHTML(recipe, mode = "edit") {
                 : ""
             }
 
-            <fieldset>
+            <fieldset name="ingredients">
                 <legend>Ingredients</legend>
                 <div id="editIngredients-${formId}">
                     ${ingRows}
@@ -75,7 +75,7 @@ export function recipeFormHTML(recipe, mode = "edit") {
                 <button type="button" class="add-ingredient" data-recipe-id="${formId}">+ Add ingredient</button>
             </fieldset>
 
-            <fieldset>
+            <fieldset name="steps">
                 <legend>Steps</legend>
                 <div id="editSteps-${formId}">
                     ${stepsRows}
@@ -234,6 +234,7 @@ export function recipeFormButtons(onRefresh) {
             if (!editForm) return;
 
             const patch = {
+                id,
                 title: editTitle.value.trim(),
                 time: Number(editTime.value),
                 category: editCategory.value,
