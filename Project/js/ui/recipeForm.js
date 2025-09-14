@@ -32,7 +32,7 @@ export function recipeFormHTML(recipe, mode = "edit") {
             <label for="editTitle-${formId}">
                 Title
             </label>
-            <input id="editTitle-${formId}" name="title" value="${recipe.title ?? ""}">
+            <input id="editTitle-${formId}" name="title" value="${recipe.title ?? ""}" autofocus>
 
             <label for="editCategory-${formId}">
                 Category
@@ -60,6 +60,7 @@ export function recipeFormHTML(recipe, mode = "edit") {
                 ? `<button 
                     type="button" 
                     class="fav-btn" 
+                    title="Mark/Unmark as favorite"
                     id="favBtn-${formId}"
                     aria-label="${recipe.isFavorite ? 'Unmark as favorite' : 'Mark as favorite'}"
                     aria-pressed="${recipe.isFavorite ? 'true' : 'false'}"
