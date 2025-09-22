@@ -1,5 +1,6 @@
 const LS_KEY_RECIPES = 'cookbook_recipes';
-const LS_KEY_SETTINGS = 'cookbook_settings';
+const LS_KEY_PROFILE = 'cookbook_profile';
+const LS_KEY_SESSION = 'cookbook_session';
 
 const demoRecipes = [
   {
@@ -114,35 +115,76 @@ export function toggleFavorite(id) {
     saveRecipes(list);
 }
 
-export function loadSettings() {
-    const raw = localStorage.getItem(LS_KEY_SETTINGS);
-    if (!raw) {
-        return {
-            category: "all",
-            sortBy: "createdAt",
-            theme: "light"
-        };
-    }
+export function loadProfiles () {
+    const profiles = localStorage.getItem(LS_KEY_PROFILE);
+    if (!profiles) return [];
     try {
-       return JSON.parse(raw);
-    } catch (error) {
-        console.error("Error reading from localStorage", error);
-        return {
-            category: "all",
-            sortBy: "createdAt",
-            theme: "light"
-        };
+        return JSON.parse(profiles);
+    } catch (e) {
+        console.error("Error reading from localStorage", e);
+        return [];
     }
 }
 
-export function saveSettings(settings) {
+export function loadProfile(id) {
+    const list = loadProfiles();
+    return list.find(profile => profile.profileId === id) || null;
+}
+
+export function saveProfile(profile) {
+    if (!profile) return console.error("Profile is not defined");
     try {
-        const raw = JSON.stringify(settings);
-        localStorage.setItem(LS_KEY_SETTINGS, raw);
+        const profiles = loadProfiles();
+        profiles.push(profile);
+        localStorage.setItem(LS_KEY_PROFILE, JSON.stringify(profiles));
+    } catch (error) {
+        console.error("Error saving to localStorage", error); 
+    }
+}
+
+export function updateProfile(id, patch) {
+    const list = loadProfiles();
+    const index = list.findIndex(p => p.profileId === id);
+    if (index === -1) return console.error("Profile is not found");
+    list[index] = {
+        ...list[index],
+        ...patch,
+        updatedAt: new Date().toISOString()
+    };
+    try {
+        localStorage.setItem(LS_KEY_PROFILE, JSON.stringify(list));
     } catch (error) {
         console.error("Error saving to localStorage", error);
     }
 }
+
+export function saveSession(session) {
+    try {
+        const raw = JSON.stringify(session);
+        localStorage.setItem(LS_KEY_SESSION, raw);
+    } catch (e) {
+        console.error("Error saving to localStorage", e);
+    }
+}
+
+export function loadSession() {
+    const session = localStorage.getItem(LS_KEY_SESSION);
+    if (!session) {
+        return null;
+    }
+    try {
+       return JSON.parse(session);
+    } catch (e) {
+        console.error("Error reading from localStorage", e);
+        return null;
+    }
+}
+
+export function clearSession() {
+    localStorage.removeItem(LS_KEY_SESSION);
+}
+
+
 
 function hydrate() {
     const list = loadRecipes();
@@ -152,7 +194,3 @@ function hydrate() {
 }
 hydrate();
 
-export function clearAll () {
-    localStorage.removeItem(LS_KEY_RECIPES);
-    localStorage.removeItem(LS_KEY_SETTINGS);
-}

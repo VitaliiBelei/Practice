@@ -1,4 +1,4 @@
-import {recipesPage, homePage, addPage, favoritesPage} from "./app.js";
+import {recipesPage, profilePage, addPage, favoritesPage} from "./app.js";
 
 const app = document.getElementById("app");
 const routes = new Set(['#/home', '#/recipes', '#/add', '#/favorites']);
@@ -22,7 +22,7 @@ function handleRoute() {
 function render(hash) {
     switch (hash) {
         case "#/home":
-            homePage();
+            profilePage();
             break;
         case "#/recipes":
             recipesPage();

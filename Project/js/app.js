@@ -1,7 +1,8 @@
-import {loadRecipes, addRecipe} from "./store.js";
+import {loadRecipes, addRecipe, saveProfile, loadProfile, loadProfiles, saveSession, loadSession, clearSession, updateProfile} from "./store.js";
 import {recipeFormHTML, recipeFormButtons, editFormAdd, collectIngredients, collectSteps} from "./ui/recipeForm.js";
 import {recipeCard} from "./ui/recipeCard.js";
 import {validateRecipe} from "./ui/validation.js";
+import {loadProfilePage, registerProfile, loginProfile, editProfile} from "./ui/profile.js";
 
 
 // Render recipes to the #recipes container
@@ -205,4 +206,225 @@ export function favoritesPage() {
     recipeFormButtons(refresh);       
 };
 
-export function homePage(){ document.getElementById("app").innerHTML="<h2>Home</h2>"; }
+
+
+
+
+
+export function profilePage(){
+    
+    const session = loadSession();
+    const profile = session ? loadProfile(session.profileId) : null;
+    loadProfilePage(profile, session ? session.status : "unlogin");
+    const registerBtn = document.getElementById("registerBtn");
+    if (registerBtn) {
+        registerBtn.addEventListener("click", () => {
+            registerProfile();
+            const registerForm = document.getElementById("registerForm");
+            const nameInput = registerForm.querySelector("input[name='name']");
+            const emailInput = registerForm.querySelector("input[name='email']");
+            const passwordInput = registerForm.querySelector("input[name='password']");
+            const fotoInput = registerForm.querySelector("input[name='foto']");
+            let fotoData = "img/foto.png";
+            if (fotoInput) {
+                fotoInput.addEventListener("change", (e) => {
+                    const file = fotoInput.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(ev) {
+                            fotoData = ev.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+            registerForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const profile = {
+                    name: nameInput.value.trim(),
+                    email: emailInput.value.trim(),
+                    password: passwordInput.value.trim(),
+                    foto: fotoData,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                    profileId: 'user_' + Math.random().toString(36).substring(2, 11) + Date.now().toString(36),
+                    settings: {
+                        theme: "light"
+                    }
+                };
+                saveProfile(profile);
+                const session = {profileId: profile.profileId, status: "login", loggetAt: new Date().toISOString()};
+                loadProfilePage(profile, session.status);
+                saveSession(session);
+            });
+        });
+    }
+
+    const loginBtn = document.getElementById("loginBtn");
+    if (loginBtn) {
+        loginBtn.addEventListener("click", () => {
+            loginProfile();
+            const loginForm = document.getElementById("loginForm");
+            if (!loginForm) return;
+            loginForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const emailInput = loginForm.querySelector("input[name='email']");
+                const profiles = loadProfiles();
+                const profile = profiles.find(p => p.email === emailInput.value.trim().toLowerCase());
+                if (!profile) {
+                    alert("No user with this email");
+                    return;
+                }
+            const session = {profileId: profile.profileId, status: "login", loggetAt: new Date().toISOString()};
+            loadProfilePage(profile, session.status);
+            saveSession(session);
+            });
+        });
+    };
+
+    function initProfileButtons(profile, session) {
+    const registerBtn = document.getElementById("registerBtn");
+    if (registerBtn) {
+        registerBtn.disabled = false;
+        registerBtn.classList.remove("disabled");
+        registerBtn.onclick = () => {
+            registerProfile();
+            setTimeout(() => {
+                const registerForm = document.getElementById("registerForm");
+                const nameInput = registerForm.querySelector("input[name='name']");
+                const emailInput = registerForm.querySelector("input[name='email']");
+                const passwordInput = registerForm.querySelector("input[name='password']");
+                const fotoInput = registerForm.querySelector("input[name='foto']");
+                let fotoData = "img/foto.png";
+                if (fotoInput) {
+                    fotoInput.onchange = (e) => {
+                        const file = fotoInput.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = function(ev) {
+                                fotoData = ev.target.result;
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    };
+                }
+                registerForm.onsubmit = (e) => {
+                    e.preventDefault();
+                    const profile = {
+                        name: nameInput.value.trim(),
+                        email: emailInput.value.trim(),
+                        password: passwordInput.value.trim(),
+                        foto: fotoData,
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString(),
+                        profileId: 'user_' + Math.random().toString(36).substring(2, 11) + Date.now().toString(36),
+                        settings: {
+                            theme: "light"
+                        }
+                    };
+                    saveProfile(profile);
+                    const session = {profileId: profile.profileId, status: "login", loggetAt: new Date().toISOString()};
+                    loadProfilePage(profile, session.status);
+                    initProfileButtons(profile, session);
+                    saveSession(session);
+                };
+            }, 0);
+        };
+    }
+        const loginBtn = document.getElementById("loginBtn");
+        if (loginBtn) {
+            loginBtn.disabled = false;
+            loginBtn.classList.remove("disabled");
+            loginBtn.onclick = () => {
+                loginProfile();
+                setTimeout(() => {
+                    const loginForm = document.getElementById("loginForm");
+                    if (!loginForm) return;
+                    loginForm.onsubmit = (e) => {
+                        e.preventDefault();
+                        const emailInput = loginForm.querySelector("input[name='email']");
+                        const profiles = loadProfiles();
+                        const profile = profiles.find(p => p.email === emailInput.value.trim().toLowerCase());
+                        if (!profile) {
+                            alert("No user with this email");
+                            return;
+                        }
+                        const session = {profileId: profile.profileId, status: "login", loggetAt: new Date().toISOString()};
+                        loadProfilePage(profile, session.status);
+                        initProfileButtons(profile, session);
+                        saveSession(session);
+                    };
+                }, 0);
+            };
+        }
+
+        const logoutBtn = document.getElementById("logoutBtn");
+        if (logoutBtn) {
+            logoutBtn.disabled = false;
+            logoutBtn.classList.remove("disabled");
+            logoutBtn.onclick = () => {
+                clearSession();
+                loadProfilePage(null, "unlogin");
+                initProfileButtons(null, {status: "unlogin"});
+            };
+        }
+
+        const editProfileBtn = document.getElementById("editProfileBtn");
+        if (editProfileBtn) {
+            editProfileBtn.disabled = false;
+            editProfileBtn.classList.remove("disabled");
+            editProfileBtn.onclick = () => {
+                editProfile(profile);
+                setTimeout(() => {
+                    const editProfileForm = document.getElementById("editProfileForm");
+                    if (!editProfileForm) return;
+                    const fotoInput = editProfileForm.querySelector("input[name='foto']");
+                    let fotoData = profile.foto || "img/foto.png";
+                    if (fotoInput) {
+                        fotoInput.onchange = (e) => {
+                            const file = fotoInput.files[0];
+                            if (file) {
+                                const reader = new FileReader();
+                                reader.onload = function(ev) {
+                                    fotoData = ev.target.result;
+                                };
+                                reader.readAsDataURL(file);
+                            }
+                        };
+                    }
+                    editProfileForm.onsubmit = (e) => {
+                        e.preventDefault();
+                        const id = profile.profileId;
+                        if (!id) return;
+                        const nameInput = editProfileForm.querySelector("input[name='name']");
+                        const emailInput = editProfileForm.querySelector("input[name='email']");
+                        const locationInput = editProfileForm.querySelector("input[name='location']");
+                        const fcInput = editProfileForm.querySelector("input[name='fc']");
+                        const bioInput = editProfileForm.querySelector("textarea[name='bio']");
+                        const linkInput = editProfileForm.querySelector("input[name='link']");
+                        const updatedProfile = {
+                            ...profile,
+                            foto: fotoData,
+                            name: nameInput.value.trim(),
+                            email: emailInput.value.trim(),
+                            location: locationInput.value.trim(),
+                            fc: fcInput.value.trim(),
+                            bio: bioInput.value.trim(),
+                            link: linkInput.value.trim(),
+                            updatedAt: new Date().toISOString(),
+                        };
+                        updateProfile(id, updatedProfile);
+                        loadProfilePage(updatedProfile, session ? session.status : "unlogin");
+                        initProfileButtons(updatedProfile, session);
+                    };
+                }, 0);
+            };
+        }
+    }
+    initProfileButtons(profile, session);
+};
+
+const profilePageLoad = document.getElementById("profilePage");
+profilePageLoad.addEventListener("click", () => {
+    profilePage();
+});
