@@ -1,7 +1,7 @@
-import {recipesPage, profilePage, addPage, favoritesPage} from "./app.js";
+import {recipesPage, profilePage, addPage, favoritesPage, homePage} from "./app.js";
 
 const app = document.getElementById("app");
-const routes = new Set(['#/home', '#/recipes', '#/add', '#/favorites']);
+const routes = new Set(['#/home', '#/profile', '#/recipes', '#/add', '#/favorites']);
 
 function handleRoute() {
     const hash = window.location.hash;
@@ -22,6 +22,9 @@ function handleRoute() {
 function render(hash) {
     switch (hash) {
         case "#/home":
+            homePage();
+            break;
+        case "#/profile":
             profilePage();
             break;
         case "#/recipes":

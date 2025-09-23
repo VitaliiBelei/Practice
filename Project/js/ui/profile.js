@@ -4,9 +4,6 @@ export function loadProfilePage(profile = null, mode = "unlogin") {
         <h2>User Profile</h2>
         ${mode === "login" && profile
             ? `
-            <button id="logoutBtn">Logout</button> 
-            <button id="editProfileBtn">Edit Profile</button>
-            <button id="settingsBtn">Settings</button>
             <div id="profileFoto">
                 <img src="${profile.foto}" alt="Profile Photo" />
             </div>
@@ -21,9 +18,26 @@ export function loadProfilePage(profile = null, mode = "unlogin") {
             </div>
             `
             : `
-            <button id="registerBtn">Register</button>
-            <button id="loginBtn">Login</button>
             <h3>Welcome to Cookbook Social! Your place to share recipes, discover new flavors, and connect with food lovers from around the world. Save your favorite dishes, customize your cooking profile, and make every meal a story worth sharing.</h3>
+            `
+        }
+    `;
+    const nav = document.getElementById('nav');
+    nav.innerHTML = `
+        
+        ${mode === "login" && profile
+            ? `
+                <button id="logoutBtn">Logout</button> 
+                <button id="editProfileBtn">Edit Profile</button>
+                <button id="settingsBtn">Settings</button>
+                <a href="#/profile" aria-current="page" class="is-active" id="profilePage">Profile</a>
+                <a href="#/recipes">Recipes</a>
+                <a href="#/add">Add</a>
+                <a href="#/favorites">Favorites</a>
+            `
+            :`
+                <button id="registerBtn">Register</button>
+                <button id="loginBtn">Login</button>
             `
         }
     `;
