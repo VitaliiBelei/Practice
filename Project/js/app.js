@@ -91,6 +91,7 @@ export function recipesPage() {
 }
 
 export function addPage() {
+    const session = loadSession();
     const emptyRecipe = {
         title: "",
         category: "breakfasts",
@@ -99,6 +100,7 @@ export function addPage() {
         ingredients: [],
         steps: [],
         isFavorite: false,
+        profileId: "",
     };
     const app = document.getElementById("app");
     app.innerHTML = `
@@ -146,6 +148,7 @@ export function addPage() {
             steps: collectSteps(editSteps),
             type: "local",
             isFavorite,
+            profileId: session.profileId,
         };
         
         const valid = validateRecipe(newRecipe);
@@ -291,91 +294,102 @@ export function profilePage(){
 };
 
 export function homePage() {
+    const session = loadSession();
+    if (!session) {
     function initProfileButtons() {
-    const app = document.getElementById("app");
-    app.innerHTML = `
-        <h2>Welcome to the Recipe App</h2>
-        <p>Discover and share amazing recipes!</p>
-    `;
-    const nav = document.getElementById('nav');
-    nav.innerHTML = `
-        <button id="registerBtn">Register</button>
-        <button id="loginBtn">Login</button>
-    `;
+        const app = document.getElementById("app");
+        app.innerHTML = `
+            <h2>Welcome to the Recipe App</h2>
+            <p>Discover and share amazing recipes!</p>
+        `;
+        const nav = document.getElementById('nav');
+        nav.innerHTML = `
+            <button id="registerBtn">Register</button>
+            <button id="loginBtn">Login</button>
+        `;
     
-    const registerBtn = document.getElementById("registerBtn");
-    if (registerBtn) {
-        registerBtn.addEventListener("click", () => {
-            registerProfile();
-            const registerForm = document.getElementById("registerForm");
-            const nameInput = registerForm.querySelector("input[name='name']");
-            const emailInput = registerForm.querySelector("input[name='email']");
-            const passwordInput = registerForm.querySelector("input[name='password']");
-            const fotoInput = registerForm.querySelector("input[name='foto']");
-            let fotoData = "img/foto.png";
-            if (fotoInput) {
-                fotoInput.addEventListener("change", (e) => {
-                    const file = fotoInput.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = function(ev) {
-                            fotoData = ev.target.result;
-                        };
-                        reader.readAsDataURL(file);
-                    }
+        const registerBtn = document.getElementById("registerBtn");
+        if (registerBtn) {
+            registerBtn.addEventListener("click", () => {
+                registerProfile();
+                const registerForm = document.getElementById("registerForm");
+                const nameInput = registerForm.querySelector("input[name='name']");
+                const emailInput = registerForm.querySelector("input[name='email']");
+                const passwordInput = registerForm.querySelector("input[name='password']");
+                const fotoInput = registerForm.querySelector("input[name='foto']");
+                let fotoData = "img/foto.png";
+                if (fotoInput) {
+                    fotoInput.addEventListener("change", (e) => {
+                        const file = fotoInput.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = function(ev) {
+                                fotoData = ev.target.result;
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                }
+                registerForm.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    const profile = {
+                        name: nameInput.value.trim(),
+                        email: emailInput.value.trim(),
+                        password: passwordInput.value.trim(),
+                        foto: fotoData,
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString(),
+                        profileId: 'user_' + Math.random().toString(36).substring(2, 11) + Date.now().toString(36),
+                        settings: {
+                            theme: "light"
+                        }
+                    };
+                    saveProfile(profile);
+                    const session = {profileId: profile.profileId, status: "login", loggetAt: new Date().toISOString()};
+                    loadProfilePage(profile, session.status);
+                    saveSession(session);
                 });
-            }
-            registerForm.addEventListener("submit", (e) => {
-                e.preventDefault();
-                const profile = {
-                    name: nameInput.value.trim(),
-                    email: emailInput.value.trim(),
-                    password: passwordInput.value.trim(),
-                    foto: fotoData,
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString(),
-                    profileId: 'user_' + Math.random().toString(36).substring(2, 11) + Date.now().toString(36),
-                    settings: {
-                        theme: "light"
+            });
+        }
+
+            const loginBtn = document.getElementById("loginBtn");
+            if (loginBtn) {
+                loginBtn.addEventListener("click", () => {
+                loginProfile();
+                const loginForm = document.getElementById("loginForm");
+                if (!loginForm) return;
+                loginForm.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    const emailInput = loginForm.querySelector("input[name='email']");
+                    const profiles = loadProfiles();
+                    const profile = profiles.find(p => p.email === emailInput.value.trim().toLowerCase());
+                    if (!profile) {
+                        alert("No user with this email");
+                        return;
                     }
-                };
-                saveProfile(profile);
                 const session = {profileId: profile.profileId, status: "login", loggetAt: new Date().toISOString()};
                 loadProfilePage(profile, session.status);
                 saveSession(session);
+                window.location.hash = "#/profile";
+                });
             });
-        });
-    }
-
-    const loginBtn = document.getElementById("loginBtn");
-    if (loginBtn) {
-        loginBtn.addEventListener("click", () => {
-            loginProfile();
-            const loginForm = document.getElementById("loginForm");
-            if (!loginForm) return;
-            loginForm.addEventListener("submit", (e) => {
-                e.preventDefault();
-                const emailInput = loginForm.querySelector("input[name='email']");
-                const profiles = loadProfiles();
-                const profile = profiles.find(p => p.email === emailInput.value.trim().toLowerCase());
-                if (!profile) {
-                    alert("No user with this email");
-                    return;
-                }
-            const session = {profileId: profile.profileId, status: "login", loggetAt: new Date().toISOString()};
-            loadProfilePage(profile, session.status);
-            saveSession(session);
-            window.location.hash = "#/profile";
-            });
-        });
+        };
     };
-};
     initProfileButtons();
-
     const title = document.getElementById("h1");
     title.addEventListener("click", () => {
-        initProfileButtons();
+        if (!session) {
+            homePage();
+        }
+        else {
+            window.location.hash = "#/profile";
+        };
     });
+    }
+    else {
+        window.location.hash = "#/profile";
+    };
+  
 }
 
 
