@@ -2,49 +2,6 @@ const LS_KEY_RECIPES = 'cookbook_recipes';
 const LS_KEY_PROFILE = 'cookbook_profile';
 const LS_KEY_SESSION = 'cookbook_session';
 
-const demoRecipes = [
-  {
-    id: "r1",
-    title: "Omelet",
-    category: "breakfasts",
-    time: 10,
-    servings: 2,
-    ingredients: [
-        { name: "Eggs", qty: 3, unit: "pcs" }
-    ],
-    steps: ["Beat the eggs", "Fry"],
-    isFavorite: true,
-    type: "local",
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  },
-  {
-    id: "r2",
-    title: "Vegetable salad",
-    category: "salads",
-    time: 15,
-    servings: 3,
-    ingredients: [
-        { name: "Cucumber", qty: 2, unit: "pcs" },
-        { name: "Tomato", qty: 2, unit: "pcs" },
-        { name: "Onion", qty: 0.5, unit: "pcs" },
-        { name: "Sunflower oil", qty: 2, unit: "tbsp" },
-        { name: "Salt", qty: 1, unit: "pinch" }
-    ],
-    steps: [
-        "Cut the vegetables into cubes",
-        "Add oil and salt",
-        "Stir"
-    ],
-    isFavorite: false,
-    type: "local",
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  }
-];
-
-
-
 export function loadRecipes() {
     const recipe = localStorage.getItem(LS_KEY_RECIPES);
     if (!recipe) {
@@ -188,14 +145,3 @@ export function loadSession() {
 export function clearSession() {
     localStorage.removeItem(LS_KEY_SESSION);
 }
-
-
-
-function hydrate() {
-    const list = loadRecipes();
-    if (list.length === 0) {
-        saveRecipes(demoRecipes);
-    }
-}
-hydrate();
-
