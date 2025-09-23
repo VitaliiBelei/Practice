@@ -1,4 +1,4 @@
-import {loadRecipes, addRecipe, saveProfile, loadProfile, loadProfiles, saveSession, loadSession, clearSession, updateProfile, loadUserRecipes} from "./store.js";
+import { loadRecipes, addRecipe, saveProfile, loadProfile, loadProfiles, saveSession, loadSession, clearSession, updateProfile, loadUserRecipes, getRecipeById } from "./store.js";
 import {recipeFormHTML, recipeFormButtons, editFormAdd, collectIngredients, collectSteps} from "./ui/recipeForm.js";
 import {recipeCard} from "./ui/recipeCard.js";
 import {validateRecipe} from "./ui/validation.js";
@@ -90,6 +90,24 @@ export function recipesPage() {
     };
 
     recipeFormButtons(refresh);
+
+    const showRecipeDetail = async (id) => {
+        const recipe = getRecipeById(id);
+        if (!recipe) return;
+        const { renderRecipeDetail } = await import("./ui/recipeDetail.js");
+        renderRecipeDetail(recipe);
+    };
+
+    const recipesContainer = document.getElementById("recipes");
+    if (recipesContainer) {
+        recipesContainer.addEventListener("click", (e) => {
+            const card = e.target.closest(".recipe-card");
+            if (!card) return;
+            const id = card.getAttribute("data-id");
+            if (!id) return;
+            showRecipeDetail(id);
+        });
+    }
 }
 
 export function addPage() {
