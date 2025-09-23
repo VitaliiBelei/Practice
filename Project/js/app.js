@@ -1,4 +1,4 @@
-import {loadRecipes, addRecipe, saveProfile, loadProfile, loadProfiles, saveSession, loadSession, clearSession, updateProfile} from "./store.js";
+import {loadRecipes, addRecipe, saveProfile, loadProfile, loadProfiles, saveSession, loadSession, clearSession, updateProfile, loadUserRecipes} from "./store.js";
 import {recipeFormHTML, recipeFormButtons, editFormAdd, collectIngredients, collectSteps} from "./ui/recipeForm.js";
 import {recipeCard} from "./ui/recipeCard.js";
 import {validateRecipe} from "./ui/validation.js";
@@ -53,7 +53,9 @@ export function recipesPage() {
         <p id="counter" aria-live="polite"></p>
     `;
 
-    const allRecipes = loadRecipes();
+    const session = loadSession();
+    const id = session.profileId;
+    const allRecipes = loadUserRecipes(id);
     renderRecipes(allRecipes);
 
     const searchForm = document.getElementById("searchForm")
@@ -73,7 +75,7 @@ export function recipesPage() {
     });
 
     function searchRecipe () {
-    const list = loadRecipes();
+    const list = loadUserRecipes(id);
     const q = search.value.trim().toLowerCase();
     const filtered = list.filter(recipe => 
         (!onlyFav.checked || recipe.isFavorite)   &&
@@ -188,7 +190,9 @@ export function favoritesPage() {
         <p id="counter" aria-live="polite"></p>
     `;
 
-    const list = loadRecipes();
+    const session = loadSession();
+    const id = session.profileId;
+    const list = loadUserRecipes(id);
     const filtered = list.filter(recipe => 
         (recipe.isFavorite === "true" || recipe.isFavorite === true)   
     );
@@ -202,7 +206,7 @@ export function favoritesPage() {
     };
     
     function refresh() {
-        const filtered = loadRecipes().filter(r => !!r.isFavorite);
+        const filtered = loadUserRecipes(id).filter(r => !!r.isFavorite);
         renderRecipes(filtered);
     };
 
@@ -361,10 +365,16 @@ export function homePage() {
                 loginForm.addEventListener("submit", (e) => {
                     e.preventDefault();
                     const emailInput = loginForm.querySelector("input[name='email']");
+                    const passwordInput = loginForm.querySelector("input[name='password']");
+                    if (!emailInput || !passwordInput) return;
                     const profiles = loadProfiles();
                     const profile = profiles.find(p => p.email === emailInput.value.trim().toLowerCase());
                     if (!profile) {
                         alert("No user with this email");
+                        return;
+                    }
+                    if (profile.password !== passwordInput.value.trim()) {
+                        alert("Incorrect password");
                         return;
                     }
                 const session = {profileId: profile.profileId, status: "login", loggetAt: new Date().toISOString()};
@@ -389,7 +399,4 @@ export function homePage() {
     else {
         window.location.hash = "#/profile";
     };
-  
 }
-
-

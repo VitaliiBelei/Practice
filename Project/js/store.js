@@ -58,6 +58,11 @@ export function loadRecipes() {
     }
 }
 
+export function loadUserRecipes(id) {
+    const list = loadRecipes();
+    return list.filter(recipe => recipe.profileId === id || null);
+}
+
 export function saveRecipes(list) {
     try {
         const raw = JSON.stringify(list);
