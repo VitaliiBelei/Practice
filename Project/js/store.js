@@ -119,6 +119,22 @@ export function updateProfile(id, patch) {
         console.error("Error saving to localStorage", error);
     }
 }
+export function deleteProfile(id) {
+    const list = loadProfiles();
+    const newList = list.filter(p => p.profileId !== id);
+    try {
+        localStorage.setItem(LS_KEY_PROFILE, JSON.stringify(newList));
+    } catch (error) {
+        console.error("Error saving to localStorage", error);
+    }
+    const recipes = loadRecipes();
+    const newRecipes = recipes.filter(r => r.profileId !== id);
+    try {
+        localStorage.setItem(LS_KEY_RECIPES, JSON.stringify(newRecipes));
+    } catch (error) {
+        console.error("Error saving to localStorage", error);
+    }
+}
 
 export function saveSession(session) {
     try {

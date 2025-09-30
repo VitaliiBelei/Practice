@@ -1,7 +1,7 @@
-import {recipesPage, profilePage, addPage, favoritesPage, homePage} from "./app.js";
+import {recipesPage, profilePage, addPage, favoritesPage, homePage, settingsPage} from "./app.js";
 
 const app = document.getElementById("app");
-const routes = new Set(['#/home', '#/profile', '#/recipes', '#/add', '#/favorites']);
+const routes = new Set(['#/home', '#/profile', '#/recipes', '#/add', '#/favorites', '#/settings']);
 
 function handleRoute() {
     const hash = window.location.hash;
@@ -35,6 +35,9 @@ function render(hash) {
             break;
         case "#/favorites":
             favoritesPage();
+            break;
+        case "#/settings":
+            settingsPage();
             break;
         default:
             app.innerHTML = "<h1>404</h1><p>Page not found</p>";
