@@ -1,8 +1,9 @@
-import { loadRecipes, addRecipe, saveProfile, loadProfile, loadProfiles, saveSession, loadSession, clearSession, updateProfile, loadUserRecipes, getRecipeById } from "./store.js";
+import {addRecipe, saveProfile, loadProfile, loadProfiles, saveSession, loadSession, clearSession, updateProfile, loadUserRecipes, getRecipeById, deleteProfile } from "./store.js";
 import {recipeFormHTML, recipeFormButtons, editFormAdd, collectIngredients, collectSteps} from "./ui/recipeForm.js";
 import {recipeCard} from "./ui/recipeCard.js";
 import {validateRecipe} from "./ui/validation.js";
 import {loadProfilePage, registerProfile, loginProfile, editProfile} from "./ui/profile.js";
+import {renderSettings} from "./ui/settings.js";
 
 
 // Render recipes to the #recipes container
@@ -238,12 +239,7 @@ export function profilePage(){
     const profile = session ? loadProfile(session.profileId) : null;
     loadProfilePage(profile, session ? session.status : "unlogin");
     
-
-    
-
     function initProfileButtons(profile, session) {
-    
-
         const logoutBtn = document.getElementById("logoutBtn");
         if (logoutBtn) {
             logoutBtn.disabled = false;
@@ -253,6 +249,14 @@ export function profilePage(){
                 loadProfilePage(null, "unlogin");
                 initProfileButtons(null, {status: "unlogin"});
                 window.location.hash = "#/home";
+            };
+        }
+        const settingsBtn = document.getElementById("settingsBtn");
+        if (settingsBtn) {
+            settingsBtn.disabled = false;
+            settingsBtn.classList.remove("disabled");
+            settingsBtn.onclick = () => {
+                settingsPage();
             };
         }
 
@@ -313,6 +317,77 @@ export function profilePage(){
     profilePageLoad.addEventListener("click", () => {
         profilePage();
     });
+
+    function settingsPage() {
+        renderSettings();
+        const settingsMessage = document.getElementById("settingsMessage");
+        const languageSelect = document.getElementById("language");
+        const themeSelect = document.getElementById("theme");
+        const unitsSelect = document.getElementById("units");
+    
+        if (profile && profile.settings) {
+            languageSelect.value = profile.settings.language;
+            themeSelect.value = profile.settings.theme;
+            unitsSelect.value = profile.settings.units;
+        };
+    
+        const saveSettingsBtn = document.getElementById("saveSettingsBtn");
+        saveSettingsBtn.addEventListener("click", () => {
+            if (!profile) return;
+            const newSettings = {
+                language: languageSelect.value,
+                theme: themeSelect.value,
+                units: unitsSelect.value
+            };
+
+            updateProfile(profile.profileId, { settings: newSettings });
+            settingsMessage.textContent = "Settings saved successfully!";
+            setTimeout(() => {profilePage()}, 2000);
+        });
+    
+        const resetSettingsBtn = document.getElementById("resetSettingsBtn");
+        resetSettingsBtn.addEventListener("click", () => {
+            if (!profile) return;
+            const defaultSettings = {
+                language: "en",
+                theme: "system",
+                units: "metric"
+            };
+            updateProfile(profile.profileId, { settings: defaultSettings });
+            languageSelect.value = defaultSettings.language;
+            themeSelect.value = defaultSettings.theme;
+            unitsSelect.value = defaultSettings.units;
+            settingsMessage.textContent = "Settings reset to default!";
+        });
+
+        const cancelBtn = document.getElementById("cancelBtn");
+        cancelBtn.addEventListener("click", () => {
+            if (!profile) return;
+            loadProfilePage(profile, session ? session.status : "unlogin");
+            initProfileButtons(profile, session);
+        });
+
+        const deleteAccountBtn = document.getElementById("deleteAccountBtn");
+        deleteAccountBtn.addEventListener("click", () => {
+            if (!profile) return;
+            const confirmed = confirm("Are you sure you want to delete your account? This action cannot be undone.");
+            if (!confirmed) return;
+            deleteProfile(profile.profileId);
+            clearSession();
+            loadProfilePage(null, "unlogin");
+            initProfileButtons(null, {status: "unlogin"});
+            window.location.hash = "#/home";
+        });
+    };
+    
+    const settingsBtn = document.getElementById("settingsBtn");
+    if (settingsBtn) {
+        settingsBtn.disabled = false;
+        settingsBtn.classList.remove("disabled");
+        settingsBtn.onclick = () => {
+           settingsPage();
+        };
+    };
 };
 
 export function homePage() {
@@ -363,7 +438,9 @@ export function homePage() {
                         updatedAt: new Date().toISOString(),
                         profileId: 'user_' + Math.random().toString(36).substring(2, 11) + Date.now().toString(36),
                         settings: {
-                            theme: "light"
+                            language: "en",
+                            theme: "system",
+                            units: "metric"
                         }
                     };
                     saveProfile(profile);
@@ -372,7 +449,7 @@ export function homePage() {
                     saveSession(session);
                 });
             });
-        }
+        };
 
             const loginBtn = document.getElementById("loginBtn");
             if (loginBtn) {
@@ -417,4 +494,4 @@ export function homePage() {
     else {
         window.location.hash = "#/profile";
     };
-}
+};
