@@ -110,8 +110,6 @@ export function recipesPage() {
                 showRecipeDetail(id);
                 return;
             }
-            
-            // ... тут можна додати обробку кнопок
         });
     }
 }
@@ -195,7 +193,7 @@ export function addPage() {
         toast.style.fontSize = '1em';
         toast.style.zIndex = '1000';
         toast.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
-        toast.textContent = 'Рецепт додано!';
+        toast.textContent = 'Recipe added!';
 
         form.parentElement.insertBefore(toast, form);
         setTimeout(() => {
