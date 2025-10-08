@@ -102,11 +102,16 @@ export function recipesPage() {
     const recipesContainer = document.getElementById("recipes");
     if (recipesContainer) {
         recipesContainer.addEventListener("click", (e) => {
-            const card = e.target.closest(".recipe-card");
-            if (!card) return;
-            const id = card.getAttribute("data-id");
-            if (!id) return;
-            showRecipeDetail(id);
+            if (e.target.tagName === 'H2') {
+                const card = e.target.closest(".recipe-card");
+                if (!card) return;
+                const id = card.getAttribute("data-id");
+                if (!id) return;
+                showRecipeDetail(id);
+                return;
+            }
+            
+            // ... тут можна додати обробку кнопок
         });
     }
 }
