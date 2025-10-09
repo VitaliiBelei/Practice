@@ -1,5 +1,5 @@
 import {addRecipe, saveProfile, loadProfile, loadProfiles, saveSession, loadSession, clearSession, updateProfile, loadUserRecipes, getRecipeById, deleteProfile } from "./store.js";
-import {recipeFormHTML, recipeFormButtons, editFormAdd, collectIngredients, collectSteps} from "./ui/recipeForm.js";
+import {recipeFormHTML, recipeFormButtons, editFormAdd, collectIngredients, collectSteps, collectImage} from "./ui/recipeForm.js";
 import {recipeCard} from "./ui/recipeCard.js";
 import {validateRecipe} from "./ui/validation.js";
 import {loadProfilePage, registerProfile, loginProfile, editProfile} from "./ui/profile.js";
@@ -153,6 +153,35 @@ export function addPage() {
         });
     };
 
+    const mainImageInput = document.querySelector(".add-mainimage");
+    const addImageBtn = document.querySelector(".add-mainimage-btn");
+    let mainImageData = "img/norecipe.png";
+    
+    if (addImageBtn && mainImageInput) {
+        addImageBtn.addEventListener("click", () => {
+            mainImageInput.click();
+        });
+    }
+    
+    if (mainImageInput) {
+        mainImageInput.addEventListener("change", (e) => {
+            const file = mainImageInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    mainImageData = ev.target.result;
+                    // Update preview image if it exists
+                    const imagePreview = document.getElementById("imagePreview-new");
+                    if (imagePreview) {
+                        imagePreview.src = ev.target.result;
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+    
+
     form.addEventListener("submit", (e) => {
         e.preventDefault();
 
@@ -173,6 +202,7 @@ export function addPage() {
             type: "local",
             isFavorite,
             profileId: session.profileId,
+            mainImage: mainImageData,
         };
         
         const valid = validateRecipe(newRecipe);

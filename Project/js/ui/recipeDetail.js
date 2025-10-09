@@ -7,6 +7,9 @@ export function renderRecipeDetail(recipe) {
             <div class="container">
                 <button id="backToRecipes" class="back-btn">← Back to Recipes</button>
                 <h2 class="title">${recipe.title}</h2>
+                <div class="recipe-main-image">
+                    <img src="${recipe.mainImage ?? 'img/norecipe.png'}" alt="Image of ${recipe.title}">
+                </div>
                 <p><strong>Time:</strong> ${recipe.time} minutes</p>
                 <p><strong>Servings:</strong> ${recipe.servings}</p>
                 <h3 class="subtitle">Ingredients:</h3>

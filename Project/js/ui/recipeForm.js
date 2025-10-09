@@ -68,6 +68,15 @@ export function recipeFormHTML(recipe, mode = "edit") {
                 : ""
             }
 
+            <div class="main-image-input">
+                <label for="editImageUrl-${formId}">
+                    Add Image
+                </label>
+                <img src="${recipe.mainImage ?? "img/norecipe.png"}" alt="Image preview" id="imagePreview-${formId}">
+                <input type="file" accept="image/*" class="add-mainimage" id="fileInput-${formId}" style="display: none;">
+                <button type="button" class="add-mainimage-btn" data-recipe-id="${formId}">Add image</button>
+            </div>
+
             <fieldset name="ingredients">
                 <legend>Ingredients</legend>
                 <div id="editIngredients-${formId}">
@@ -96,6 +105,31 @@ export function recipeFormHTML(recipe, mode = "edit") {
 export function editFormAdd(id) {
     const editForm = document.getElementById(`editForm-${id}`);
     if (!editForm) return;
+    
+    // Handle image upload
+    const addImageBtn = editForm.querySelector(".add-mainimage-btn");
+    const fileInput = editForm.querySelector(".add-mainimage");
+    const imagePreview = editForm.querySelector(`#imagePreview-${id}`);
+    
+    if (addImageBtn && fileInput) {
+        addImageBtn.addEventListener("click", () => {
+            fileInput.click();
+        });
+        
+        fileInput.addEventListener("change", (e) => {
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    if (imagePreview) {
+                        imagePreview.src = ev.target.result;
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+    
     const addIngBtn = editForm.querySelector(".add-ingredient");
 
     addIngBtn.addEventListener("click", () => {
@@ -175,6 +209,11 @@ export function collectSteps(editSteps) {
     return steps;
 };
 
+export function collectImage(formId) {
+    const imagePreview = document.getElementById(`imagePreview-${formId}`);
+    return imagePreview ? imagePreview.src : "img/norecipe.png";
+};
+
 
 // Handle buttons in recipe cards: favorite, delete, edit
 export function recipeFormButtons(onRefresh) {
@@ -242,6 +281,7 @@ export function recipeFormButtons(onRefresh) {
                 servings: Number(editServings.value),
                 ingredients: collectIngredients(editIngredients),
                 steps: collectSteps(editSteps),
+                mainImage: collectImage(id),
             };
 
             const valid = validateRecipe(patch);

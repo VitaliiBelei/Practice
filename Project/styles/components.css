@@ -8,3 +8,30 @@
 #nav a.is-active { font-weight:700; border-bottom:2px solid var(--primary); }
 
 #nav a:focus-visible { outline-color: var(--primary); }
+
+/* Recipes cards styles */
+.recipe-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    background: var(--card-bg);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s ease;
+    display: flex;
+}
+
+.recipe-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.recipe-image, .recipe-main-image {
+    flex-shrink: 0;
+    width: 150px;
+    height: 150px;
+    margin-right: 16px;
+    margin-left: 16px;
+    margin-top: 19px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #f0f0f0;
+}
