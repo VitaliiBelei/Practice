@@ -1,4 +1,4 @@
-import { loadSession, loadUserRecipes } from "../store.js";
+import { loadSession, loadUserRecipes, getRecipeById } from "../store.js";
 import { recipeCard } from "../ui/recipe.js";
 import { recipeFormButtons } from "../ui/recipeForm/buttons.js";
 import { createNavigation } from "../ui/navigation.js";
@@ -35,5 +35,26 @@ export function favoritesPage() {
         renderRecipes(filtered);
     };
 
-    recipeFormButtons(refresh);       
+    recipeFormButtons(refresh);
+
+    const showRecipeDetail = async (id) => {
+        const recipe = getRecipeById(id);
+        if (!recipe) return;
+        const { renderRecipeDetail } = await import("../ui/recipe.js");
+        renderRecipeDetail(recipe);
+    };
+
+    const recipesContainer = document.getElementById("recipes");
+    if (recipesContainer) {
+        recipesContainer.addEventListener("click", (e) => {
+            if (e.target.tagName === 'H2') {
+                const card = e.target.closest(".recipe-card");
+                if (!card) return;
+                const id = card.getAttribute("data-id");
+                if (!id) return;
+                showRecipeDetail(id);
+                return;
+            }
+        });
+    }
 };
