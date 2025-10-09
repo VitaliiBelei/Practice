@@ -4,7 +4,7 @@ const app = document.getElementById("app");
 const routes = new Set(['#/home', '#/profile', '#/recipes', '#/add', '#/favorites']);
 
 function handleRoute() {
-    const hash = window.location.hash;
+    const hash = window.location.hash.split('?')[0]; // Remove URL parameters for route matching
     if (!hash || hash === '#') {
         window.location.replace('#/home');
         return;
@@ -16,7 +16,7 @@ function handleRoute() {
     }
     
     render(hash);
-    updateActiveNav(hash);
+    setTimeout(() => updateActiveNav(hash), 10);
 }
 
 function render(hash) {
@@ -45,7 +45,8 @@ function updateActiveNav(hash) {
     const nav = document.getElementById('nav');
     if (!nav) return;
     nav.querySelectorAll('a').forEach(a => {
-        if (a.getAttribute('href') === hash) {
+        const href = a.getAttribute('href');
+        if (href === hash) {
             a.classList.add('is-active');
             a.setAttribute('aria-current', 'page');
         } else {

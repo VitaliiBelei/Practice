@@ -1,3 +1,5 @@
+// Profile display and editing components
+
 export function loadProfilePage(profile = null, mode = "unlogin") {
     const app = document.getElementById("app");
     app.innerHTML = `
@@ -21,57 +23,6 @@ export function loadProfilePage(profile = null, mode = "unlogin") {
             <h3>Welcome to Cookbook Social! Your place to share recipes, discover new flavors, and connect with food lovers from around the world. Save your favorite dishes, customize your cooking profile, and make every meal a story worth sharing.</h3>
             `
         }
-    `;
-    const nav = document.getElementById('nav');
-    nav.innerHTML = `
-        
-        ${mode === "login" && profile
-            ? `
-                <button id="logoutBtn">Logout</button> 
-                <button id="editProfileBtn">Edit Profile</button>
-                <button id="settingsBtn">Settings</button>
-                <a href="#/profile" aria-current="page" class="is-active" id="profilePage">Profile</a>
-                <a href="#/recipes">Recipes</a>
-                <a href="#/add">Add</a>
-                <a href="#/favorites">Favorites</a>
-            `
-            :`
-                <button id="registerBtn">Register</button>
-                <button id="loginBtn">Login</button>
-            `
-        }
-    `;
-}
-
-export function registerProfile() {
-    const app = document.getElementById("app");
-    app.innerHTML = `
-        <h2>Register</h2>
-        <form id="registerForm">
-            <label for="foto">Profile Photo URL:</label>
-            <input type="file" name="foto" accept="image/*">
-            <label for="name">Name:</label>
-            <input type="text" name="name" required>
-            <label for="email">Email:</label>
-            <input type="email" name="email" required>
-            <label for="password">Password:</label>
-            <input type="password" name="password" required>
-            <button type="submit">Register</button>
-        </form>
-    `;
-}
-
-export function loginProfile() {
-    const app = document.getElementById("app");
-    app.innerHTML = `
-        <h2>Login</h2>
-        <form id="loginForm">
-            <label for="email">Email:</label>
-            <input type="email" name="email" required>
-            <label for="password">Password:</label>
-            <input type="password" name="password" required>
-            <button type="submit">Login</button>
-        </form>
     `;
 }
 

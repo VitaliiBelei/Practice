@@ -17,7 +17,7 @@ export function loadRecipes() {
 
 export function loadUserRecipes(id) {
     const list = loadRecipes();
-    return list.filter(recipe => recipe.profileId === id || null);
+    return list.filter(recipe => recipe.profileId === id);
 }
 
 export function saveRecipes(list) {
@@ -46,7 +46,7 @@ export function getRecipeById(id) {
 export function updateRecipe(id, patch) {
     const list = loadRecipes();
     const index = list.findIndex(r => r.id === id);
-    if (index === -1) return console.error("Resipe is not found");
+    if (index === -1) return console.error("Recipe is not found");
 
     list[index] = {
         ...list[index],
@@ -66,7 +66,7 @@ export function deleteRecipe(id) {
 export function toggleFavorite(id) {
     const list = loadRecipes();
     const index = list.findIndex(r => r.id === id);
-    if (index === -1) return console.error("Resipe is not found");
+    if (index === -1) return console.error("Recipe is not found");
     
     list[index] = {
         ...list[index],
