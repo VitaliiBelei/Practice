@@ -7,15 +7,18 @@ export function recipeCard(recipe) {
         <article class="recipe-card" data-id="${recipe.id}">
             <div>
                 <h2>${recipe.title}</h2>
-                <p>Category: ${category}</p>
-                <p>Time: ${recipe.time}</p>
-                <button type="button" class="fav-btn" 
-                    aria-label="${recipe.isFavorite ? "Unmark as favorite" : "Mark as favorite"}"
-                    aria-pressed="${recipe.isFavorite ? "true" : "false"}">
-                    ${recipe.isFavorite ? "★" : "☆"}
-                </button>
-                <button type="button" class="edit-btn" aria-label="Edit recipe">Edit</button>
-                <button type="button" class="delete-btn" aria-label="Delete recipe">Delete</button>
+                <p><strong>Category:</strong> ${category}</p>
+                <p><strong>Time:</strong> ${recipe.time} minutes</p>
+                <p><strong>Servings:</strong> ${recipe.servings}</p>
+                <div class="button-group">
+                    <button type="button" class="fav-btn" 
+                        aria-label="${recipe.isFavorite ? "Unmark as favorite" : "Mark as favorite"}"
+                        aria-pressed="${recipe.isFavorite ? "true" : "false"}">
+                        ${recipe.isFavorite ? "★" : "☆"}
+                    </button>
+                    <button type="button" class="edit-btn" aria-label="Edit recipe">Edit</button>
+                    <button type="button" class="delete-btn btn-error" aria-label="Delete recipe">Delete</button>
+                </div>
             </div>
             <div class="recipe-image" data-id="${recipe.id}">
                 <img src="${recipe.mainImage ?? 'img/norecipe.png'}" alt="Image of ${recipe.title}">
