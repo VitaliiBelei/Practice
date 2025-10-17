@@ -1,6 +1,7 @@
 import { loadSession, loadProfile, clearSession, updateProfile, deleteProfile } from "../store.js";
 import { loadProfilePage, editProfile } from "../ui/profile.js";
 import { createNavigation } from "../ui/navigation.js";
+import { handleFileInput } from "../utils/fileHandler.js";
 
 // Settings rendering function (moved from ui/settings.js)
 function renderSettings() {
@@ -50,19 +51,17 @@ function setupEditProfileForm(profile, session) {
     
     const fotoInput = editProfileForm.querySelector("input[name='foto']");
     let fotoData = profile.foto || "img/foto.png";
-    
+
     if (fotoInput) {
-        fotoInput.onchange = (e) => {
-            const file = fotoInput.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(ev) {
-                    fotoData = ev.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        };
-    }
+            handleFileInput(fotoInput, (result) => {
+                fotoData = result;
+                // Update preview image if it exists
+                const imagePreview = document.getElementById("imagePreview-profile");
+                if (imagePreview) {
+                    imagePreview.src = result;
+                }
+            });
+        }
     
     editProfileForm.addEventListener("submit", (e) => {
         e.preventDefault();

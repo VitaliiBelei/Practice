@@ -13,20 +13,25 @@ export function recipesPage() {
             <form id="searchForm">
                 <label for="searchInput">
                     Search recipes
-                    <input type="text" id="searchInput" placeholder="Recipe">
+                    <div>
+                        <input type="text" id="searchInput" placeholder="Recipe">
+                        <select id="category">
+                            <option value="all">All categories</option>       
+                            <option value="breakfasts">Breakfasts</option>
+                            <option value="dinners">Dinners</option>
+                            <option value="salads">Salads</option>
+                            <option value="soups">Soups</option>
+                            <option value="meat">Meat</option>
+                            <option value="fish">Fish</option>
+                        </select>
+                        <label><input type="checkbox" id="onlyFav"> Only favorites</label>
+                        <button type="reset" id="resetBtn">Reset</button>
+                    </div>
                 </label>
-                <button type="reset" id="resetBtn">Reset</button>
+                
             </form>
-        <select id="category">
-            <option value="all">All categories</option>       
-            <option value="breakfasts">Breakfasts</option>
-            <option value="dinners">Dinners</option>
-            <option value="salads">Salads</option>
-            <option value="soups">Soups</option>
-            <option value="meat">Meat</option>
-            <option value="fish">Fish</option>
-        </select>
-        <label><input type="checkbox" id="onlyFav"> Only favorites</label>
+        
+        
         </div>
         <div id="recipes"></div>
         <p id="counter" aria-live="polite"></p>

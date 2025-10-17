@@ -1,6 +1,6 @@
 import { loadSession, loadProfiles, saveProfile, saveSession } from "../store.js";
-import { loadProfilePage } from "../ui/profile.js";
 import { registerProfile, loginProfile } from "../ui/auth.js";
+import { handleFileInput } from "../utils/fileHandler.js";
 
 export function homePage() {
     const session = loadSession();
@@ -38,15 +38,13 @@ export function homePage() {
                     let fotoData = "img/foto.png";
                     
                     if (fotoInput) {
-                        fotoInput.addEventListener("change", (e) => {
-                            const file = fotoInput.files[0];
-                            if (file) {
-                                const reader = new FileReader();
-                                reader.onload = function(ev) {
-                                    fotoData = ev.target.result;
-                                };
-                                reader.readAsDataURL(file);
-                            }
+                        handleFileInput(fotoInput, (result) => {
+                        fotoData = result;
+                        // Update preview image if it exists
+                        const imagePreview = document.getElementById("imagePreview-profile");
+                        if (imagePreview) {
+                            imagePreview.src = result;
+                        }
                         });
                     }
                     

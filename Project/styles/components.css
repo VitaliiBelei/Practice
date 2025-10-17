@@ -182,11 +182,35 @@ textarea {
     background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: var(--radius);
+    width: 100%;
 }
 
 #searchForm {
-    flex: 1;
+    display: flex;
     margin: 0;
+    align-items: stretch;
+    gap: 0.5rem;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+#searchForm > label > div{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+#searchForm > label > div > label {
+    display: flex;
+    width: 25%;
+    align-items: center;
+    gap: 0.5rem;
+    padding-left: 3%;
+    padding-right: 3%;
+}
+
+#category {
+    width: 25%;
 }
 
 /* Form errors */
@@ -351,7 +375,7 @@ legend {
 
 /* ===== UTILITY CLASSES ===== */
 .recipes-container {
-    display: grid;
+    display: block;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: var(--space-4);
     margin-bottom: var(--space-6);
@@ -437,3 +461,27 @@ legend {
     justify-content: center;
     align-items: center;
 }
+
+.userProfile {
+    display: flex;
+    margin: auto;
+    justify-content: space-around;
+}
+
+.profileInfo {
+    align-self: flex-end;
+    ;
+
+}
+
+main > h2 {
+    text-align: center;
+}
+
+#imagePreview-profile {
+    width: 35%;
+    height: auto;
+    margin: 0 auto;
+}
+
+
