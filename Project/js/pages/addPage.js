@@ -47,16 +47,10 @@ export function addPage() {
         });
     };
 
-    const mainImageInput = document.querySelector(".add-mainimage");
-    const addImageBtn = document.querySelector(".add-mainimage-btn");
     let mainImageData = "img/norecipe.png";
     
-    if (addImageBtn && mainImageInput) {
-        addImageBtn.addEventListener("click", () => {
-            mainImageInput.click();
-        });
-    }
-    
+    // Use handleFileInput utility to avoid duplication
+    const mainImageInput = document.querySelector(".add-mainimage");
     if (mainImageInput) {
         handleFileInput(mainImageInput, (result) => {
             mainImageData = result;

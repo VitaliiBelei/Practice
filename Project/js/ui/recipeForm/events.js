@@ -4,27 +4,13 @@ export function editFormAdd(id) {
     const editForm = document.getElementById(`editForm-${id}`);
     if (!editForm) return;
     
-    // Handle image upload
+    // Handle image upload button click (file input handling is done elsewhere)
     const addImageBtn = editForm.querySelector(".add-mainimage-btn");
     const fileInput = editForm.querySelector(".add-mainimage");
-    const imagePreview = editForm.querySelector(`#imagePreview-${id}`);
     
     if (addImageBtn && fileInput) {
         addImageBtn.addEventListener("click", () => {
             fileInput.click();
-        });
-        
-        fileInput.addEventListener("change", (e) => {
-            const file = fileInput.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(ev) {
-                    if (imagePreview) {
-                        imagePreview.src = ev.target.result;
-                    }
-                };
-                reader.readAsDataURL(file);
-            }
         });
     }
     

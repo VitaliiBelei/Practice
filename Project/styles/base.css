@@ -55,7 +55,7 @@
 /* Dark theme support */
 @media (prefers-color-scheme: dark) {
     :root {
-        --bg: #0f172a;
+        --bg: #272c5a;
         --text: #f1f5f9;
         --border: #334155;
         --card-bg: #1e293b;

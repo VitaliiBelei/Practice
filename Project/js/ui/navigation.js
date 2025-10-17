@@ -4,6 +4,7 @@ import { registerProfile, loginProfile } from "./auth.js";
 
 export function createNavigation() {
     const nav = document.getElementById('nav');
+    const buttons = document.getElementById('buttons');
     if (!nav) return;
 
     const session = loadSession();
@@ -12,13 +13,15 @@ export function createNavigation() {
     if (session && profile) {
         // Logged in navigation
         nav.innerHTML = `
-            <button id="logoutBtn">Logout</button> 
-            <button id="editProfileBtn">Edit Profile</button>
-            <button id="settingsBtn">Settings</button>
             <a href="#/profile" id="profilePage">Profile</a>
             <a href="#/recipes">Recipes</a>
             <a href="#/add">Add</a>
             <a href="#/favorites">Favorites</a>
+        `;
+        buttons.innerHTML = `
+            <button id="logoutBtn">Logout</button> 
+            <button id="editProfileBtn">Edit Profile</button>
+            <button id="settingsBtn">Settings</button>
         `;
 
         // Add logout functionality
@@ -53,6 +56,7 @@ export function createNavigation() {
             <button id="registerBtn">Register</button>
             <button id="loginBtn">Login</button>
         `;
+        buttons.innerHTML = '';
 
         // Add register functionality
         const registerBtn = document.getElementById("registerBtn");

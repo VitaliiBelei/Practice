@@ -25,44 +25,47 @@ export function recipeFormHTML(recipe, mode = "edit") {
 
     return `
         <form id="editForm-${formId}">
-            <label for="editTitle-${formId}">
-                Title
-            </label>
-            <input id="editTitle-${formId}" name="title" value="${recipe.title ?? ""}" autofocus>
+            
+                <label for="editTitle-${formId}">
+                    Title
+                </label>
+                <input id="editTitle-${formId}" name="title" value="${recipe.title ?? ""}" autofocus>
+            <div class = 'editForm'>
+                <label for="editCategory-${formId}">
+                    Category
+                </label>
+                <select id="editCategory-${formId}" name="category">
+                    <option value="breakfasts" ${recipe.category === "breakfasts" ? "selected" : ""}>Breakfasts</option>
+                    <option value="dinners"    ${recipe.category === "dinners"    ? "selected" : ""}>Dinners</option>
+                    <option value="salads"     ${recipe.category === "salads"     ? "selected" : ""}>Salads</option>
+                    <option value="soups"      ${recipe.category === "soups"      ? "selected" : ""}>Soups</option>
+                    <option value="meat"       ${recipe.category === "meat"       ? "selected" : ""}>Meat</option>
+                    <option value="fish"       ${recipe.category === "fish"       ? "selected" : ""}>Fish</option>
+                </select>
 
-            <label for="editCategory-${formId}">
-                Category
-            </label>
-            <select id="editCategory-${formId}" name="category">
-                <option value="breakfasts" ${recipe.category === "breakfasts" ? "selected" : ""}>Breakfasts</option>
-                <option value="dinners"    ${recipe.category === "dinners"    ? "selected" : ""}>Dinners</option>
-                <option value="salads"     ${recipe.category === "salads"     ? "selected" : ""}>Salads</option>
-                <option value="soups"      ${recipe.category === "soups"      ? "selected" : ""}>Soups</option>
-                <option value="meat"       ${recipe.category === "meat"       ? "selected" : ""}>Meat</option>
-                <option value="fish"       ${recipe.category === "fish"       ? "selected" : ""}>Fish</option>
-            </select>
+                <label for="editTime-${formId}">
+                    Time
+                </label>
+                <input id="editTime-${formId}" name="time" type="number" value="${recipe.time ?? 1}">
 
-            <label for="editTime-${formId}">
-                Time
-            </label>
-            <input id="editTime-${formId}" name="time" type="number" value="${recipe.time ?? 1}">
-
-            <label for="editServings-${formId}">
-                Servings
-            </label>
-            <input id="editServings-${formId}" name="servings" type="number" value="${recipe.servings ?? 1}">
-
-            ${mode === "add"
-                ? `<button 
-                    type="button" 
-                    class="fav-btn" 
-                    title="Mark/Unmark as favorite"
-                    id="favBtn-${formId}"
-                    aria-label="${recipe.isFavorite ? 'Unmark as favorite' : 'Mark as favorite'}"
-                    aria-pressed="${recipe.isFavorite ? 'true' : 'false'}"
-                    >${recipe.isFavorite ? '★' : '☆'}</button>` 
-                : ""
-            }
+                <label for="editServings-${formId}">
+                    Servings
+                </label>
+                <input id="editServings-${formId}" name="servings" type="number" value="${recipe.servings ?? 1}">
+            
+            
+                ${mode === "add"
+                    ? `<button 
+                        type="button" 
+                        class="fav-btn" 
+                        title="Mark/Unmark as favorite"
+                        id="favBtn-${formId}"
+                        aria-label="${recipe.isFavorite ? 'Unmark as favorite' : 'Mark as favorite'}"
+                        aria-pressed="${recipe.isFavorite ? 'true' : 'false'}"
+                        >${recipe.isFavorite ? '★' : '☆'}</button>` 
+                    : ""
+                }
+            </div>
 
             <div class="main-image-input">
                 <label for="editImageUrl-${formId}">
@@ -89,9 +92,11 @@ export function recipeFormHTML(recipe, mode = "edit") {
                 <button type="button" class="add-step" data-recipe-id="${formId}">+ Add step</button>
             </fieldset>
             
-            <button type="submit" class="editButton" id="editButton-${formId}">${mode === "add" ? "Add recipe" : "Confirm"}</button>
+            <div class = 'editButtons'>
+                <button type="submit" class="editButton" id="editButton-${formId}">${mode === "add" ? "Add recipe" : "Confirm"}</button>
 
-            <button type="button" class="editButton" id="cancelEdit-${formId}">Cancel</button>
+                <button type="button" class="editButton" id="cancelEdit-${formId}">Cancel</button>
+            </div>
         </form>
     `;
 };
