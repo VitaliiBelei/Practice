@@ -54,7 +54,6 @@ export async function addPage() {
     if (mainImageInput) {
         handleFileInput(mainImageInput, (result) => {
             mainImageData = result;
-            // Update preview image if it exists
             const imagePreview = document.getElementById("imagePreview-new");
             if (imagePreview) {
                 imagePreview.src = result;

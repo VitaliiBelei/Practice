@@ -1,6 +1,7 @@
 import { loadSession, saveProfile, saveSession } from "../store.js";
 import { registerProfile, loginProfile } from "../ui/auth.js";
 import { handleFileInput } from "../utils/fileHandler.js";
+import { validateProfile } from "../ui/recipeForm/validation.js";
 
 export function homePage() {
     const session = loadSession();
@@ -65,6 +66,11 @@ export function homePage() {
                             }
                         };
                         try {
+                            const isValid = await validateProfile();
+                            if (!isValid) {
+                                alert ('Email olredy used! Change email.');
+                                return;
+                            }
                             await saveProfile(profile);
                             const session = {profileId: profile.profileId, status: "login", loggetAt: new Date().toISOString()};
                             saveSession(session);

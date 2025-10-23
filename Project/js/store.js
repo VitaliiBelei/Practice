@@ -106,6 +106,18 @@ export async function toggleFavorite(id) {
     }
 }
 
+export async function loadProfiles() {
+    try {
+        const response = await fetch ('http://localhost:3001/profiles');
+        if (!response.ok) throw new Error("Error loading profile");
+        const profiles = await response.json();
+        return profiles || null; 
+    } catch (error) {
+        console.error("Error loading profile:", error); 
+        throw error;
+    }
+}
+
 export async function loadProfile(profileId) {
     try {
         const response = await fetch (`http://localhost:3001/profiles?profileId=${profileId}`);

@@ -1,3 +1,5 @@
+import { loadProfiles } from "../../store.js";
+
 export function validateRecipe(patch) {
     const form = document.getElementById(`editForm-${patch.id || "new"}`);
     
@@ -88,4 +90,27 @@ export function validateRecipe(patch) {
     }
 
     return true;
-}
+};
+
+export async function validateProfile () {
+    const registerForm = document.getElementById('registerForm');
+    const emailInput = registerForm.querySelector("input[name='email']");
+    
+    if (!emailInput) {
+        console.log('Email input not found');
+        return false;
+    }
+    
+    const profiles = await loadProfiles();
+    if (!profiles) {
+        console.log('Load of profiles is failed');
+        return false;
+    }
+    for (const profile of profiles) {
+        if (profile.email === emailInput.value.trim().toLowerCase()) {
+            console.log('Email already exist');
+            return false;
+        }
+    }
+    return true;
+};
