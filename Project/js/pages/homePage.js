@@ -1,4 +1,4 @@
-import { loadSession, loadProfiles, saveProfile, saveSession } from "../store.js";
+import { loadSession, saveProfile, saveSession } from "../store.js";
 import { registerProfile, loginProfile } from "../ui/auth.js";
 import { handleFileInput } from "../utils/fileHandler.js";
 
@@ -48,7 +48,7 @@ export function homePage() {
                         });
                     }
                     
-                    registerForm.addEventListener("submit", (e) => {
+                    registerForm.addEventListener("submit", async (e) => {
                         e.preventDefault();
                         const profile = {
                             name: nameInput.value.trim(),
@@ -64,10 +64,15 @@ export function homePage() {
                                 units: "metric"
                             }
                         };
-                        saveProfile(profile);
-                        const session = {profileId: profile.profileId, status: "login", loggetAt: new Date().toISOString()};
-                        saveSession(session);
-                        window.location.hash = "#/profile";
+                        try {
+                            await saveProfile(profile);
+                            const session = {profileId: profile.profileId, status: "login", loggetAt: new Date().toISOString()};
+                            saveSession(session);
+                            window.location.hash = "#/profile";
+                        } catch (error) {
+                            console.error("Registration failed:", error);
+                            alert("Registration failed: " + error.message);
+                        }
                     });
                 }, 100);
             });
@@ -81,28 +86,36 @@ export function homePage() {
                     const loginForm = document.getElementById("loginForm");
                     if (!loginForm) return;
                     
-                    loginForm.addEventListener("submit", (e) => {
+                    loginForm.addEventListener("submit", async (e) => {
                         e.preventDefault();
                         const emailInput = loginForm.querySelector("input[name='email']");
                         const passwordInput = loginForm.querySelector("input[name='password']");
                         if (!emailInput || !passwordInput) return;
                         
-                        const profiles = loadProfiles();
-                        const profile = profiles.find(p => p.email === emailInput.value.trim().toLowerCase());
-                        
-                        if (!profile) {
-                            alert("No user with this email");
-                            return;
+                        try {
+                            // Get all profiles from server
+                            const response = await fetch('http://localhost:3001/profiles');
+                            if (!response.ok) throw new Error("Failed to load profiles");
+                            const profiles = await response.json();
+                            const profile = profiles.find(p => p.email === emailInput.value.trim().toLowerCase());
+                            
+                            if (!profile) {
+                                alert("No user with this email");
+                                return;
+                            }
+                            
+                            if (profile.password !== passwordInput.value.trim()) {
+                                alert("Wrong password");
+                                return;
+                            }
+                            
+                            const session = {profileId: profile.profileId, status: "login", loggetAt: new Date().toISOString()};
+                            saveSession(session);
+                            window.location.hash = "#/profile";
+                        } catch (error) {
+                            console.error("Login failed:", error);
+                            alert("Login failed. Please try again.");
                         }
-                        
-                        if (profile.password !== passwordInput.value.trim()) {
-                            alert("Wrong password");
-                            return;
-                        }
-                        
-                        const session = {profileId: profile.profileId, status: "login", loggetAt: new Date().toISOString()};
-                        saveSession(session);
-                        window.location.hash = "#/profile";
                     });
                 }, 100);
             });

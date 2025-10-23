@@ -19,22 +19,22 @@ function handleRoute() {
     setTimeout(() => updateActiveNav(hash), 10);
 }
 
-function render(hash) {
+async function render(hash) {
     switch (hash) {
         case "#/home":
             homePage();
             break;
         case "#/profile":
-            profilePage();
+            await profilePage();
             break;
         case "#/recipes":
-            recipesPage();
+            await recipesPage();
             break;
         case "#/add":
-            addPage();
+            await addPage();
             break;
         case "#/favorites":
-            favoritesPage();
+            await favoritesPage();
             break;
         default:
             app.innerHTML = "<h1>404</h1><p>Page not found</p>";

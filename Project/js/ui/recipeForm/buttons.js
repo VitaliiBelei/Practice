@@ -7,7 +7,7 @@ import { collectIngredients, collectSteps, collectImage } from "./data.js";
 // Handle buttons in recipe cards: favorite, delete, edit
 export function recipeFormButtons(onRefresh) {
     const recipesContainer = document.getElementById("recipes");
-    recipesContainer.addEventListener("click", event => {
+    recipesContainer.addEventListener("click", async event => {
         const btn = event.target.closest("button");
         if (!btn) return;
 
@@ -16,7 +16,7 @@ export function recipeFormButtons(onRefresh) {
             if (!article) return;
             const id = article.dataset.id;
             if (!id) return;
-            toggleFavorite(id);
+            await toggleFavorite(id);
             onRefresh();
             return;
         }
@@ -26,7 +26,7 @@ export function recipeFormButtons(onRefresh) {
             if (!article) return;
             const id = article.dataset.id;
             if (confirm("Delete recipe?")) {
-            deleteRecipe(id);
+            await deleteRecipe(id);
             onRefresh();
             }
             return;
@@ -36,7 +36,7 @@ export function recipeFormButtons(onRefresh) {
             const article = btn.closest("article");
             if (!article) return;
             const id = article.dataset.id;
-            const recipe = getRecipeById(id);
+            const recipe = await getRecipeById(id);
             const existingForm = document.querySelector('[id^="editForm-"]');
             if (existingForm) existingForm.remove();
                                
@@ -57,7 +57,7 @@ export function recipeFormButtons(onRefresh) {
 
             collectSteps(editSteps);
 
-            editForm.addEventListener("submit", (event) => {                
+            editForm.addEventListener("submit", async (event) => {                
             event.preventDefault();
 
             if (!editForm) return;
@@ -76,7 +76,7 @@ export function recipeFormButtons(onRefresh) {
             const valid = validateRecipe(patch);
             if (!valid) return;
             
-            updateRecipe(id, patch);
+            await updateRecipe(id, patch);
 
             onRefresh();
 

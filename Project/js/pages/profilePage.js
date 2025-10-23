@@ -139,11 +139,11 @@ function setupSettingsForm(profile, session) {
     });
 }
 
-export function profilePage(){
-    createNavigation();
+export async function profilePage(){
+    await createNavigation();
     
     const session = loadSession();
-    const profile = session ? loadProfile(session.profileId) : null;
+    const profile = session ? await loadProfile(session.profileId) : null;
     
     // Check URL hash parameters for actions
     const hash = window.location.hash;
@@ -248,8 +248,8 @@ export function profilePage(){
     initProfileButtons(profile, session);
     const profilePageLoad = document.getElementById("profilePage");
     if (profilePageLoad) {
-        profilePageLoad.addEventListener("click", () => {
-            profilePage();
+        profilePageLoad.addEventListener("click", async () => {
+            await profilePage();
         });
     }
     

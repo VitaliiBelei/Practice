@@ -1,11 +1,10 @@
 import { loadSession, loadUserRecipes, getRecipeById } from "../store.js";
-import { recipeCard } from "../ui/recipe.js";
 import { recipeFormButtons } from "../ui/recipeForm/buttons.js";
 import { createNavigation } from "../ui/navigation.js";
 import { renderRecipes } from "../ui/recipeList.js";
 
-export function recipesPage() {
-    createNavigation();
+export async function recipesPage() {
+    await createNavigation();
     
     const app = document.getElementById("app");
     app.innerHTML = `
@@ -39,7 +38,7 @@ export function recipesPage() {
 
     const session = loadSession();
     const id = session.profileId;
-    const allRecipes = loadUserRecipes(id);
+    const allRecipes = await loadUserRecipes(id);
     renderRecipes(allRecipes);
 
     const searchForm = document.getElementById("searchForm")
@@ -58,8 +57,8 @@ export function recipesPage() {
         setTimeout(refresh, 0);
     });
 
-    function searchRecipe () {
-    const list = loadUserRecipes(id);
+    async function searchRecipe () {
+    const list = await loadUserRecipes(id);
     const q = search.value.trim().toLowerCase();
     const filtered = list.filter(recipe => 
         (!onlyFav.checked || recipe.isFavorite)   &&
@@ -76,7 +75,7 @@ export function recipesPage() {
     recipeFormButtons(refresh);
 
     const showRecipeDetail = async (id) => {
-        const recipe = getRecipeById(id);
+        const recipe = await getRecipeById(id);
         if (!recipe) return;
         const { renderRecipeDetail } = await import("../ui/recipe.js");
         renderRecipeDetail(recipe);

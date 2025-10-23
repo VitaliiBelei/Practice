@@ -2,13 +2,13 @@ import { loadSession, loadProfile, clearSession } from "../store.js";
 import { loadProfilePage, editProfile } from "./profile.js";
 import { registerProfile, loginProfile } from "./auth.js";
 
-export function createNavigation() {
+export async function createNavigation() {
     const nav = document.getElementById('nav');
     const buttons = document.getElementById('buttons');
     if (!nav) return;
 
     const session = loadSession();
-    const profile = session ? loadProfile(session.profileId) : null;
+    const profile = session ? await loadProfile(session.profileId) : null;
 
     if (session && profile) {
         // Logged in navigation
@@ -27,10 +27,10 @@ export function createNavigation() {
         // Add logout functionality
         const logoutBtn = document.getElementById("logoutBtn");
         if (logoutBtn) {
-            logoutBtn.addEventListener("click", () => {
+            logoutBtn.addEventListener("click", async () => {
                 clearSession();
                 loadProfilePage(null, "unlogin");
-                createNavigation(); // Recreate navigation
+                await createNavigation(); // Recreate navigation
                 window.location.hash = "#/home";
             });
         }

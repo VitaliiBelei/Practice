@@ -6,8 +6,8 @@ import { validateRecipe } from "../ui/recipeForm/validation.js";
 import { createNavigation } from "../ui/navigation.js";
 import { handleFileInput } from "../utils/fileHandler.js";
 
-export function addPage() {
-    createNavigation();
+export async function addPage() {
+    await createNavigation();
     
     const session = loadSession();
     const emptyRecipe = {
@@ -63,7 +63,7 @@ export function addPage() {
     }
     
 
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
         const editTitle = document.getElementById("editTitle-new");
@@ -89,27 +89,14 @@ export function addPage() {
         const valid = validateRecipe(newRecipe);
 
         if (!valid) return;
-        addRecipe(newRecipe);
-
-        // Toast/status message
-        const toast = document.createElement('div');
-        toast.setAttribute('role', 'status');
-        toast.style.position = 'relative';
-        toast.style.display = 'block';
-        toast.style.marginBottom = '1em';
-        toast.style.background = '#333';
-        toast.style.color = '#fff';
-        toast.style.padding = '0.5em 1em';
-        toast.style.borderRadius = '6px';
-        toast.style.fontSize = '1em';
-        toast.style.zIndex = '1000';
-        toast.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
-        toast.textContent = 'Recipe added!';
-
-        form.parentElement.insertBefore(toast, form);
-        setTimeout(() => {
-            toast.remove();
+        
+        try {
+            await addRecipe(newRecipe);
             window.location.hash = "#/recipes";
-        }, 2000);
+            window.location.reload();
+        } catch (error) {
+            console.error("Error adding recipe:", error);
+            alert("Failed to add recipe: " + error.message);
+        }
     });
 };
