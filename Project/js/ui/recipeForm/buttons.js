@@ -3,6 +3,7 @@ import { validateRecipe } from "./validation.js";
 import { recipeFormHTML } from "./html.js";
 import { editFormAdd } from "./events.js";
 import { collectIngredients, collectSteps, collectImage } from "./data.js";
+import { handleFileInput } from "../../utils/fileHandler.js";
 
 // Handle buttons in recipe cards: favorite, delete, edit
 export function recipeFormButtons(onRefresh) {
@@ -51,6 +52,18 @@ export function recipeFormButtons(onRefresh) {
             const editSteps = document.getElementById(`editSteps-${id}`);
             editCategory.value = recipe.category;
 
+            let mainImageData = "img/norecipe.png";
+            const mainImageInput = document.querySelector(".add-mainimage");
+            if (mainImageInput) {
+                handleFileInput(mainImageInput, (result) => {
+                    mainImageData = result;
+                    const imagePreview = document.getElementById(`imagePreview-${id}`);
+                    if (imagePreview) {
+                        imagePreview.src = result;
+                    }
+                });
+            }
+
             editFormAdd(id);
 
             collectIngredients(editIngredients);
@@ -70,7 +83,7 @@ export function recipeFormButtons(onRefresh) {
                 servings: Number(editServings.value),
                 ingredients: collectIngredients(editIngredients),
                 steps: collectSteps(editSteps),
-                mainImage: collectImage(id),
+                mainImage: mainImageData,
             };
 
             const valid = validateRecipe(patch);
