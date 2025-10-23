@@ -7,7 +7,7 @@ import { createNavigation } from "../ui/navigation.js";
 import { handleFileInput } from "../utils/fileHandler.js";
 
 export async function addPage() {
-    await createNavigation();
+    createNavigation();
     
     const session = loadSession();
     const emptyRecipe = {

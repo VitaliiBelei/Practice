@@ -140,7 +140,7 @@ function setupSettingsForm(profile, session) {
 }
 
 export async function profilePage(){
-    await createNavigation();
+    createNavigation();
     
     const session = loadSession();
     const profile = session ? await loadProfile(session.profileId) : null;

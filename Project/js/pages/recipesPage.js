@@ -4,7 +4,7 @@ import { createNavigation } from "../ui/navigation.js";
 import { renderRecipes } from "../ui/recipeList.js";
 
 export async function recipesPage() {
-    await createNavigation();
+    createNavigation();
     
     const app = document.getElementById("app");
     app.innerHTML = `

@@ -1,16 +1,17 @@
-import { loadSession, loadProfile, clearSession } from "../store.js";
-import { loadProfilePage, editProfile } from "./profile.js";
+import { loadSession, clearSession } from "../store.js";
+import { loadProfilePage } from "./profile.js";
 import { registerProfile, loginProfile } from "./auth.js";
 
-export async function createNavigation() {
+export function createNavigation() {
     const nav = document.getElementById('nav');
     const buttons = document.getElementById('buttons');
     if (!nav) return;
 
     const session = loadSession();
-    const profile = session ? await loadProfile(session.profileId) : null;
+    //const profile = session ? await loadProfile(session.profileId) : null;
+    //&& profile
 
-    if (session && profile) {
+    if (session ) {
         // Logged in navigation
         nav.innerHTML = `
             <a href="#/profile" id="profilePage">Profile</a>
@@ -30,7 +31,7 @@ export async function createNavigation() {
             logoutBtn.addEventListener("click", async () => {
                 clearSession();
                 loadProfilePage(null, "unlogin");
-                await createNavigation(); // Recreate navigation
+                createNavigation(); // Recreate navigation
                 window.location.hash = "#/home";
             });
         }
