@@ -1,10 +1,9 @@
 import { loadSession, loadUserRecipes, getRecipeById } from "../store.js";
-import { recipeCard } from "../ui/recipe.js";
 import { recipeFormButtons } from "../ui/recipeForm/buttons.js";
 import { createNavigation } from "../ui/navigation.js";
 import { renderRecipes } from "../ui/recipeList.js";
 
-export function recipesPage() {
+export async function recipesPage() {
     createNavigation();
     
     const app = document.getElementById("app");
@@ -13,20 +12,25 @@ export function recipesPage() {
             <form id="searchForm">
                 <label for="searchInput">
                     Search recipes
-                    <input type="text" id="searchInput" placeholder="Recipe">
+                    <div>
+                        <input type="text" id="searchInput" placeholder="Recipe">
+                        <select id="category">
+                            <option value="all">All categories</option>       
+                            <option value="breakfasts">Breakfasts</option>
+                            <option value="dinners">Dinners</option>
+                            <option value="salads">Salads</option>
+                            <option value="soups">Soups</option>
+                            <option value="meat">Meat</option>
+                            <option value="fish">Fish</option>
+                        </select>
+                        <label><input type="checkbox" id="onlyFav"> Only favorites</label>
+                        <button type="reset" id="resetBtn">Reset</button>
+                    </div>
                 </label>
-                <button type="reset" id="resetBtn">Reset</button>
+                
             </form>
-        <select id="category">
-            <option value="all">All categories</option>       
-            <option value="breakfasts">Breakfasts</option>
-            <option value="dinners">Dinners</option>
-            <option value="salads">Salads</option>
-            <option value="soups">Soups</option>
-            <option value="meat">Meat</option>
-            <option value="fish">Fish</option>
-        </select>
-        <label><input type="checkbox" id="onlyFav"> Only favorites</label>
+        
+        
         </div>
         <div id="recipes"></div>
         <p id="counter" aria-live="polite"></p>
@@ -34,7 +38,7 @@ export function recipesPage() {
 
     const session = loadSession();
     const id = session.profileId;
-    const allRecipes = loadUserRecipes(id);
+    const allRecipes = await loadUserRecipes(id);
     renderRecipes(allRecipes);
 
     const searchForm = document.getElementById("searchForm")
@@ -53,8 +57,8 @@ export function recipesPage() {
         setTimeout(refresh, 0);
     });
 
-    function searchRecipe () {
-    const list = loadUserRecipes(id);
+    async function searchRecipe () {
+    const list = await loadUserRecipes(id);
     const q = search.value.trim().toLowerCase();
     const filtered = list.filter(recipe => 
         (!onlyFav.checked || recipe.isFavorite)   &&
@@ -71,7 +75,7 @@ export function recipesPage() {
     recipeFormButtons(refresh);
 
     const showRecipeDetail = async (id) => {
-        const recipe = getRecipeById(id);
+        const recipe = await getRecipeById(id);
         if (!recipe) return;
         const { renderRecipeDetail } = await import("../ui/recipe.js");
         renderRecipeDetail(recipe);

@@ -1,37 +1,501 @@
-/* Стилі пунктів меню */
+/* ===== COMPONENT STYLES ===== */
+
+/* ===== NAVIGATION ===== */
 #nav a {
-    padding:10px 14px; border-radius: var(--radius); line-height:1;
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius);
+    line-height: 1.2;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    position: relative;
 }
 
-#nav a:hover { background: rgba(0,0,0,0.05); }
+#nav a:hover {
+    background: var(--card-shadow);
+    transform: translateY(-1px);
+}
 
-#nav a.is-active { font-weight:700; border-bottom:2px solid var(--primary); }
+#nav a.is-active {
+    font-weight: 700;
+    color: var(--primary);
+    border-bottom: 2px solid var(--primary);
+}
 
-#nav a:focus-visible { outline-color: var(--primary); }
+#nav a:focus-visible {
+    outline-color: var(--primary);
+}
 
-/* Recipes cards styles */
+/* Navigation buttons */
+#nav button {
+    padding: var(--space-2) var(--space-4);
+    border: 2px solid var(--primary);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--primary);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+#nav button:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-1px);
+}
+
+#nav button:active {
+    transform: translateY(0);
+}
+
+/* ===== BUTTONS ===== */
+button {
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card-bg);
+    color: var(--text);
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+button:hover {
+    border-color: var(--primary);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px var(--card-shadow);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Button variants */
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
+
+.btn-success {
+    background: var(--success);
+    color: white;
+    border-color: var(--success);
+}
+
+.btn-error {
+    background: var(--error);
+    color: white;
+    border-color: var(--error);
+}
+
+/* Special buttons */
+.fav-btn {
+    font-size: var(--font-size-lg);
+    padding: var(--space-1) var(--space-2);
+    border: none;
+    background: transparent;
+    color: var(--warning);
+    min-inline-size: 32px;
+}
+
+.fav-btn:hover {
+    background: rgba(245, 158, 11, 0.1);
+    transform: scale(1.1);
+}
+
+.back-btn {
+    margin-bottom: var(--space-4);
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: var(--space-2) var(--space-3);
+}
+
+.back-btn:hover {
+    background: var(--card-bg);
+    border-color: var(--primary);
+}
+
+/* ===== FORMS ===== */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+}
+
+label {
+    font-weight: 500;
+    margin-bottom: var(--space-1);
+    display: block;
+}
+
+input,
+textarea,
+select {
+    padding: var(--space-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card-bg);
+    color: var(--text);
+    font-family: inherit;
+    font-size: var(--font-size-base);
+    transition: all var(--transition-fast);
+    inline-size: 100%;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+textarea {
+    resize: vertical;
+    min-block-size: 80px;
+}
+
+/* Form controls container */
+#controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    align-items: end;
+    margin-bottom: var(--space-6);
+    padding: var(--space-4);
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    inline-size: 100%;
+}
+
+#searchForm {
+    display: flex;
+    margin: 0;
+    align-items: stretch;
+    gap: 0.5rem;
+    box-sizing: border-box;
+    inline-size: 100%;
+}
+
+#searchForm > label > div{
+    display: flex;
+    flex-direction: row;
+    inline-size: 100%;
+}
+
+#searchForm > label > div > label {
+    display: flex;
+    inline-size: 25%;
+    align-items: center;
+    gap: 0.5rem;
+    padding-left: 3%;
+    padding-right: 3%;
+}
+
+#category {
+    inline-size: 25%;
+}
+
+/* Form errors */
+.form-error {
+    color: var(--error);
+    font-size: var(--font-size-sm);
+    margin-top: var(--space-1);
+}
+
+/* Fieldsets */
+fieldset {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--space-4);
+    margin-bottom: var(--space-4);
+}
+
+legend {
+    font-weight: 600;
+    padding: 0 var(--space-2);
+}
+
+/* ===== RECIPE CARDS ===== */
 .recipe-card {
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 16px;
+    padding: var(--space-4);
     background: var(--card-bg);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: box-shadow 0.3s ease;
+    box-shadow: 0 2px 4px var(--card-shadow);
+    transition: all var(--transition-base);
     display: flex;
+    gap: var(--space-4);
+    position: relative;
+    overflow: hidden;
 }
 
 .recipe-card:hover {
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 25px var(--card-shadow-hover);
+    transform: translateY(-2px);
+    border-color: var(--primary);
 }
 
-.recipe-image, .recipe-main-image {
+.recipe-card h2 {
+    margin: 0 0 var(--space-2) 0;
+    cursor: pointer;
+    color: var(--primary);
+    transition: color var(--transition-fast);
+}
+
+.recipe-card h2:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+.recipe-card p {
+    margin: var(--space-1) 0;
+    color: var(--muted);
+    font-size: var(--font-size-sm);
+}
+
+.recipe-card > div:first-child {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.recipe-card .button-group {
+    display: flex;
+    gap: var(--space-2);
+    margin-top: auto;
+}
+
+.recipe-card button {
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--font-size-sm);
+}
+
+/* Recipe images */
+.recipe-image,
+.recipe-main-image {
     flex-shrink: 0;
-    width: 150px;
-    height: 150px;
-    margin-right: 16px;
-    margin-left: 16px;
-    margin-top: 19px;
+    inline-size: 150px;
+    block-size: 150px;
     border-radius: var(--radius);
     overflow: hidden;
     background: #f0f0f0;
+    position: relative;
 }
+
+.recipe-main-image {
+    inline-size: 100%;
+    max-inline-size: 400px;
+    block-size: 250px;
+    margin: var(--space-4) 0;
+}
+
+.recipe-image img,
+.recipe-main-image img {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-base);
+}
+
+.recipe-card:hover .recipe-image img {
+    transform: scale(1.05);
+}
+
+/* Image upload component */
+.main-image-input {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: center;
+    padding: var(--space-4);
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    transition: border-color var(--transition-fast);
+}
+
+.main-image-input:hover {
+    border-color: var(--primary);
+}
+
+.main-image-input img {
+    max-inline-size: 200px;
+    border-radius: var(--radius);
+}
+
+/* ===== FORM COMPONENTS ===== */
+.ingredient-row,
+.step-row {
+    display: flex;
+    gap: var(--space-2);
+    align-items: start;
+    margin-bottom: var(--space-2);
+    padding: var(--space-2);
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: var(--radius);
+}
+
+.ingredient-row input,
+.ingredient-row select {
+    margin: 0;
+}
+
+.ingredient-row button,
+.step-row button {
+    min-inline-size: 32px;
+    block-size: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.step-row textarea {
+    flex: 1;
+    margin: 0;
+}
+
+/* ===== UTILITY CLASSES ===== */
+.recipes-container {
+    display: block;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+}
+
+#counter {
+    text-align: center;
+    color: var(--muted);
+    font-size: var(--font-size-sm);
+    margin-top: var(--space-4);
+}
+
+/* Loading states */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Toast messages */
+.toast {
+    position: fixed;
+    top: var(--space-4);
+    right: var(--space-4);
+    background: var(--success);
+    color: white;
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 12px var(--card-shadow);
+    z-index: 1000;
+    animation: slideIn var(--transition-base);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* ===== RESPONSIVE COMPONENTS ===== */
+@media (max-width: 768px) {
+    .recipe-card {
+        flex-direction: column;
+    }
+    
+    .recipe-image {
+        inline-size: 100%;
+        block-size: 200px;
+        align-self: center;
+    }
+    
+    .recipes-container {
+        grid-template-columns: 1fr;
+    }
+    
+    #controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .ingredient-row,
+    .step-row {
+        flex-direction: column;
+        gap: var(--space-1);
+    }
+    
+    .ingredient-row button,
+    .step-row button {
+        align-self: flex-end;
+        inline-size: auto;
+        min-inline-size: auto;
+        padding: var(--space-1) var(--space-2);
+    }
+}
+
+.editForm {
+    display: flex;
+    block-size: auto;
+    justify-content: center;
+    align-items: center;
+}
+
+.userProfile {
+    display: flex;
+    margin: auto;
+    justify-content: space-around;
+}
+
+#profileFoto {
+    flex: 1;
+    text-align: center;
+}
+
+#profileFoto img {
+    inline-size: 200px;
+    block-size: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary-color);
+}
+
+.profileInfo,
+#profileInfo {
+    align-self: flex-end;
+    flex: 2;
+    padding-left: 2rem;
+}
+
+main > h2 {
+    text-align: center;
+}
+
+#imagePreview-profile {
+    inline-size: 35%;
+    block-size: auto;
+    margin: 0 auto;
+}
+
+

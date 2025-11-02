@@ -19,22 +19,22 @@ function handleRoute() {
     setTimeout(() => updateActiveNav(hash), 10);
 }
 
-function render(hash) {
+async function render(hash) {
     switch (hash) {
         case "#/home":
             homePage();
             break;
         case "#/profile":
-            profilePage();
+            await profilePage();
             break;
         case "#/recipes":
-            recipesPage();
+            await recipesPage();
             break;
         case "#/add":
-            addPage();
+            await addPage();
             break;
         case "#/favorites":
-            favoritesPage();
+            await favoritesPage();
             break;
         default:
             app.innerHTML = "<h1>404</h1><p>Page not found</p>";
@@ -46,13 +46,12 @@ function updateActiveNav(hash) {
     if (!nav) return;
     nav.querySelectorAll('a').forEach(a => {
         const href = a.getAttribute('href');
-        if (href === hash) {
-            a.classList.add('is-active');
-            a.setAttribute('aria-current', 'page');
-        } else {
+        if (href !== hash) {
             a.classList.remove('is-active');
             a.removeAttribute('aria-current');
         }
+        a.classList.add('is-active');
+        a.setAttribute('aria-current', 'page');
     });
 }
 

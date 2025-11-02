@@ -1,6 +1,7 @@
-import { loadSession, loadProfiles, saveProfile, saveSession } from "../store.js";
-import { loadProfilePage } from "../ui/profile.js";
+import { loadSession, saveProfile, saveSession } from "../store.js";
 import { registerProfile, loginProfile } from "../ui/auth.js";
+import { handleFileInput } from "../utils/fileHandler.js";
+import { validateProfile } from "../ui/recipeForm/validation.js";
 
 export function homePage() {
     const session = loadSession();
@@ -38,19 +39,17 @@ export function homePage() {
                     let fotoData = "img/foto.png";
                     
                     if (fotoInput) {
-                        fotoInput.addEventListener("change", (e) => {
-                            const file = fotoInput.files[0];
-                            if (file) {
-                                const reader = new FileReader();
-                                reader.onload = function(ev) {
-                                    fotoData = ev.target.result;
-                                };
-                                reader.readAsDataURL(file);
-                            }
+                        handleFileInput(fotoInput, (result) => {
+                        fotoData = result;
+                        // Update preview image if it exists
+                        const imagePreview = document.getElementById("imagePreview-profile");
+                        if (imagePreview) {
+                            imagePreview.src = result;
+                        }
                         });
                     }
                     
-                    registerForm.addEventListener("submit", (e) => {
+                    registerForm.addEventListener("submit", async (e) => {
                         e.preventDefault();
                         const profile = {
                             name: nameInput.value.trim(),
@@ -66,10 +65,20 @@ export function homePage() {
                                 units: "metric"
                             }
                         };
-                        saveProfile(profile);
-                        const session = {profileId: profile.profileId, status: "login", loggetAt: new Date().toISOString()};
-                        saveSession(session);
-                        window.location.hash = "#/profile";
+                        try {
+                            const isValid = await validateProfile();
+                            if (!isValid) {
+                                alert ('Email alredy used! Change email.');
+                                return;
+                            }
+                            await saveProfile(profile);
+                            const session = {profileId: profile.profileId, status: "login", loggetAt: new Date().toISOString()};
+                            saveSession(session);
+                            window.location.hash = "#/profile";
+                        } catch (error) {
+                            console.error("Registration failed:", error);
+                            alert("Registration failed: " + error.message);
+                        }
                     });
                 }, 100);
             });
@@ -83,28 +92,36 @@ export function homePage() {
                     const loginForm = document.getElementById("loginForm");
                     if (!loginForm) return;
                     
-                    loginForm.addEventListener("submit", (e) => {
+                    loginForm.addEventListener("submit", async (e) => {
                         e.preventDefault();
                         const emailInput = loginForm.querySelector("input[name='email']");
                         const passwordInput = loginForm.querySelector("input[name='password']");
                         if (!emailInput || !passwordInput) return;
                         
-                        const profiles = loadProfiles();
-                        const profile = profiles.find(p => p.email === emailInput.value.trim().toLowerCase());
-                        
-                        if (!profile) {
-                            alert("No user with this email");
-                            return;
+                        try {
+                            // Get all profiles from server
+                            const response = await fetch('http://localhost:3001/profiles');
+                            if (!response.ok) throw new Error("Failed to load profiles");
+                            const profiles = await response.json();
+                            const profile = profiles.find(p => p.email === emailInput.value.trim().toLowerCase());
+                            
+                            if (!profile) {
+                                alert("No user with this email");
+                                return;
+                            }
+                            
+                            if (profile.password !== passwordInput.value.trim()) {
+                                alert("Wrong password");
+                                return;
+                            }
+                            
+                            const session = {profileId: profile.profileId, status: "login", loggetAt: new Date().toISOString()};
+                            saveSession(session);
+                            window.location.hash = "#/profile";
+                        } catch (error) {
+                            console.error("Login failed:", error);
+                            alert("Login failed. Please try again.");
                         }
-                        
-                        if (profile.password !== passwordInput.value.trim()) {
-                            alert("Wrong password");
-                            return;
-                        }
-                        
-                        const session = {profileId: profile.profileId, status: "login", loggetAt: new Date().toISOString()};
-                        saveSession(session);
-                        window.location.hash = "#/profile";
                     });
                 }, 100);
             });
@@ -115,11 +132,10 @@ export function homePage() {
     const title = document.getElementById("h1");
     if (title) {
         title.addEventListener("click", () => {
-            if (!session) {
-                homePage();
-            } else {
-                window.location.hash = "#/profile";
-            }
+            if (session) {
+                window.location.hash = "#/profile";  
+            } 
+            homePage();
         });
     }
 }
