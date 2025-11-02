@@ -55,10 +55,10 @@ h1:hover {
 
 /* Main content area */
 main#app {
-    max-width: 1200px;
+    max-inline-size: 1200px;
     margin: var(--space-6) auto;
     padding: 0 var(--space-4);
-    min-height: 60vh;
+    min-block-size: 60vh;
 }
 
 /* Content sections */
@@ -67,7 +67,7 @@ main#app {
 }
 
 .container {
-    max-width: 100%;
+    max-inline-size: 100%;
     margin: 0 auto;
 }
 

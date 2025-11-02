@@ -132,11 +132,10 @@ export function homePage() {
     const title = document.getElementById("h1");
     if (title) {
         title.addEventListener("click", () => {
-            if (!session) {
-                homePage();
-            } else {
-                window.location.hash = "#/profile";
-            }
+            if (session) {
+                window.location.hash = "#/profile";  
+            } 
+            homePage();
         });
     }
 }

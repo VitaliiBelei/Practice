@@ -110,7 +110,7 @@ button:disabled {
     border: none;
     background: transparent;
     color: var(--warning);
-    min-width: 32px;
+    min-inline-size: 32px;
 }
 
 .fav-btn:hover {
@@ -155,7 +155,7 @@ select {
     font-family: inherit;
     font-size: var(--font-size-base);
     transition: all var(--transition-fast);
-    width: 100%;
+    inline-size: 100%;
 }
 
 input:focus,
@@ -168,7 +168,7 @@ select:focus {
 
 textarea {
     resize: vertical;
-    min-height: 80px;
+    min-block-size: 80px;
 }
 
 /* Form controls container */
@@ -182,7 +182,7 @@ textarea {
     background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    width: 100%;
+    inline-size: 100%;
 }
 
 #searchForm {
@@ -191,18 +191,18 @@ textarea {
     align-items: stretch;
     gap: 0.5rem;
     box-sizing: border-box;
-    width: 100%;
+    inline-size: 100%;
 }
 
 #searchForm > label > div{
     display: flex;
     flex-direction: row;
-    width: 100%;
+    inline-size: 100%;
 }
 
 #searchForm > label > div > label {
     display: flex;
-    width: 25%;
+    inline-size: 25%;
     align-items: center;
     gap: 0.5rem;
     padding-left: 3%;
@@ -210,7 +210,7 @@ textarea {
 }
 
 #category {
-    width: 25%;
+    inline-size: 25%;
 }
 
 /* Form errors */
@@ -293,8 +293,8 @@ legend {
 .recipe-image,
 .recipe-main-image {
     flex-shrink: 0;
-    width: 150px;
-    height: 150px;
+    inline-size: 150px;
+    block-size: 150px;
     border-radius: var(--radius);
     overflow: hidden;
     background: #f0f0f0;
@@ -302,16 +302,16 @@ legend {
 }
 
 .recipe-main-image {
-    width: 100%;
-    max-width: 400px;
-    height: 250px;
+    inline-size: 100%;
+    max-inline-size: 400px;
+    block-size: 250px;
     margin: var(--space-4) 0;
 }
 
 .recipe-image img,
 .recipe-main-image img {
-    width: 100%;
-    height: 100%;
+    inline-size: 100%;
+    block-size: 100%;
     object-fit: cover;
     transition: transform var(--transition-base);
 }
@@ -337,7 +337,7 @@ legend {
 }
 
 .main-image-input img {
-    max-width: 200px;
+    max-inline-size: 200px;
     border-radius: var(--radius);
 }
 
@@ -360,8 +360,8 @@ legend {
 
 .ingredient-row button,
 .step-row button {
-    min-width: 32px;
-    height: 32px;
+    min-inline-size: 32px;
+    block-size: 32px;
     padding: 0;
     display: flex;
     align-items: center;
@@ -426,8 +426,8 @@ legend {
     }
     
     .recipe-image {
-        width: 100%;
-        height: 200px;
+        inline-size: 100%;
+        block-size: 200px;
         align-self: center;
     }
     
@@ -449,15 +449,15 @@ legend {
     .ingredient-row button,
     .step-row button {
         align-self: flex-end;
-        width: auto;
-        min-width: auto;
+        inline-size: auto;
+        min-inline-size: auto;
         padding: var(--space-1) var(--space-2);
     }
 }
 
 .editForm {
     display: flex;
-    height: auto;
+    block-size: auto;
     justify-content: center;
     align-items: center;
 }
@@ -474,8 +474,8 @@ legend {
 }
 
 #profileFoto img {
-    width: 200px;
-    height: 200px;
+    inline-size: 200px;
+    block-size: 200px;
     border-radius: 50%;
     object-fit: cover;
     border: 3px solid var(--primary-color);
@@ -493,8 +493,8 @@ main > h2 {
 }
 
 #imagePreview-profile {
-    width: 35%;
-    height: auto;
+    inline-size: 35%;
+    block-size: auto;
     margin: 0 auto;
 }
 
