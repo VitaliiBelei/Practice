@@ -68,7 +68,7 @@ export function homePage() {
                         try {
                             const isValid = await validateProfile();
                             if (!isValid) {
-                                alert ('Email olredy used! Change email.');
+                                alert ('Email alredy used! Change email.');
                                 return;
                             }
                             await saveProfile(profile);

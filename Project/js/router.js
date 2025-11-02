@@ -46,13 +46,12 @@ function updateActiveNav(hash) {
     if (!nav) return;
     nav.querySelectorAll('a').forEach(a => {
         const href = a.getAttribute('href');
-        if (href === hash) {
-            a.classList.add('is-active');
-            a.setAttribute('aria-current', 'page');
-        } else {
+        if (href !== hash) {
             a.classList.remove('is-active');
             a.removeAttribute('aria-current');
         }
+        a.classList.add('is-active');
+        a.setAttribute('aria-current', 'page');
     });
 }
 
