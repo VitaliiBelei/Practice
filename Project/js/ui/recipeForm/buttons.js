@@ -2,7 +2,7 @@ import { toggleFavorite, deleteRecipe, updateRecipe, getRecipeById } from "../..
 import { validateRecipe } from "./validation.js";
 import { recipeFormHTML } from "./html.js";
 import { editFormAdd } from "./events.js";
-import { collectIngredients, collectSteps, collectImage } from "./data.js";
+import { collectIngredients, collectSteps } from "./data.js";
 import { handleFileInput } from "../../utils/fileHandler.js";
 
 // Handle buttons in recipe cards: favorite, delete, edit
@@ -38,12 +38,12 @@ export function recipeFormButtons(onRefresh) {
             if (!article) return;
             const id = article.dataset.id;
             const recipe = await getRecipeById(id);
-            const existingForm = document.querySelector('[id^="editForm-"]');
+            const existingForm = document.querySelector('[id^="edit-form-"]');
             if (existingForm) existingForm.remove();
                                
             article.insertAdjacentHTML("afterend", recipeFormHTML(recipe)); 
 
-            const editForm = document.getElementById(`editForm-${id}`);
+            const editForm = document.getElementById(`edit-form-${id}`);
             const editTitle = document.getElementById(`editTitle-${id}`);
             const editTime = document.getElementById(`editTime-${id}`);
             const editCategory = document.getElementById(`editCategory-${id}`);

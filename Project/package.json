@@ -1,0 +1,30 @@
+{
+  "author": "Vitalii Belei",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "live-server --port=3301",
+    "dev": "npm-run-all --parallel serve db lint:js:watch lint:css:watch",
+    "db": "json-server --watch db.json --port=3001",
+    "lint": "npm-run-all lint:js lint:css",
+    "lint:js": "eslint js/**/*.js",
+    "lint:js:watch": "chokidar \"js/**/*.js\" -c \"npm run lint:js -- --cache\" --initial",
+    "lint:css": "stylelint \"styles/**/*.css\"",
+    "lint:css:watch": "chokidar \"styles/**/*.css\" -c \"npm run lint:css\" --initial",
+    "build": "echo \"Dummy build script required for Autocode Compile\""
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@typescript-eslint/eslint-plugin": "^8.48.1",
+    "@typescript-eslint/parser": "^8.48.1",
+    "chokidar-cli": "^3.0.0",
+    "eslint": "^9.39.1",
+    "globals": "^16.5.0",
+    "live-server": "^1.2.2",
+    "npm-run-all": "^4.1.5",
+    "sass": "^1.94.2",
+    "stylelint": "^16.26.1",
+    "stylelint-config-standard": "^39.0.1",
+    "stylelint-config-standard-scss": "^16.0.0"
+  }
+}

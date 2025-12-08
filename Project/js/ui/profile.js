@@ -4,13 +4,13 @@ export function loadProfilePage(profile = null, mode = "unlogin") {
     const app = document.getElementById("app");
     app.innerHTML = `
         <h2>User Profile</h2>
-        <div class = 'userProfile'>
+        <div class='user-profile'>
             ${mode === "login" && profile
                 ? `
-                <div id="profileFoto">
+                <div id="profile-foto">
                     <img src="${profile.foto}" alt="Profile Photo" />
                 </div>
-                <div id="profileInfo">
+                <div id="profile-info">
                     <p><strong>Name: </strong>${profile.name}</p>
                     <p><strong>Email: </strong>${profile.email}</p>
                     <p><strong>Location: </strong>${profile.location || ""}</p>
@@ -34,7 +34,7 @@ export function editProfile(profile) {
         <h2>Edit Profile</h2>
         <form id="editProfileForm">
             <label for="foto">Profile Photo URL:</label>
-            <img src="${profile.foto ?? "img/foto.png"}" alt="Image preview" id="imagePreview-profile">
+            <img src="${profile.foto ?? "img/foto.png"}" alt="Image preview" id="image-preview-profile">
             <input type="file" name="foto" accept="image/*">
             <label for="name">Name:</label>
             <input type="text" name="name" value="${profile.name}" required>

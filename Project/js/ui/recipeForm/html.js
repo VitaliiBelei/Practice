@@ -24,13 +24,13 @@ export function recipeFormHTML(recipe, mode = "edit") {
         `).join("");
 
     return `
-        <form id="editForm-${formId}">
+        <form id="edit-form-${formId}">
             
                 <label for="editTitle-${formId}">
                     Title
                 </label>
                 <input id="editTitle-${formId}" name="title" value="${recipe.title ?? ""}" autofocus>
-            <div class = 'editForm'>
+            <div class='edit-form'>
                 <label for="editCategory-${formId}">
                     Category
                 </label>

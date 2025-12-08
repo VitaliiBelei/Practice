@@ -1,7 +1,7 @@
 // Event handlers for recipe forms
 
 export function editFormAdd(id) {
-    const editForm = document.getElementById(`editForm-${id}`);
+    const editForm = document.getElementById(`edit-form-${id}`);
     if (!editForm) return;
     
     // Handle image upload button click (file input handling is done elsewhere)

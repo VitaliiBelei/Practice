@@ -9,11 +9,11 @@ export async function recipesPage() {
     const app = document.getElementById("app");
     app.innerHTML = `
         <div id="controls">
-            <form id="searchForm">
-                <label for="searchInput">
+            <form id="search-form">
+                <label for="search-input">
                     Search recipes
                     <div>
-                        <input type="text" id="searchInput" placeholder="Recipe">
+                        <input type="text" id="search-input" placeholder="Recipe">
                         <select id="category">
                             <option value="all">All categories</option>       
                             <option value="breakfasts">Breakfasts</option>
@@ -23,8 +23,8 @@ export async function recipesPage() {
                             <option value="meat">Meat</option>
                             <option value="fish">Fish</option>
                         </select>
-                        <label><input type="checkbox" id="onlyFav"> Only favorites</label>
-                        <button type="reset" id="resetBtn">Reset</button>
+                        <label><input type="checkbox" id="only-fav"> Only favorites</label>
+                        <button type="reset" id="reset-btn">Reset</button>
                     </div>
                 </label>
                 
@@ -41,10 +41,10 @@ export async function recipesPage() {
     const allRecipes = await loadUserRecipes(id);
     renderRecipes(allRecipes);
 
-    const searchForm = document.getElementById("searchForm")
+    const searchForm = document.getElementById("search-form");
     const category = document.getElementById("category");
-    const onlyFav = document.getElementById("onlyFav");
-    const search = document.getElementById("searchInput");  
+    const onlyFav = document.getElementById("only-fav");
+    const search = document.getElementById("search-input");  
 
     onlyFav.addEventListener("change", searchRecipe);
     category.addEventListener("change", searchRecipe);

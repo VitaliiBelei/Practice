@@ -32,7 +32,7 @@ export async function addPage() {
         window.location.hash = "#/profile";
     });
 
-    const form = document.getElementById(`editForm-new`);
+    const form = document.getElementById(`edit-form-new`);
 
     const favBtn = document.getElementById("favBtn-new");
 

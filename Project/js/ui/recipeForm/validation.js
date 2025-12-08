@@ -1,7 +1,7 @@
 import { loadProfiles } from "../../store.js";
 
 export function validateRecipe(patch) {
-    const form = document.getElementById(`editForm-${patch.id || "new"}`);
+    const form = document.getElementById(`edit-form-${patch.id || "new"}`);
     
     function clearFormErrors(form) {
         form.querySelectorAll('.form-error').forEach(el => el.remove());

@@ -42,7 +42,7 @@ export function homePage() {
                         handleFileInput(fotoInput, (result) => {
                         fotoData = result;
                         // Update preview image if it exists
-                        const imagePreview = document.getElementById("imagePreview-profile");
+                        const imagePreview = document.getElementById("image-preview-profile");
                         if (imagePreview) {
                             imagePreview.src = result;
                         }

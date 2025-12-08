@@ -1,4 +1,69 @@
-const LS_KEY_SESSION = 'cookbook_session';
+
+// Cookie Manager
+class CookieManager {
+    static set(name, value, options = {}) {
+        const defaults = {
+            path: '/',
+            maxAge: 86400 * 7, // 7 днів
+            samesite: 'lax'
+        };
+        
+        options = { ...defaults, ...options };
+        
+        let cookieString = `${encodeURIComponent(name)}=${encodeURIComponent(value)}`;
+        
+        if (options.maxAge) {
+            cookieString += `; max-age=${options.maxAge}`;
+        }
+        
+        if (options.expires) {
+            cookieString += `; expires=${options.expires.toUTCString()}`;
+        }
+        
+        if (options.path) {
+            cookieString += `; path=${options.path}`;
+        }
+        
+        if (options.domain) {
+            cookieString += `; domain=${options.domain}`;
+        }
+        
+        if (options.secure) {
+            cookieString += '; secure';
+        }
+        
+        if (options.samesite) {
+            cookieString += `; samesite=${options.samesite}`;
+        }
+        
+        document.cookie = cookieString;
+    }
+    
+    static get(name) {
+        const matches = document.cookie.match(
+            new RegExp('(?:^|; )' + encodeURIComponent(name) + '=([^;]*)')
+        );
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+    
+    static delete(name) {
+        this.set(name, '', { maxAge: -1 });
+    }
+    
+    static has(name) {
+        return this.get(name) !== undefined;
+    }
+    
+    static getAll() {
+        return document.cookie.split('; ').reduce((acc, cookie) => {
+            const [name, value] = cookie.split('=');
+            if (name) {
+                acc[decodeURIComponent(name)] = decodeURIComponent(value);
+            }
+            return acc;
+        }, {});
+    }
+}
 
 export async function loadUserRecipes(profileId) {
     try {
@@ -196,27 +261,18 @@ export async function deleteProfile(profileId) {
 }
 
 export function saveSession(session) {
-    try {
-        const raw = JSON.stringify(session);
-        localStorage.setItem(LS_KEY_SESSION, raw);
-    } catch (e) {
-        console.error("Error saving to localStorage", e);
-    }
+    CookieManager.set('cookbook_session', JSON.stringify(session), {
+        maxAge: 86400 * 7,
+        secure: true,
+        samesite: 'strict'
+    });
 }
 
 export function loadSession() {
-    const session = localStorage.getItem(LS_KEY_SESSION);
-    if (!session) {
-        return null;
-    }
-    try {
-       return JSON.parse(session);
-    } catch (e) {
-        console.error("Error reading from localStorage", e);
-        return null;
-    }
+    const data = CookieManager.get('cookbook_session');
+    return data ? JSON.parse(data) : null;
 }
 
 export function clearSession() {
-    localStorage.removeItem(LS_KEY_SESSION);
+    CookieManager.delete('cookbook_session');
 }

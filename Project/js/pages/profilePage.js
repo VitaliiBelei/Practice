@@ -45,7 +45,7 @@ function renderSettings() {
         `;
 }
 
-function setupEditProfileForm(profile, session) {
+function setupEditProfileForm(profile) {
     const editProfileForm = document.getElementById("editProfileForm");
     if (!editProfileForm) return;
     
@@ -56,7 +56,7 @@ function setupEditProfileForm(profile, session) {
             handleFileInput(fotoInput, (result) => {
                 fotoData = result;
                 // Update preview image if it exists
-                const imagePreview = document.getElementById("imagePreview-profile");
+                const imagePreview = document.getElementById("image-preview-profile");
                 if (imagePreview) {
                     imagePreview.src = result;
                 }
@@ -82,7 +82,7 @@ function setupEditProfileForm(profile, session) {
     });
 }
 
-function setupSettingsForm(profile, session) {
+function setupSettingsForm(profile) {
     const settingsMessage = document.getElementById("settingsMessage");
     const languageSelect = document.getElementById("language");
     const themeSelect = document.getElementById("theme");
@@ -205,7 +205,7 @@ export async function profilePage(){
                     const fotoInput = editProfileForm.querySelector("input[name='foto']");
                     let fotoData = profile.foto || "img/foto.png";
                     if (fotoInput) {
-                        fotoInput.onchange = (e) => {
+                        fotoInput.onchange = () => {
                             const file = fotoInput.files[0];
                             if (file) {
                                 const reader = new FileReader();

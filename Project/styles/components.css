@@ -1,52 +1,5 @@
 /* ===== COMPONENT STYLES ===== */
 
-/* ===== NAVIGATION ===== */
-#nav a {
-    padding: var(--space-2) var(--space-4);
-    border-radius: var(--radius);
-    line-height: 1.2;
-    font-weight: 500;
-    transition: all var(--transition-fast);
-    position: relative;
-}
-
-#nav a:hover {
-    background: var(--card-shadow);
-    transform: translateY(-1px);
-}
-
-#nav a.is-active {
-    font-weight: 700;
-    color: var(--primary);
-    border-bottom: 2px solid var(--primary);
-}
-
-#nav a:focus-visible {
-    outline-color: var(--primary);
-}
-
-/* Navigation buttons */
-#nav button {
-    padding: var(--space-2) var(--space-4);
-    border: 2px solid var(--primary);
-    border-radius: var(--radius);
-    background: transparent;
-    color: var(--primary);
-    font-weight: 500;
-    cursor: pointer;
-    transition: all var(--transition-fast);
-}
-
-#nav button:hover {
-    background: var(--primary);
-    color: white;
-    transform: translateY(-1px);
-}
-
-#nav button:active {
-    transform: translateY(0);
-}
-
 /* ===== BUTTONS ===== */
 button {
     padding: var(--space-2) var(--space-4);
@@ -114,7 +67,7 @@ button:disabled {
 }
 
 .fav-btn:hover {
-    background: rgba(245, 158, 11, 0.1);
+    background: rgb(245 158 11 / 10%);
     transform: scale(1.1);
 }
 
@@ -158,17 +111,17 @@ select {
     inline-size: 100%;
 }
 
+textarea {
+    resize: vertical;
+    min-block-size: 80px;
+}
+
 input:focus,
 textarea:focus,
 select:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-
-textarea {
-    resize: vertical;
-    min-block-size: 80px;
+    box-shadow: 0 0 0 3px rgb(37 99 235 / 10%);
 }
 
 /* Form controls container */
@@ -185,7 +138,7 @@ textarea {
     inline-size: 100%;
 }
 
-#searchForm {
+:where(#search-form) {
     display: flex;
     margin: 0;
     align-items: stretch;
@@ -194,13 +147,13 @@ textarea {
     inline-size: 100%;
 }
 
-#searchForm > label > div{
+:where(#search-form) > label > div{
     display: flex;
     flex-direction: row;
     inline-size: 100%;
 }
 
-#searchForm > label > div > label {
+:where(#search-form) > label > div > label {
     display: flex;
     inline-size: 25%;
     align-items: center;
@@ -231,6 +184,10 @@ fieldset {
 legend {
     font-weight: 600;
     padding: 0 var(--space-2);
+}
+
+main > h2 {
+    text-align: center;
 }
 
 /* ===== RECIPE CARDS ===== */
@@ -316,10 +273,6 @@ legend {
     transition: transform var(--transition-base);
 }
 
-.recipe-card:hover .recipe-image img {
-    transform: scale(1.05);
-}
-
 /* Image upload component */
 .main-image-input {
     display: flex;
@@ -341,6 +294,10 @@ legend {
     border-radius: var(--radius);
 }
 
+.recipe-card:hover .recipe-image img {
+    transform: scale(1.05);
+}
+
 /* ===== FORM COMPONENTS ===== */
 .ingredient-row,
 .step-row {
@@ -349,7 +306,7 @@ legend {
     align-items: start;
     margin-bottom: var(--space-2);
     padding: var(--space-2);
-    background: rgba(0, 0, 0, 0.02);
+    background: rgb(0 0 0 / 2%);
     border-radius: var(--radius);
 }
 
@@ -371,6 +328,52 @@ legend {
 .step-row textarea {
     flex: 1;
     margin: 0;
+}
+
+/* ===== NAVIGATION ===== */
+#nav a {
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius);
+    line-height: 1.2;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+#nav a:hover {
+    background: var(--card-shadow);
+    transform: translateY(-1px);
+}
+
+#nav a.is-active {
+    font-weight: 700;
+    color: var(--primary);
+    border-bottom: 2px solid var(--primary);
+}
+
+#nav a:focus-visible {
+    outline-color: var(--primary);
+}
+
+#nav button {
+    padding: var(--space-2) var(--space-4);
+    border: 2px solid var(--primary);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--primary);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+#nav button:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-1px);
+}
+
+#nav button:active {
+    transform: translateY(0);
 }
 
 /* ===== UTILITY CLASSES ===== */
@@ -405,14 +408,15 @@ legend {
     border-radius: var(--radius);
     box-shadow: 0 4px 12px var(--card-shadow);
     z-index: 1000;
-    animation: slideIn var(--transition-base);
+    animation: slide-in var(--transition-base);
 }
 
-@keyframes slideIn {
+@keyframes slide-in {
     from {
         transform: translateX(100%);
         opacity: 0;
     }
+
     to {
         transform: translateX(0);
         opacity: 1;
@@ -420,7 +424,7 @@ legend {
 }
 
 /* ===== RESPONSIVE COMPONENTS ===== */
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .recipe-card {
         flex-direction: column;
     }
@@ -455,25 +459,25 @@ legend {
     }
 }
 
-.editForm {
+.edit-form {
     display: flex;
     block-size: auto;
     justify-content: center;
     align-items: center;
 }
 
-.userProfile {
+.user-profile {
     display: flex;
     margin: auto;
     justify-content: space-around;
 }
 
-#profileFoto {
+#profile-foto {
     flex: 1;
     text-align: center;
 }
 
-#profileFoto img {
+#profile-foto img {
     inline-size: 200px;
     block-size: 200px;
     border-radius: 50%;
@@ -481,18 +485,14 @@ legend {
     border: 3px solid var(--primary-color);
 }
 
-.profileInfo,
-#profileInfo {
+.profile-info,
+#profile-info {
     align-self: flex-end;
     flex: 2;
     padding-left: 2rem;
 }
 
-main > h2 {
-    text-align: center;
-}
-
-#imagePreview-profile {
+#image-preview-profile {
     inline-size: 35%;
     block-size: auto;
     margin: 0 auto;

@@ -3,7 +3,7 @@
 export function handleFileInput(fileInput, callback) {
     if (!fileInput) return;
     
-    fileInput.addEventListener("change", (e) => {
+    fileInput.addEventListener("change", () => {
         const file = fileInput.files[0];
         if (file) {
             const reader = new FileReader();
