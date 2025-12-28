@@ -7,6 +7,7 @@ export async function recipesPage() {
     createNavigation();
     
     const app = document.getElementById("app");
+    if (!app) return;
     app.innerHTML = `
         <div id="controls">
             <form id="search-form">
@@ -37,14 +38,20 @@ export async function recipesPage() {
     `;
 
     const session = loadSession();
+    if (!session) return;
     const id = session.profileId;
     const allRecipes = await loadUserRecipes(id);
-    renderRecipes(allRecipes);
+    renderRecipes(allRecipes ?? []);
 
-    const searchForm = document.getElementById("search-form");
-    const category = document.getElementById("category");
-    const onlyFav = document.getElementById("only-fav");
-    const search = document.getElementById("search-input");  
+    /** @type {HTMLFormElement | null} */
+    const searchForm = /** @type {HTMLFormElement | null} */ (document.getElementById("search-form"));
+    /** @type {HTMLSelectElement | null} */
+    const category = /** @type {HTMLSelectElement | null} */ (document.getElementById("category"));
+    /** @type {HTMLInputElement | null} */
+    const onlyFav = /** @type {HTMLInputElement | null} */ (document.getElementById("only-fav"));
+    /** @type {HTMLInputElement | null} */
+    const search = /** @type {HTMLInputElement | null} */ (document.getElementById("search-input"));
+    if (!searchForm || !category || !onlyFav || !search) return;
 
     onlyFav.addEventListener("change", searchRecipe);
     category.addEventListener("change", searchRecipe);
@@ -60,11 +67,11 @@ export async function recipesPage() {
     async function searchRecipe () {
     const list = await loadUserRecipes(id);
     const q = search.value.trim().toLowerCase();
-    const filtered = list.filter(recipe => 
+    const filtered = (list ?? []).filter(recipe => 
         (!onlyFav.checked || recipe.isFavorite)   &&
         (category.value === "all" || recipe.category === category.value) &&
         (q === "" || recipe.title.toLowerCase().includes(q))
-    )
+    );
     renderRecipes(filtered);
     };
 
@@ -84,7 +91,7 @@ export async function recipesPage() {
     const recipesContainer = document.getElementById("recipes");
     if (recipesContainer) {
         recipesContainer.addEventListener("click", (e) => {
-            if (e.target.tagName === 'H2') {
+            if (e.target instanceof Element && e.target.tagName === "H2") {
                 const card = e.target.closest(".recipe-card");
                 if (!card) return;
                 const id = card.getAttribute("data-id");

@@ -6,6 +6,7 @@ export function editFormAdd(id) {
     
     // Handle image upload button click (file input handling is done elsewhere)
     const addImageBtn = editForm.querySelector(".add-mainimage-btn");
+    /** @type {HTMLInputElement} */
     const fileInput = editForm.querySelector(".add-mainimage");
     
     if (addImageBtn && fileInput) {
@@ -49,17 +50,19 @@ export function editFormAdd(id) {
     });
 
     editForm.addEventListener("click", (e) => {
-        const rmIngBtn = e.target.closest(".remove-ingredient");
-        if (rmIngBtn) {
-            e.preventDefault();
-            rmIngBtn.closest(".ingredient-row")?.remove();
-            return;
-        };
+        if (e.target instanceof Element) {
+            const rmIngBtn = e.target.closest(".remove-ingredient");
+            if (rmIngBtn) {
+                e.preventDefault();
+                rmIngBtn.closest(".ingredient-row")?.remove();
+                return;
+            };
 
-        const rmStepBtn = e.target.closest(".remove-step");
-        if (rmStepBtn) {
-            e.preventDefault();
-            rmStepBtn.closest(".step-row")?.remove();
-        };
+            const rmStepBtn = e.target.closest(".remove-step");
+            if (rmStepBtn) {
+                e.preventDefault();
+                rmStepBtn.closest(".step-row")?.remove();
+            };
+        }
     });
 };

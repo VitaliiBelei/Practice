@@ -19,6 +19,7 @@ export function homePage() {
             <p>Discover and share amazing recipes!</p>
         `;
         const nav = document.getElementById('nav');
+        if (!nav) return;
         nav.innerHTML = `
             <button id="registerBtn">Register</button>
             <button id="loginBtn">Login</button>
@@ -32,17 +33,25 @@ export function homePage() {
                     const registerForm = document.getElementById("registerForm");
                     if (!registerForm) return;
                     
-                    const nameInput = registerForm.querySelector("input[name='name']");
-                    const emailInput = registerForm.querySelector("input[name='email']");
-                    const passwordInput = registerForm.querySelector("input[name='password']");
-                    const fotoInput = registerForm.querySelector("input[name='foto']");
+                    /** @type {HTMLInputElement | null} */
+                    const nameInput = /** @type {HTMLInputElement | null} */ (registerForm.querySelector("input[name='name']"));
+                    /** @type {HTMLInputElement | null} */
+                    const emailInput = /** @type {HTMLInputElement | null} */ (registerForm.querySelector("input[name='email']"));
+                    /** @type {HTMLInputElement | null} */
+                    const passwordInput = /** @type {HTMLInputElement | null} */ (registerForm.querySelector("input[name='password']"));
+                    /** @type {HTMLInputElement | null} */
+                    const passwordConfirm = /** @type {HTMLInputElement | null} */ (registerForm.querySelector("input[name='confirm-password']"));
+                    /** @type {HTMLInputElement | null} */
+                    const fotoInput = /** @type {HTMLInputElement | null} */ (registerForm.querySelector("input[name='foto']"));
                     let fotoData = "img/foto.png";
+                    if (!nameInput || !emailInput || !passwordInput || !passwordConfirm) return;
                     
                     if (fotoInput) {
                         handleFileInput(fotoInput, (result) => {
                         fotoData = result;
                         // Update preview image if it exists
-                        const imagePreview = document.getElementById("image-preview-profile");
+                        /** @type {HTMLImageElement | null} */
+                        const imagePreview = /** @type {HTMLImageElement | null} */ (document.getElementById("image-preview-profile"));
                         if (imagePreview) {
                             imagePreview.src = result;
                         }
@@ -51,6 +60,18 @@ export function homePage() {
                     
                     registerForm.addEventListener("submit", async (e) => {
                         e.preventDefault();
+                        const passwordContainer = document.getElementById('password-register');
+                        const tagP = passwordContainer.querySelector('p');
+                        if (tagP) {
+                        tagP.remove();
+                        }
+                        if (passwordInput.value !== passwordConfirm.value) {
+                            const p = document.createElement('p');
+                            p.textContent = 'Password does not match!';
+                            p.style.color = 'red';
+                            passwordContainer.appendChild(p);
+                            return;
+                        }
                         const profile = {
                             name: nameInput.value.trim(),
                             email: emailInput.value.trim(),
@@ -68,7 +89,6 @@ export function homePage() {
                         try {
                             const isValid = await validateProfile();
                             if (!isValid) {
-                                alert ('Email alredy used! Change email.');
                                 return;
                             }
                             await saveProfile(profile);
@@ -94,8 +114,10 @@ export function homePage() {
                     
                     loginForm.addEventListener("submit", async (e) => {
                         e.preventDefault();
-                        const emailInput = loginForm.querySelector("input[name='email']");
-                        const passwordInput = loginForm.querySelector("input[name='password']");
+                        /** @type {HTMLInputElement | null} */
+                        const emailInput = /** @type {HTMLInputElement | null} */ (loginForm.querySelector("input[name='email']"));
+                        /** @type {HTMLInputElement | null} */
+                        const passwordInput = /** @type {HTMLInputElement | null} */ (loginForm.querySelector("input[name='password']"));
                         if (!emailInput || !passwordInput) return;
                         
                         try {

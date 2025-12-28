@@ -46,17 +46,20 @@ function renderSettings() {
 }
 
 function setupEditProfileForm(profile) {
-    const editProfileForm = document.getElementById("editProfileForm");
+    /** @type {HTMLFormElement | null} */
+    const editProfileForm = /** @type {HTMLFormElement | null} */ (document.getElementById("editProfileForm"));
     if (!editProfileForm) return;
     
-    const fotoInput = editProfileForm.querySelector("input[name='foto']");
+    /** @type {HTMLInputElement | null} */
+    const fotoInput = /** @type {HTMLInputElement | null} */ (editProfileForm.querySelector("input[name='foto']"));
     let fotoData = profile.foto || "img/foto.png";
 
     if (fotoInput) {
             handleFileInput(fotoInput, (result) => {
                 fotoData = result;
                 // Update preview image if it exists
-                const imagePreview = document.getElementById("image-preview-profile");
+                /** @type {HTMLImageElement | null} */
+                const imagePreview = /** @type {HTMLImageElement | null} */ (document.getElementById("image-preview-profile"));
                 if (imagePreview) {
                     imagePreview.src = result;
                 }
@@ -84,9 +87,13 @@ function setupEditProfileForm(profile) {
 
 function setupSettingsForm(profile) {
     const settingsMessage = document.getElementById("settingsMessage");
-    const languageSelect = document.getElementById("language");
-    const themeSelect = document.getElementById("theme");
-    const unitsSelect = document.getElementById("units");
+    /** @type {HTMLSelectElement | null} */
+    const languageSelect = /** @type {HTMLSelectElement | null} */ (document.getElementById("language"));
+    /** @type {HTMLSelectElement | null} */
+    const themeSelect = /** @type {HTMLSelectElement | null} */ (document.getElementById("theme"));
+    /** @type {HTMLSelectElement | null} */
+    const unitsSelect = /** @type {HTMLSelectElement | null} */ (document.getElementById("units"));
+    if (!languageSelect || !themeSelect || !unitsSelect) return;
 
     if (profile && profile.settings) {
         languageSelect.value = profile.settings.language;
@@ -94,7 +101,9 @@ function setupSettingsForm(profile) {
         unitsSelect.value = profile.settings.units;
     }
 
-    const saveSettingsBtn = document.getElementById("saveSettingsBtn");
+    /** @type {HTMLButtonElement | null} */
+    const saveSettingsBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById("saveSettingsBtn"));
+    if (!saveSettingsBtn) return;
     saveSettingsBtn.addEventListener("click", () => {
         if (!profile) return;
         const newSettings = {
@@ -104,11 +113,13 @@ function setupSettingsForm(profile) {
         };
 
         updateProfile(profile.profileId, { settings: newSettings });
-        settingsMessage.textContent = "Settings saved successfully!";
+        if (settingsMessage) settingsMessage.textContent = "Settings saved successfully!";
         setTimeout(() => { window.location.hash = "#/profile"; }, 2000);
     });
 
-    const resetSettingsBtn = document.getElementById("resetSettingsBtn");
+    /** @type {HTMLButtonElement | null} */
+    const resetSettingsBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById("resetSettingsBtn"));
+    if (!resetSettingsBtn) return;
     resetSettingsBtn.addEventListener("click", () => {
         if (!profile) return;
         const defaultSettings = {
@@ -120,23 +131,27 @@ function setupSettingsForm(profile) {
         languageSelect.value = defaultSettings.language;
         themeSelect.value = defaultSettings.theme;
         unitsSelect.value = defaultSettings.units;
-        settingsMessage.textContent = "Settings reset to default!";
+        if (settingsMessage) settingsMessage.textContent = "Settings reset to default!";
     });
 
     const cancelBtn = document.getElementById("cancelBtn");
-    cancelBtn.addEventListener("click", () => {
-        window.location.hash = "#/profile";
-    });
+    if (cancelBtn) {
+        cancelBtn.addEventListener("click", () => {
+            window.location.hash = "#/profile";
+        });
+    }
 
     const deleteAccountBtn = document.getElementById("deleteAccountBtn");
-    deleteAccountBtn.addEventListener("click", () => {
-        if (!profile) return;
-        const confirmed = confirm("Are you sure you want to delete your account? This action cannot be undone.");
-        if (!confirmed) return;
-        deleteProfile(profile.profileId);
-        clearSession();
-        window.location.hash = "#/home";
-    });
+    if (deleteAccountBtn) {
+        deleteAccountBtn.addEventListener("click", () => {
+            if (!profile) return;
+            const confirmed = confirm("Are you sure you want to delete your account? This action cannot be undone.");
+            if (!confirmed) return;
+            deleteProfile(profile.profileId);
+            clearSession();
+            window.location.hash = "#/home";
+        });
+    }
 }
 
 export async function profilePage(){
@@ -153,7 +168,7 @@ export async function profilePage(){
     if (action === 'edit' && profile) {
         editProfile(profile);
         setTimeout(() => {
-            setupEditProfileForm(profile, session);
+            setupEditProfileForm(profile);
         }, 100);
         return;
     }
@@ -161,7 +176,7 @@ export async function profilePage(){
     if (action === 'settings' && profile) {
         renderSettings();
         setTimeout(() => {
-            setupSettingsForm(profile, session);
+            setupSettingsForm(profile);
         }, 100);
         return;
     }
@@ -170,7 +185,8 @@ export async function profilePage(){
     loadProfilePage(profile, session ? session.status : "unlogin");
     
     function initProfileButtons(profile, session) {
-        const logoutBtn = document.getElementById("logoutBtn");
+        /** @type {HTMLButtonElement | null} */
+        const logoutBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById("logoutBtn"));
         if (logoutBtn) {
             logoutBtn.disabled = false;
             logoutBtn.classList.remove("disabled");
@@ -181,36 +197,41 @@ export async function profilePage(){
                 window.location.hash = "#/home";
             };
         }
-        const settingsBtn = document.getElementById("settingsBtn");
+        /** @type {HTMLButtonElement | null} */
+        const settingsBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById("settingsBtn"));
         if (settingsBtn) {
             settingsBtn.disabled = false;
             settingsBtn.classList.remove("disabled");
             settingsBtn.onclick = () => {
                 renderSettings();
                 setTimeout(() => {
-                    setupSettingsForm(profile, session);
+                    setupSettingsForm(profile);
                 }, 100);
             };
         }
 
-        const editProfileBtn = document.getElementById("editProfileBtn");
+        /** @type {HTMLButtonElement | null} */
+        const editProfileBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById("editProfileBtn"));
         if (editProfileBtn) {
             editProfileBtn.disabled = false;
             editProfileBtn.classList.remove("disabled");
             editProfileBtn.onclick = () => {
+                if (!profile) return;
                 editProfile(profile);
                 setTimeout(() => {
-                    const editProfileForm = document.getElementById("editProfileForm");
+                    /** @type {HTMLFormElement | null} */
+                    const editProfileForm = /** @type {HTMLFormElement | null} */ (document.getElementById("editProfileForm"));
                     if (!editProfileForm) return;
-                    const fotoInput = editProfileForm.querySelector("input[name='foto']");
+                    /** @type {HTMLInputElement | null} */
+                    const fotoInput = /** @type {HTMLInputElement | null} */ (editProfileForm.querySelector("input[name='foto']"));
                     let fotoData = profile.foto || "img/foto.png";
                     if (fotoInput) {
                         fotoInput.onchange = () => {
-                            const file = fotoInput.files[0];
+                            const file = fotoInput.files ? fotoInput.files[0] : null;
                             if (file) {
                                 const reader = new FileReader();
                                 reader.onload = function(ev) {
-                                    fotoData = ev.target.result;
+                                    fotoData = ev.target ? ev.target.result : fotoData;
                                 };
                                 reader.readAsDataURL(file);
                             }
@@ -220,12 +241,19 @@ export async function profilePage(){
                         e.preventDefault();
                         const id = profile.profileId;
                         if (!id) return;
-                        const nameInput = editProfileForm.querySelector("input[name='name']");
-                        const emailInput = editProfileForm.querySelector("input[name='email']");
-                        const locationInput = editProfileForm.querySelector("input[name='location']");
-                        const fcInput = editProfileForm.querySelector("input[name='fc']");
-                        const bioInput = editProfileForm.querySelector("textarea[name='bio']");
-                        const linkInput = editProfileForm.querySelector("input[name='link']");
+                        /** @type {HTMLInputElement | null} */
+                        const nameInput = /** @type {HTMLInputElement | null} */ (editProfileForm.querySelector("input[name='name']"));
+                        /** @type {HTMLInputElement | null} */
+                        const emailInput = /** @type {HTMLInputElement | null} */ (editProfileForm.querySelector("input[name='email']"));
+                        /** @type {HTMLInputElement | null} */
+                        const locationInput = /** @type {HTMLInputElement | null} */ (editProfileForm.querySelector("input[name='location']"));
+                        /** @type {HTMLInputElement | null} */
+                        const fcInput = /** @type {HTMLInputElement | null} */ (editProfileForm.querySelector("input[name='fc']"));
+                        /** @type {HTMLTextAreaElement | null} */
+                        const bioInput = /** @type {HTMLTextAreaElement | null} */ (editProfileForm.querySelector("textarea[name='bio']"));
+                        /** @type {HTMLInputElement | null} */
+                        const linkInput = /** @type {HTMLInputElement | null} */ (editProfileForm.querySelector("input[name='link']"));
+                        if (!nameInput || !emailInput || !locationInput || !fcInput || !bioInput || !linkInput) return;
                         const updatedProfile = {
                             ...profile,
                             foto: fotoData,
@@ -253,14 +281,15 @@ export async function profilePage(){
         });
     }
     
-    const settingsBtn = document.getElementById("settingsBtn");
+    /** @type {HTMLButtonElement | null} */
+    const settingsBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById("settingsBtn"));
     if (settingsBtn) {
         settingsBtn.disabled = false;
         settingsBtn.classList.remove("disabled");
         settingsBtn.onclick = () => {
             renderSettings();
             setTimeout(() => {
-                setupSettingsForm(profile, session);
+                setupSettingsForm(profile);
             }, 100);
         };
     };

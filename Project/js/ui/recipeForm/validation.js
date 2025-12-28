@@ -94,6 +94,7 @@ export function validateRecipe(patch) {
 
 export async function validateProfile () {
     const registerForm = document.getElementById('registerForm');
+    /** @type {HTMLInputElement} */
     const emailInput = registerForm.querySelector("input[name='email']");
     
     if (!emailInput) {
@@ -108,7 +109,15 @@ export async function validateProfile () {
     }
     for (const profile of profiles) {
         if (profile.email === emailInput.value.trim().toLowerCase()) {
-            console.log('Email already exist');
+            const emailContainer = document.getElementById('email-register');
+            const tagP = emailContainer.querySelector('p');
+            if (tagP) {
+                tagP.remove();
+            }
+            const p = document.createElement('p');
+            p.textContent = 'Email already used!';
+            p.style.color = 'red';
+            emailContainer.appendChild(p);
             return false;
         }
     }

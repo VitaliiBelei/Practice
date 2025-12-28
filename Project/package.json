@@ -7,6 +7,7 @@
     "dev": "npm-run-all --parallel serve db lint:js:watch lint:css:watch",
     "db": "json-server --watch db.json --port=3001",
     "lint": "npm-run-all lint:js lint:css",
+    "typecheck": "tsc --noEmit",
     "lint:js": "eslint js/**/*.js",
     "lint:js:watch": "chokidar \"js/**/*.js\" -c \"npm run lint:js -- --cache\" --initial",
     "lint:css": "stylelint \"styles/**/*.css\"",
@@ -25,6 +26,7 @@
     "sass": "^1.94.2",
     "stylelint": "^16.26.1",
     "stylelint-config-standard": "^39.0.1",
-    "stylelint-config-standard-scss": "^16.0.0"
+    "stylelint-config-standard-scss": "^16.0.0",
+    "typescript": "^5.9.3"
   }
 }

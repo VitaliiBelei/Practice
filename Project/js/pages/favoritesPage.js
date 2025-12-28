@@ -7,6 +7,7 @@ export async function favoritesPage() {
     createNavigation();
     
     const app = document.getElementById("app");
+    if (!app) return;
 
     app.innerHTML = `
         <h2>Favorites</h2>
@@ -15,11 +16,10 @@ export async function favoritesPage() {
     `;
 
     const session = loadSession();
+    if (!session) return;
     const id = session.profileId;
     const list = await loadUserRecipes(id);
-    const filtered = list.filter(recipe => 
-        (recipe.isFavorite === "true" || recipe.isFavorite === true)   
-    );
+    const filtered = (list ?? []).filter(recipe => !!recipe.isFavorite);
 
     renderRecipes(filtered);     
 
@@ -30,7 +30,8 @@ export async function favoritesPage() {
     };
     
     async function refresh() {
-        const filtered = await loadUserRecipes(id).filter(r => !!r.isFavorite);
+        const list = await loadUserRecipes(id);
+        const filtered = (list ?? []).filter(r => !!r.isFavorite);
         renderRecipes(filtered);
     };
 
@@ -46,7 +47,7 @@ export async function favoritesPage() {
     const recipesContainer = document.getElementById("recipes");
     if (recipesContainer) {
         recipesContainer.addEventListener("click", (e) => {
-            if (e.target.tagName === 'H2') {
+            if (e.target instanceof Element && e.target.tagName === "H2") {
                 const card = e.target.closest(".recipe-card");
                 if (!card) return;
                 const id = card.getAttribute("data-id");

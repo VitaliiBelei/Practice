@@ -10,10 +10,16 @@ export function registerProfile() {
             <input type="file" name="foto" accept="image/*">
             <label for="name">Name:</label>
             <input type="text" name="name" required>
-            <label for="email">Email:</label>
-            <input type="email" name="email" required>
-            <label for="password">Password:</label>
-            <input type="password" name="password" required>
+            <div id='email-register'>
+                <label for="email">Email:</label>
+                <input type="email" name="email" required>
+            </div>
+            <div id='password-register'>
+                <label for="password">Password:</label>
+                <input type="password" name="password" required>
+                <label for="password">Confirm password:</label>
+                <input type="password" name="confirm-password" required>
+            </div>
             <button type="submit">Register</button>
         </form>
     `;

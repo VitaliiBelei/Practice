@@ -8,8 +8,9 @@ import { handleFileInput } from "../../utils/fileHandler.js";
 // Handle buttons in recipe cards: favorite, delete, edit
 export function recipeFormButtons(onRefresh) {
     const recipesContainer = document.getElementById("recipes");
+    if (!recipesContainer) return;
     recipesContainer.addEventListener("click", async event => {
-        const btn = event.target.closest("button");
+        const btn = event.target instanceof Element ? event.target.closest("button") : null;
         if (!btn) return;
 
         if (btn.classList.contains("fav-btn")) {
@@ -26,6 +27,7 @@ export function recipeFormButtons(onRefresh) {
             const article = btn.closest("article");
             if (!article) return;
             const id = article.dataset.id;
+            if (!id) return;
             if (confirm("Delete recipe?")) {
             await deleteRecipe(id);
             onRefresh();
@@ -43,21 +45,31 @@ export function recipeFormButtons(onRefresh) {
                                
             article.insertAdjacentHTML("afterend", recipeFormHTML(recipe)); 
 
-            const editForm = document.getElementById(`edit-form-${id}`);
-            const editTitle = document.getElementById(`editTitle-${id}`);
-            const editTime = document.getElementById(`editTime-${id}`);
-            const editCategory = document.getElementById(`editCategory-${id}`);
-            const editServings = document.getElementById(`editServings-${id}`);
-            const editIngredients = document.getElementById(`editIngredients-${id}`);
-            const editSteps = document.getElementById(`editSteps-${id}`);
+            /** @type {HTMLFormElement | null} */
+            const editForm = /** @type {HTMLFormElement | null} */ (document.getElementById(`edit-form-${id}`));
+            /** @type {HTMLInputElement | null} */
+            const editTitle = /** @type {HTMLInputElement | null} */ (document.getElementById(`editTitle-${id}`));
+            /** @type {HTMLInputElement | null} */
+            const editTime = /** @type {HTMLInputElement | null} */ (document.getElementById(`editTime-${id}`));
+            /** @type {HTMLSelectElement | null} */
+            const editCategory = /** @type {HTMLSelectElement | null} */ (document.getElementById(`editCategory-${id}`));
+            /** @type {HTMLInputElement | null} */
+            const editServings = /** @type {HTMLInputElement | null} */ (document.getElementById(`editServings-${id}`));
+            /** @type {HTMLElement | null} */
+            const editIngredients = /** @type {HTMLElement | null} */ (document.getElementById(`editIngredients-${id}`));
+            /** @type {HTMLElement | null} */
+            const editSteps = /** @type {HTMLElement | null} */ (document.getElementById(`editSteps-${id}`));
+            if (!editForm || !editTitle || !editTime || !editCategory || !editServings || !editIngredients || !editSteps) return;
             editCategory.value = recipe.category;
 
             let mainImageData = "img/norecipe.png";
-            const mainImageInput = document.querySelector(".add-mainimage");
+            /** @type {HTMLInputElement | null} */
+            const mainImageInput = /** @type {HTMLInputElement | null} */ (document.querySelector(".add-mainimage"));
             if (mainImageInput) {
                 handleFileInput(mainImageInput, (result) => {
                     mainImageData = result;
-                    const imagePreview = document.getElementById(`imagePreview-${id}`);
+                    /** @type {HTMLImageElement | null} */
+                    const imagePreview = /** @type {HTMLImageElement | null} */ (document.getElementById(`imagePreview-${id}`));
                     if (imagePreview) {
                         imagePreview.src = result;
                     }
@@ -72,8 +84,6 @@ export function recipeFormButtons(onRefresh) {
 
             editForm.addEventListener("submit", async (event) => {                
             event.preventDefault();
-
-            if (!editForm) return;
 
             const patch = {
                 id,
@@ -98,9 +108,13 @@ export function recipeFormButtons(onRefresh) {
             return;
             });
 
-            document.getElementById(`cancelEdit-${id}`).addEventListener("click", () => {
+            const cancelButton = document.getElementById(`cancelEdit-${id}`);
+            if (cancelButton) cancelButton.addEventListener("click", () => {
                 editForm.remove();
-                document.querySelector(`article[data-id="${id}"] .edit-btn`)?.focus();
+                const editButton = document.querySelector(`article[data-id="${id}"] .edit-btn`);
+                if (editButton instanceof HTMLElement) {
+                    editButton.focus();
+                }
             });
             
         }

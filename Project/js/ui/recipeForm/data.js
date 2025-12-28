@@ -28,6 +28,6 @@ export function collectSteps(editSteps) {
 }
 
 export function collectImage(formId) {
-    const imagePreview = document.getElementById(`imagePreview-${formId}`);
+    const imagePreview = /** @type {HTMLImageElement | null} */ (document.getElementById(`imagePreview-${formId}`));
     return imagePreview ? imagePreview.src : "img/norecipe.png";
 };

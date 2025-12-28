@@ -1,3 +1,4 @@
+// @ts-check
 import { loadSession, addRecipe } from "../store.js";
 import { recipeFormHTML } from "../ui/recipeForm/html.js";
 import { editFormAdd } from "../ui/recipeForm/events.js";
@@ -10,7 +11,10 @@ export async function addPage() {
     createNavigation();
     
     const session = loadSession();
-    const emptyRecipe = {
+    if (!session) return;
+
+    /** @type {Recipe} */    
+    const emptyRecipe = ({
         title: "",
         category: "breakfasts",
         time: 1,
@@ -19,8 +23,12 @@ export async function addPage() {
         steps: [],
         isFavorite: false,
         profileId: "",
-    };
+        type: "local",
+        mainImage: "img/norecipe.png",
+    });
+
     const app = document.getElementById("app");
+    if (!app) return;
     app.innerHTML = `
         <h2>Add New Recipe</h2>
         ${recipeFormHTML(emptyRecipe, "add")}
@@ -32,7 +40,9 @@ export async function addPage() {
         window.location.hash = "#/profile";
     });
 
-    const form = document.getElementById(`edit-form-new`);
+    /** @type {HTMLFormElement | null} */
+    const form = /** @type {HTMLFormElement | null} */ (document.getElementById(`edit-form-new`));
+    if (!form) return;
 
     const favBtn = document.getElementById("favBtn-new");
 
@@ -50,11 +60,13 @@ export async function addPage() {
     let mainImageData = "img/norecipe.png";
     
     // Use handleFileInput utility to avoid duplication
-    const mainImageInput = document.querySelector(".add-mainimage");
+    /** @type {HTMLInputElement | null} */
+    const mainImageInput = /** @type {HTMLInputElement | null} */ (document.querySelector(".add-mainimage"));
     if (mainImageInput) {
         handleFileInput(mainImageInput, (result) => {
             mainImageData = result;
-            const imagePreview = document.getElementById("imagePreview-new");
+            /** @type {HTMLImageElement | null} */
+            const imagePreview = /** @type {HTMLImageElement | null} */ (document.getElementById("imagePreview-new"));
             if (imagePreview) {
                 imagePreview.src = result;
             }
@@ -65,14 +77,15 @@ export async function addPage() {
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const editTitle = document.getElementById("editTitle-new");
-        const editTime = document.getElementById("editTime-new");
-        const editCategory = document.getElementById("editCategory-new");
-        const editServings = document.getElementById("editServings-new");
-        const editIngredients = document.getElementById("editIngredients-new");
-        const editSteps = document.getElementById("editSteps-new");
+        const editTitle = /** @type {HTMLInputElement} */ (document.getElementById("editTitle-new"));
+        const editTime = /** @type {HTMLInputElement} */ (document.getElementById("editTime-new"));
+        const editCategory = /** @type {HTMLSelectElement} */ (document.getElementById("editCategory-new"));
+        const editServings = /** @type {HTMLInputElement} */ (document.getElementById("editServings-new"));
+        const editIngredients = /** @type {HTMLElement} */ (document.getElementById("editIngredients-new"));
+        const editSteps = /** @type {HTMLElement} */ (document.getElementById("editSteps-new"));
 
-        const newRecipe = {
+        /** @type {Recipe} */
+        const newRecipe = ({
             title: editTitle.value.trim(),
             time: Number(editTime.value),
             category: editCategory.value,
@@ -83,7 +96,7 @@ export async function addPage() {
             isFavorite,
             profileId: session.profileId,
             mainImage: mainImageData,
-        };
+        });
         
         const valid = validateRecipe(newRecipe);
 
