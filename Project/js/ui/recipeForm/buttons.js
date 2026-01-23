@@ -6,7 +6,7 @@ import { collectIngredients, collectSteps } from "./data.js";
 import { handleFileInput } from "../../utils/fileHandler.js";
 
 // Handle buttons in recipe cards: favorite, delete, edit
-export function recipeFormButtons(onRefresh) {
+export function recipeFormButtons() {
     const recipesContainer = document.getElementById("recipes");
     if (!recipesContainer) return;
     recipesContainer.addEventListener("click", async event => {
@@ -19,7 +19,6 @@ export function recipeFormButtons(onRefresh) {
             const id = article.dataset.id;
             if (!id) return;
             await toggleFavorite(id);
-            onRefresh();
             return;
         }
 
@@ -30,7 +29,6 @@ export function recipeFormButtons(onRefresh) {
             if (!id) return;
             if (confirm("Delete recipe?")) {
             await deleteRecipe(id);
-            onRefresh();
             }
             return;
         }
@@ -100,8 +98,6 @@ export function recipeFormButtons(onRefresh) {
             if (!valid) return;
             
             await updateRecipe(id, patch);
-
-            onRefresh();
 
             editForm.remove();
 

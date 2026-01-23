@@ -49,6 +49,7 @@ function updateActiveNav(hash) {
         if (href !== hash) {
             a.classList.remove('is-active');
             a.removeAttribute('aria-current');
+            return;
         }
         a.classList.add('is-active');
         a.setAttribute('aria-current', 'page');

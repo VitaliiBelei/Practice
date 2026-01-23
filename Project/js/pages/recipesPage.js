@@ -27,11 +27,8 @@ export async function recipesPage() {
                         <label><input type="checkbox" id="only-fav"> Only favorites</label>
                         <button type="reset" id="reset-btn">Reset</button>
                     </div>
-                </label>
-                
+                </label>     
             </form>
-        
-        
         </div>
         <div id="recipes"></div>
         <p id="counter" aria-live="polite"></p>
@@ -61,7 +58,6 @@ export async function recipesPage() {
         onlyFav.checked = false;
         category.value = "all";
         search.value = "";
-        setTimeout(refresh, 0);
     });
 
     async function searchRecipe () {
@@ -72,14 +68,11 @@ export async function recipesPage() {
         (category.value === "all" || recipe.category === category.value) &&
         (q === "" || recipe.title.toLowerCase().includes(q))
     );
+
     renderRecipes(filtered);
     };
 
-    function refresh() {
-        searchRecipe();
-    };
-
-    recipeFormButtons(refresh);
+    recipeFormButtons();
 
     const showRecipeDetail = async (id) => {
         const recipe = await getRecipeById(id);

@@ -19,7 +19,7 @@ export async function favoritesPage() {
     if (!session) return;
     const id = session.profileId;
     const list = await loadUserRecipes(id);
-    const filtered = (list ?? []).filter(recipe => !!recipe.isFavorite);
+    const filtered = (list ?? []).filter(recipe => recipe.isFavorite);
 
     renderRecipes(filtered);     
 
@@ -28,14 +28,8 @@ export async function favoritesPage() {
         const c = document.getElementById("counter");
         if (c) c.textContent = "Find: 0";
     };
-    
-    async function refresh() {
-        const list = await loadUserRecipes(id);
-        const filtered = (list ?? []).filter(r => !!r.isFavorite);
-        renderRecipes(filtered);
-    };
 
-    recipeFormButtons(refresh);
+    recipeFormButtons();
 
     const showRecipeDetail = async (id) => {
         const recipe = await getRecipeById(id);
