@@ -23,7 +23,91 @@ export function recipeFormHTML(recipe, mode = "edit") {
         </div>
         `).join("");
 
-    return `
+    if (mode === 'view') {
+        return `
+            <article id="edit-form-${formId}">
+                <button id="backToRecipes" class="back-btn">← Back to Recipes</button>
+                <label for="editTitle-${formId}">
+                    Title
+                </label>
+                <input id="editTitle-${formId}" name="title" value="${recipe.title ?? ""}" disabled>
+                <div class='edit-form'>
+                    <label for="editCategory-${formId}">
+                        Category
+                    </label>
+                    <select id="editCategory-${formId}" name="category" disabled>
+                        <option value="breakfasts" ${recipe.category === "breakfasts" ? "selected" : ""}>Breakfasts</option>
+                        <option value="dinners"    ${recipe.category === "dinners"    ? "selected" : ""}>Dinners</option>
+                        <option value="salads"     ${recipe.category === "salads"     ? "selected" : ""}>Salads</option>
+                        <option value="soups"      ${recipe.category === "soups"      ? "selected" : ""}>Soups</option>
+                        <option value="meat"       ${recipe.category === "meat"       ? "selected" : ""}>Meat</option>
+                        <option value="fish"       ${recipe.category === "fish"       ? "selected" : ""}>Fish</option>
+                    </select>
+
+                    <label for="editTime-${formId}">
+                        Time
+                    </label>
+                    <input id="editTime-${formId}" name="time" type="number" value="${recipe.time ?? 1}" disabled>
+
+                    <label for="editServings-${formId}">
+                        Servings
+                    </label>
+                    <input id="editServings-${formId}" name="servings" type="number" value="${recipe.servings ?? 1}" disabled>
+                </div>
+
+                <div class="main-image-input">
+                    <img src="${recipe.mainImage ?? "img/norecipe.png"}" alt="Image of ${recipe.title}" id="imagePreview-${formId}">
+                </div>
+
+                <fieldset name="ingredients">
+                    <legend>Ingredients</legend>
+                    <div id="editIngredients-${formId}">
+                        ${(recipe.ingredients ?? []).map((ing, index) => 
+                            `
+                            <div class="ingredient-row" data-index="${index}">
+                                <input id="editIngName-${formId}-${index}" name="ing[${index}][name]" type="text" placeholder="Name" value="${ing.name ?? ""}" disabled>
+                                <input id="editIngQty-${formId}-${index}"  name="ing[${index}][qty]"  type="number" placeholder="Qty" min="0" step="0.01" value="${ing.qty ?? ""}" disabled>
+                                <select id="editIngUnit-${formId}-${index}" name="ing[${index}][unit]" disabled>
+                                ${units.map(u => `<option value="${u}" ${ing.unit === u ? "selected" : ""}>${u}</option>`).join("")}
+                                </select>
+                            </div>
+                            `
+                        ).join("")}
+                    </div>
+                </fieldset>
+
+                <fieldset name="steps">
+                    <legend>Steps</legend>
+                    <div id="editSteps-${formId}">
+                        ${(recipe.steps ?? []).map((step, index) => 
+                            `
+                            <div class="step-row" data-index="${index}">
+                                <textarea id="editStep-${formId}-${index}" name="step[${index}]" rows="2" placeholder="Step ${index + 1}" disabled>${step}</textarea>
+                            </div>
+                            `
+                        ).join("")}
+                    </div>
+                </fieldset>
+
+                <button 
+                        type="button" 
+                        class="fav-btn" 
+                        title="Mark/Unmark as favorite"
+                        id="favBtn-${formId}"
+                        aria-label="${recipe.isFavorite ? 'Unmark as favorite' : 'Mark as favorite'}"
+                        aria-pressed="${recipe.isFavorite ? 'true' : 'false'}"
+                    >
+                        ${recipe.isFavorite ? '★' : '☆'}
+                </button>
+                
+                <div class = 'editButtons'>
+                    <button type="button" class="edit-btn" aria-label="Edit recipe">Edit</button>
+                </div>
+            </article>
+        `
+    }
+
+    else return `
         <form id="edit-form-${formId}">
             
                 <label for="editTitle-${formId}">
@@ -54,17 +138,16 @@ export function recipeFormHTML(recipe, mode = "edit") {
                 <input id="editServings-${formId}" name="servings" type="number" value="${recipe.servings ?? 1}">
             
             
-                ${mode === "add"
-                    ? `<button 
-                        type="button" 
-                        class="fav-btn" 
-                        title="Mark/Unmark as favorite"
-                        id="favBtn-${formId}"
-                        aria-label="${recipe.isFavorite ? 'Unmark as favorite' : 'Mark as favorite'}"
-                        aria-pressed="${recipe.isFavorite ? 'true' : 'false'}"
-                        >${recipe.isFavorite ? '★' : '☆'}</button>` 
-                    : ""
-                }
+                <button 
+                    type="button" 
+                    class="fav-btn" 
+                    title="Mark/Unmark as favorite"
+                    id="favBtn-${formId}"
+                    aria-label="${recipe.isFavorite ? 'Unmark as favorite' : 'Mark as favorite'}"
+                    aria-pressed="${recipe.isFavorite ? 'true' : 'false'}"
+                >
+                    ${recipe.isFavorite ? '★' : '☆'}
+                </button>
             </div>
 
             <div class="main-image-input">
