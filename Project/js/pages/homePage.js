@@ -1,7 +1,11 @@
-import { loadSession, saveProfile, saveSession } from "../store.js";
+import { loadSession, saveProfile, saveSession, loadAllRecipes } from "../store.js";
 import { registerProfile, loginProfile } from "../ui/auth.js";
 import { handleFileInput } from "../utils/fileHandler.js";
 import { validateProfile } from "../ui/recipeForm/validation.js";
+import { createNavigation } from "../ui/navigation.js";
+import { renderRecipes } from "../ui/recipeList.js";
+
+const app = document.getElementById("app");
 
 export function homePage() {
     const session = loadSession();
@@ -9,11 +13,10 @@ export function homePage() {
         initProfileButtons();
     } else {
         // User is logged in, redirect to profile
-        window.location.hash = "#/profile";
+        window.location.hash = "#/homeLogin";
     }
 
     function initProfileButtons() {
-        const app = document.getElementById("app");
         app.innerHTML = `
             <h2>Welcome to the Recipe App</h2>
             <p>Discover and share amazing recipes!</p>
@@ -139,7 +142,7 @@ export function homePage() {
                             
                             const session = {profileId: profile.profileId, status: "login", loggetAt: new Date().toISOString()};
                             saveSession(session);
-                            window.location.hash = "#/profile";
+                            window.location.hash = "#/homeLogin";
                         } catch (error) {
                             console.error("Login failed:", error);
                             alert("Login failed. Please try again.");
@@ -149,15 +152,25 @@ export function homePage() {
             });
         }
     }
+};
 
-    // Add title click functionality
-    const title = document.getElementById("h1");
-    if (title) {
-        title.addEventListener("click", () => {
-            if (session) {
-                window.location.hash = "#/profile";  
-            } 
-            homePage();
-        });
-    }
+export async function homeLogin() {
+        createNavigation();
+        const app = document.getElementById("app");
+    if (!app) return;
+    app.innerHTML = `
+        <h2>Welcome back to the Recipe App!</h2>
+        <p>Discover and share amazing recipes!</p>
+        <div id="recipes"></div>
+    `;
+        await loadRecipesFlow();
+}
+
+
+async function loadRecipesFlow() {
+const session = loadSession();
+    if (!session) return;
+    const allRecipes = await loadAllRecipes();
+    renderRecipes(allRecipes ?? [], "flow");
+
 }

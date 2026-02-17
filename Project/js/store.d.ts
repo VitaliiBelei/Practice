@@ -2,6 +2,7 @@ import type { Recipe } from "./pages/ts/recipe";
 import type { Profile, Session } from "./pages/ts/profile";
 
 export function loadUserRecipes(profileId: string): Promise<Recipe[] | null>;
+export function loadAllRecipes(): Promise<Recipe[] | null>;
 export function addRecipe(recipe: Recipe): Promise<Recipe>;
 export function getRecipeById(id: string): Promise<Recipe>;
 export function updateRecipe(id: string, patch: Partial<Recipe>): Promise<Recipe>;

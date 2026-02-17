@@ -2,9 +2,24 @@ import { recipeFormHTML } from './recipeForm/html.js';
 
 // Recipe display components
 
-export function recipeCard(recipe) {
+export function recipeCard(recipe, mode = "list") {
     const category = recipe.category.charAt(0).toUpperCase() + recipe.category.slice(1);
-
+    
+    if (mode === "flow") {
+        return `
+            <article class="recipe-card" >
+            <div>
+                <h2>${recipe.title}</h2>
+                <p><strong>Category:</strong> ${category}</p>
+                <p><strong>Time:</strong> ${recipe.time} minutes</p>
+                <p><strong>Servings:</strong> ${recipe.servings}</p>
+            </div>
+            <div class="recipe-image" data-id="${recipe.id}">
+                <img src="${recipe.mainImage ?? 'img/norecipe.png'}" alt="Image of ${recipe.title}">
+            </div>
+        </article>
+        `
+    }
     return `
         <article class="recipe-card" data-id="${recipe.id}">
             <div>
