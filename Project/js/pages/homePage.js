@@ -1,8 +1,9 @@
-import { loadSession, saveProfile, saveSession } from "../store.js";
+import { loadSession, saveProfile, saveSession, loadAllRecipes } from "../store.js";
 import { registerProfile, loginProfile } from "../ui/auth.js";
 import { handleFileInput } from "../utils/fileHandler.js";
 import { validateProfile } from "../ui/recipeForm/validation.js";
 import { createNavigation } from "../ui/navigation.js";
+import { renderRecipes } from "../ui/recipeList.js";
 
 const app = document.getElementById("app");
 
@@ -154,12 +155,22 @@ export function homePage() {
 };
 
 export async function homeLogin() {
-        app.innerHTML = `
-            <h2>Welcome back to the Recipe App!</h2>
-            <p>Discover and share amazing recipes!</p>
-            <p>Тут буде стрічка рецептів</p>
-        `
         createNavigation();
+        const app = document.getElementById("app");
+    if (!app) return;
+    app.innerHTML = `
+        <h2>Welcome back to the Recipe App!</h2>
+        <p>Discover and share amazing recipes!</p>
+        <div id="recipes"></div>
+    `;
+        await loadRecipesFlow();
+}
 
-    
+
+async function loadRecipesFlow() {
+const session = loadSession();
+    if (!session) return;
+    const allRecipes = await loadAllRecipes();
+    renderRecipes(allRecipes ?? [], "flow");
+
 }

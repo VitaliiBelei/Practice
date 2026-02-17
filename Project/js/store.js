@@ -77,6 +77,18 @@ export async function loadUserRecipes(profileId) {
     }
 }
 
+export async function loadAllRecipes() {
+    try {
+        const response = await fetch (`http://localhost:3001/recipes`);
+        if (!response.ok) throw new Error("Error loading recipes");
+        const recipes = await response.json();
+        return recipes || null; 
+    } catch (error) {
+        console.error("Error loading recipes:", error); 
+        throw error;
+    }
+}
+
 export async function addRecipe(recipe) {
     if (!recipe) return console.error("Recipe is not defined");
         try {

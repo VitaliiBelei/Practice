@@ -1,18 +1,18 @@
 // Common recipe list rendering functionality
 import { recipeCard } from "./recipe.js";
 
-export function renderRecipes(recipes) {
+export function renderRecipes(recipes, mode = "list") {
     let paginationWrapper = null;
     let currentPage = 1;
     const itemsPerPage = 10;
 
    
     const container = document.getElementById("recipes");
+    if (!container) return;
     container.innerHTML = "";
     const recipeContainer = document.createElement("div");
     recipeContainer.id = "recipe-container";
     container.appendChild(recipeContainer);
-    if (!container) return;
 
     container.className = "recipes-container";
 
@@ -48,7 +48,7 @@ export function renderRecipes(recipes) {
     function showPage(page) {
         const start = (page - 1) * itemsPerPage;
         const end = start + itemsPerPage; 
-        recipeContainer.innerHTML = recipes.slice(start,end).map(recipeCard).join("");
+        recipeContainer.innerHTML = recipes.slice(start,end).map((recipe) => recipeCard(recipe, mode)).join("");
         buildPagination();
         const pagination =/** @type {HTMLElement} */ (document.querySelector(".pagination-wrapper"))
         if (pagination) {
