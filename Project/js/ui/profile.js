@@ -20,9 +20,7 @@ export function loadProfilePage(profile = null, mode = "unlogin") {
                     <p><strong>Member since: </strong>${profile.createdAt}</p>
                 </div>
                 `
-                : `
-                <h3>Welcome to Cookbook Social! Your place to share recipes, discover new flavors, and connect with food lovers from around the world. Save your favorite dishes, customize your cooking profile, and make every meal a story worth sharing.</h3>
-                `
+                : `<p>Please log in to view your profile.</p>`
             }
         </div>
     `;

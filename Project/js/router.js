@@ -1,7 +1,7 @@
-import {recipesPage, profilePage, addPage, favoritesPage, homePage} from "./app.js";
+import {recipesPage, profilePage, addPage, homePage, homeLogin} from "./app.js";
 
 const app = document.getElementById("app");
-const routes = new Set(['#/home', '#/profile', '#/recipes', '#/add', '#/favorites']);
+const routes = new Set(['#/home', '#/homeLogin', '#/recipes', '#/add', '#/profile']);
 
 function handleRoute() {
     const hash = window.location.hash.split('?')[0]; // Remove URL parameters for route matching
@@ -24,8 +24,8 @@ async function render(hash) {
         case "#/home":
             homePage();
             break;
-        case "#/profile":
-            await profilePage();
+        case "#/homeLogin":
+            await homeLogin();
             break;
         case "#/recipes":
             await recipesPage();
@@ -33,8 +33,8 @@ async function render(hash) {
         case "#/add":
             await addPage();
             break;
-        case "#/favorites":
-            await favoritesPage();
+        case "#/profile":
+            await profilePage();
             break;
         default:
             app.innerHTML = "<h1>404</h1><p>Page not found</p>";

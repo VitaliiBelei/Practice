@@ -1,30 +1,32 @@
 import { loadSession, clearSession } from "../store.js";
 import { loadProfilePage } from "./profile.js";
 import { registerProfile, loginProfile } from "./auth.js";
+import { homePage } from "../app.js";
 
 export function createNavigation() {
+    const session = loadSession();
     const nav = document.getElementById('nav');
     const buttons = document.getElementById('buttons');
     if (!nav) return;
 
-    const session = loadSession();
-    //const profile = session ? await loadProfile(session.profileId) : null;
-    //&& profile
-
     if (session ) {
         // Logged in navigation
         nav.innerHTML = `
-            <a href="#/profile" id="profilePage">Profile</a>
+            <a href="#/homeLogin" id="homeLoginPage">Home</a>
             <a href="#/recipes">Recipes</a>
             <a href="#/add">Add</a>
-            <a href="#/favorites">Favorites</a>
         `;
-        buttons.innerHTML = `
+        if (window.location.hash.split('?')[0] !== "#/profile") {
+            buttons.innerHTML = `
+            <button id="profileBtn">Profile</button>
             <button id="logoutBtn">Logout</button> 
+            `;
+        } else {
+            buttons.innerHTML = `
             <button id="editProfileBtn">Edit Profile</button>
             <button id="settingsBtn">Settings</button>
-        `;
-
+            `;
+        };
         // Add logout functionality
         const logoutBtn = document.getElementById("logoutBtn");
         if (logoutBtn) {
@@ -33,6 +35,13 @@ export function createNavigation() {
                 loadProfilePage(null, "unlogin");
                 createNavigation(); // Recreate navigation
                 window.location.hash = "#/home";
+            });
+        }
+
+        const profileBtn = document.getElementById("profileBtn");
+        if (profileBtn) {
+            profileBtn.addEventListener("click", () => {
+                window.location.hash = "#/profile";
             });
         }
 
@@ -74,5 +83,15 @@ export function createNavigation() {
                 loginProfile();
             });
         }
+    }
+    //Add title click functionality
+    const title = document.getElementById("h1");
+    if (title) {
+        title.addEventListener("click", () => {
+            if (session) {
+                window.location.hash = "#/homeLogin";  
+            } 
+            homePage();
+        });
     }
 }

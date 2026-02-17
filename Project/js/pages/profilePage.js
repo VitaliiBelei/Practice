@@ -188,8 +188,6 @@ export async function profilePage(){
         /** @type {HTMLButtonElement | null} */
         const logoutBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById("logoutBtn"));
         if (logoutBtn) {
-            logoutBtn.disabled = false;
-            logoutBtn.classList.remove("disabled");
             logoutBtn.onclick = () => {
                 clearSession();
                 loadProfilePage(null, "unlogin");
@@ -200,8 +198,6 @@ export async function profilePage(){
         /** @type {HTMLButtonElement | null} */
         const settingsBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById("settingsBtn"));
         if (settingsBtn) {
-            settingsBtn.disabled = false;
-            settingsBtn.classList.remove("disabled");
             settingsBtn.onclick = () => {
                 renderSettings();
                 setTimeout(() => {
@@ -213,8 +209,6 @@ export async function profilePage(){
         /** @type {HTMLButtonElement | null} */
         const editProfileBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById("editProfileBtn"));
         if (editProfileBtn) {
-            editProfileBtn.disabled = false;
-            editProfileBtn.classList.remove("disabled");
             editProfileBtn.onclick = () => {
                 if (!profile) return;
                 editProfile(profile);
@@ -284,8 +278,6 @@ export async function profilePage(){
     /** @type {HTMLButtonElement | null} */
     const settingsBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById("settingsBtn"));
     if (settingsBtn) {
-        settingsBtn.disabled = false;
-        settingsBtn.classList.remove("disabled");
         settingsBtn.onclick = () => {
             renderSettings();
             setTimeout(() => {
