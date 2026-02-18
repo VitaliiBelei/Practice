@@ -1,4 +1,7 @@
 
+const API_URL = "http://localhost:3002";
+
+
 // Cookie Manager
 class CookieManager {
     static set(name, value, options = {}) {
@@ -67,7 +70,7 @@ class CookieManager {
 
 export async function loadUserRecipes(profileId) {
     try {
-        const response = await fetch (`http://localhost:3001/recipes?profileId=${profileId}`);
+        const response = await fetch (`${API_URL}/recipes?profileId=${profileId}`);
         if (!response.ok) throw new Error("Error loading recipes");
         const recipes = await response.json();
         return recipes || null; 
@@ -79,7 +82,7 @@ export async function loadUserRecipes(profileId) {
 
 export async function loadAllRecipes() {
     try {
-        const response = await fetch (`http://localhost:3001/recipes`);
+        const response = await fetch (`${API_URL}/recipes`);
         if (!response.ok) throw new Error("Error loading recipes");
         const recipes = await response.json();
         return recipes || null; 
@@ -92,7 +95,7 @@ export async function loadAllRecipes() {
 export async function addRecipe(recipe) {
     if (!recipe) return console.error("Recipe is not defined");
         try {
-            const response = await fetch (`http://localhost:3001/recipes`, {
+            const response = await fetch (`${API_URL}/recipes`, {
                 method: "POST",
                 headers: {"Content-Type":"application/json"},
                 body: JSON.stringify(recipe)
@@ -107,7 +110,7 @@ export async function addRecipe(recipe) {
 
 export async function getRecipeById(id) {
     try {
-        const response = await fetch(`http://localhost:3001/recipes/${id}`);
+        const response = await fetch(`${API_URL}/recipes/${id}`);
         if (!response.ok) throw new Error("Error loading recipe");
         return await response.json();
     } catch (error) {
@@ -118,7 +121,7 @@ export async function getRecipeById(id) {
 
 export async function updateRecipe(id, patch) {
     try {
-        const response = await fetch(`http://localhost:3001/recipes/${id}`);
+        const response = await fetch(`${API_URL}/recipes/${id}`);
         if (!response.ok) throw new Error("Error loading recipe");
         const recipe = await response.json();
         
@@ -128,7 +131,7 @@ export async function updateRecipe(id, patch) {
             updatedAt: new Date().toISOString()
         };
 
-        const updateResponse = await fetch(`http://localhost:3001/recipes/${id}`, {
+        const updateResponse = await fetch(`${API_URL}/recipes/${id}`, {
             method: "PUT",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(updatedRecipe)
@@ -144,7 +147,7 @@ export async function updateRecipe(id, patch) {
 
 export async function deleteRecipe(id) {
     try {
-        const deleteResponse = await fetch(`http://localhost:3001/recipes/${id}`, {
+        const deleteResponse = await fetch(`${API_URL}/recipes/${id}`, {
             method: "DELETE",
             headers: {"Content-Type": "application/json"},
         });
@@ -159,7 +162,7 @@ export async function deleteRecipe(id) {
 
 export async function toggleFavorite(id) {
     try {
-        const response = await fetch(`http://localhost:3001/recipes/${id}`);
+        const response = await fetch(`${API_URL}/recipes/${id}`);
         if (!response.ok) throw new Error("Error loading recipe");
         const recipe = await response.json();
         
@@ -169,7 +172,7 @@ export async function toggleFavorite(id) {
             updatedAt: new Date().toISOString()
         };
 
-        const updateResponse = await fetch(`http://localhost:3001/recipes/${id}`, {
+        const updateResponse = await fetch(`${API_URL}/recipes/${id}`, {
             method: "PUT",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(updatedRecipe)
@@ -185,7 +188,7 @@ export async function toggleFavorite(id) {
 
 export async function loadProfiles() {
     try {
-        const response = await fetch ('http://localhost:3001/profiles');
+        const response = await fetch (`${API_URL}/profiles`);
         if (!response.ok) throw new Error("Error loading profile");
         const profiles = await response.json();
         return profiles || null; 
@@ -197,7 +200,7 @@ export async function loadProfiles() {
 
 export async function loadProfile(profileId) {
     try {
-        const response = await fetch (`http://localhost:3001/profiles?profileId=${profileId}`);
+        const response = await fetch (`${API_URL}/profiles?profileId=${profileId}`);
         if (!response.ok) throw new Error("Error loading profile");
         const profile = await response.json();
         return profile[0] || null; 
@@ -210,7 +213,7 @@ export async function loadProfile(profileId) {
 export async function saveProfile(profile) {
     if (!profile) return console.error("Profile is not defined");
     try {
-        const response = await fetch (`http://localhost:3001/profiles`, {
+        const response = await fetch (`${API_URL}/profiles`, {
             method: "POST",
             headers: {"Content-Type":"application/json"},
             body: JSON.stringify(profile)
@@ -225,7 +228,7 @@ export async function saveProfile(profile) {
 
 export async function updateProfile(profileId, patch) {
     try {
-        const response = await fetch(`http://localhost:3001/profiles?profileId=${profileId}`);
+        const response = await fetch(`${API_URL}/profiles?profileId=${profileId}`);
         if (!response.ok) throw new Error("Error loading profile");
         const profiles = await response.json();
         
@@ -237,7 +240,7 @@ export async function updateProfile(profileId, patch) {
             updatedAt: new Date().toISOString()
         };
 
-        const updateResponse = await fetch(`http://localhost:3001/profiles/${profiles[0].id}`, {
+        const updateResponse = await fetch(`${API_URL}/profiles/${profiles[0].id}`, {
             method: "PUT",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(updatedProfile)
@@ -253,13 +256,13 @@ export async function updateProfile(profileId, patch) {
 
 export async function deleteProfile(profileId) {
     try {
-        const response = await fetch(`http://localhost:3001/profiles?profileId=${profileId}`);
+        const response = await fetch(`${API_URL}/profiles?profileId=${profileId}`);
         if (!response.ok) throw new Error("Error loading profile");
         const profiles = await response.json();
         
         if (!profiles[0]) throw new Error("Profile not found");
         
-        const deleteResponse = await fetch(`http://localhost:3001/profiles/${profiles[0].id}`, {
+        const deleteResponse = await fetch(`${API_URL}/profiles/${profiles[0].id}`, {
             method: "DELETE",
             headers: {"Content-Type": "application/json"},
         });
