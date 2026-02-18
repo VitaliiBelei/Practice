@@ -104,34 +104,43 @@ function setupSettingsForm(profile) {
     /** @type {HTMLButtonElement | null} */
     const saveSettingsBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById("saveSettingsBtn"));
     if (!saveSettingsBtn) return;
-    saveSettingsBtn.addEventListener("click", () => {
+    saveSettingsBtn.addEventListener("click", async () => {
         if (!profile) return;
         const newSettings = {
             language: languageSelect.value,
             theme: themeSelect.value,
             units: unitsSelect.value
         };
-
-        updateProfile(profile.profileId, { settings: newSettings });
-        if (settingsMessage) settingsMessage.textContent = "Settings saved successfully!";
-        setTimeout(() => { window.location.hash = "#/profile"; }, 2000);
+        try {
+            await updateProfile(profile.profileId, { settings: newSettings });
+            if (settingsMessage) settingsMessage.textContent = "Settings saved successfully!";
+            setTimeout(() => { window.location.hash = "#/profile"; }, 1200);
+        } catch (error) {
+            console.error("Error saving settings:", error);
+            if (settingsMessage) settingsMessage.textContent = "Failed to save settings.";
+        }
     });
 
     /** @type {HTMLButtonElement | null} */
     const resetSettingsBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById("resetSettingsBtn"));
     if (!resetSettingsBtn) return;
-    resetSettingsBtn.addEventListener("click", () => {
+    resetSettingsBtn.addEventListener("click", async () => {
         if (!profile) return;
         const defaultSettings = {
             language: "en",
             theme: "system",
             units: "metric"
         };
-        updateProfile(profile.profileId, { settings: defaultSettings });
-        languageSelect.value = defaultSettings.language;
-        themeSelect.value = defaultSettings.theme;
-        unitsSelect.value = defaultSettings.units;
-        if (settingsMessage) settingsMessage.textContent = "Settings reset to default!";
+        try {
+            await updateProfile(profile.profileId, { settings: defaultSettings });
+            languageSelect.value = defaultSettings.language;
+            themeSelect.value = defaultSettings.theme;
+            unitsSelect.value = defaultSettings.units;
+            if (settingsMessage) settingsMessage.textContent = "Settings reset to default!";
+        } catch (error) {
+            console.error("Error resetting settings:", error);
+            if (settingsMessage) settingsMessage.textContent = "Failed to reset settings.";
+        }
     });
 
     const cancelBtn = document.getElementById("cancelBtn");
@@ -143,13 +152,18 @@ function setupSettingsForm(profile) {
 
     const deleteAccountBtn = document.getElementById("deleteAccountBtn");
     if (deleteAccountBtn) {
-        deleteAccountBtn.addEventListener("click", () => {
+        deleteAccountBtn.addEventListener("click", async () => {
             if (!profile) return;
             const confirmed = confirm("Are you sure you want to delete your account? This action cannot be undone.");
             if (!confirmed) return;
-            deleteProfile(profile.profileId);
-            clearSession();
-            window.location.hash = "#/home";
+            try {
+                await deleteProfile(profile.profileId);
+                clearSession();
+                window.location.hash = "#/home";
+            } catch (error) {
+                console.error("Error deleting account:", error);
+                if (settingsMessage) settingsMessage.textContent = "Failed to delete account.";
+            }
         });
     }
 }
