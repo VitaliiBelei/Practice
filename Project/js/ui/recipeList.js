@@ -28,6 +28,19 @@ export function renderRecipes(recipes, mode = "list") {
 
     
 
+    function setActivePageBtn(page) {
+        if (!paginationWrapper) return;
+        const activeBtn = paginationWrapper.querySelector(`.page-btn[data-page="${page}"]`);
+        if (activeBtn) {
+            paginationWrapper.querySelectorAll('.page-btn').forEach(b => {
+                b.classList.remove('active');
+                b.removeAttribute('aria-current');
+            });
+            activeBtn.classList.add('active');
+            activeBtn.setAttribute('aria-current', 'page');
+        }
+    }
+
     function buildPagination () {
         if (paginationWrapper) {
             paginationWrapper.remove();
@@ -43,6 +56,16 @@ export function renderRecipes(recipes, mode = "list") {
             `<button class="page-btn" data-page="${i + 1}">${i + 1}</button>`
         ).join('');
         container.appendChild(paginationWrapper);
+
+        // listener for paginaion
+        paginationWrapper.addEventListener('click', (e) => {
+            if (!(e.target instanceof Element)) return;
+            const btn = e.target.closest('.page-btn');
+            if (!(btn instanceof HTMLButtonElement)) return;
+            currentPage = Number(btn.dataset.page);
+            showPage(currentPage);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
     }
 
     function showPage(page) {
@@ -50,18 +73,7 @@ export function renderRecipes(recipes, mode = "list") {
         const end = start + itemsPerPage; 
         recipeContainer.innerHTML = recipes.slice(start,end).map((recipe) => recipeCard(recipe, mode)).join("");
         buildPagination();
-        const pagination =/** @type {HTMLElement} */ (document.querySelector(".pagination-wrapper"))
-        if (pagination) {
-        pagination.addEventListener('click', (e) => {
-        
-            if (!(e.target instanceof Element)) return;
-            const btn = e.target.closest('.page-btn');
-            if (!(btn instanceof HTMLButtonElement)) return;
-                currentPage = Number(btn.dataset.page);
-                showPage(currentPage);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-    }
+        setActivePageBtn(page);
     }
     
     if (currentPage === 1) {

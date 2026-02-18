@@ -32,6 +32,10 @@ button:disabled {
     transform: none;
 }
 
+.page-btn.active {
+    border-color: red;
+}
+
 /* Button variants */
 .btn-primary {
     background: var(--primary);
