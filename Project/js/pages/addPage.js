@@ -25,6 +25,7 @@ export async function addPage() {
         profileId: "",
         type: "local",
         mainImage: "img/norecipe.png",
+        youtubeUrl: ""
     });
 
     const app = document.getElementById("app");
@@ -83,6 +84,7 @@ export async function addPage() {
         const editServings = /** @type {HTMLInputElement} */ (document.getElementById("editServings-new"));
         const editIngredients = /** @type {HTMLElement} */ (document.getElementById("editIngredients-new"));
         const editSteps = /** @type {HTMLElement} */ (document.getElementById("editSteps-new"));
+        const editYoutubeUrl = /** @type {HTMLInputElement} */ (document.getElementById("editVideoUrl-new"));
 
         /** @type {Recipe} */
         const newRecipe = ({
@@ -96,6 +98,7 @@ export async function addPage() {
             isFavorite,
             profileId: session.profileId,
             mainImage: mainImageData,
+            youtubeUrl: editYoutubeUrl.value.trim()
         });
         
         const valid = validateRecipe(newRecipe);

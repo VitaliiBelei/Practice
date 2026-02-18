@@ -502,4 +502,14 @@ main > h2 {
     margin: 0 auto;
 }
 
+.modal.hidden { display: none; }
+#ytFrame {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: 12px;
+  display: block;
+}
+
+
 

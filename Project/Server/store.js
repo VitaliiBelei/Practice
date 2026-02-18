@@ -5,46 +5,82 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const DB_PATH = path.join(__dirname, "Data", "db.json");
+
 let dbCache = null;
 let writeQueue = Promise.resolve();
+
+const recipeIndex = {
+  byId: new Map(),
+  byProfileId: new Map(),
+  byCategory: new Map()
+};
+
+function cloneRecipe(r) {
+  return { ...r };
+}
+
+function rebuildRecipeIndexes(recipes = []) {
+  recipeIndex.byId.clear();
+  recipeIndex.byProfileId.clear();
+  recipeIndex.byCategory.clear();
+
+  for (const r of recipes) {
+    const id = String(r.id);
+    recipeIndex.byId.set(id, r);
+
+    const pid = String(r.profileId ?? "");
+    if (!recipeIndex.byProfileId.has(pid)) recipeIndex.byProfileId.set(pid, []);
+    recipeIndex.byProfileId.get(pid).push(r);
+
+    const cat = String(r.category ?? "");
+    if (!recipeIndex.byCategory.has(cat)) recipeIndex.byCategory.set(cat, []);
+    recipeIndex.byCategory.get(cat).push(r);
+  }
+}
 
 async function readDb() {
   if (dbCache) return dbCache;
   const raw = await readFile(DB_PATH, "utf-8");
   dbCache = JSON.parse(raw);
+  rebuildRecipeIndexes(dbCache.recipes ?? []);
   return dbCache;
 }
 
 async function writeDb(db) {
   dbCache = db;
+  rebuildRecipeIndexes(dbCache.recipes ?? []);
   const payload = JSON.stringify(dbCache, null, 2);
   writeQueue = writeQueue.then(() => writeFile(DB_PATH, payload, "utf-8"));
   await writeQueue;
 }
 
 export async function getAllRecipes() {
-  const db = await readDb();
-  return db.recipes ?? [];
+  await readDb();
+  return Array.from(recipeIndex.byId.values()).map(cloneRecipe);
 }
 
 export async function getRecipesByProfile(profileId) {
-  const db = await readDb();
-  return (db.recipes ?? []).filter((r) => r.profileId === profileId);
+  await readDb();
+  return (recipeIndex.byProfileId.get(String(profileId)) ?? []).map(cloneRecipe);
 }
 
 export async function getRecipeById(id) {
-  const db = await readDb();
-  return (db.recipes ?? []).find((r) => String(r.id) === String(id)) ?? null;
+  await readDb();
+  const r = recipeIndex.byId.get(String(id));
+  return r ? cloneRecipe(r) : null;
 }
 
 export async function addRecipe(recipe) {
   const db = await readDb();
   const recipes = db.recipes ?? [];
-  const nextId = recipes.length ? Math.max(...recipes.map((r) => Number(r.id) || 0)) + 1 : 1;
+  const nextId = recipes.length
+    ? Math.max(...recipes.map((r) => Number(r.id) || 0)) + 1
+    : 1;
+
   const newRecipe = { ...recipe, id: nextId };
   db.recipes = [...recipes, newRecipe];
   await writeDb(db);
-  return newRecipe;
+  return cloneRecipe(newRecipe);
 }
 
 export async function updateRecipe(id, patch) {
@@ -60,7 +96,7 @@ export async function updateRecipe(id, patch) {
 
   db.recipes[idx] = updated;
   await writeDb(db);
-  return updated;
+  return cloneRecipe(updated);
 }
 
 export async function deleteRecipe(id) {
@@ -70,9 +106,10 @@ export async function deleteRecipe(id) {
 
   const [removed] = db.recipes.splice(idx, 1);
   await writeDb(db);
-  return removed;
+  return cloneRecipe(removed);
 }
 
+// profiles залишай як у тебе зараз:
 export async function getProfiles() {
   const db = await readDb();
   return db.profiles ?? [];
@@ -118,3 +155,4 @@ export async function deleteProfileById(id) {
   await writeDb(db);
   return removed;
 }
+

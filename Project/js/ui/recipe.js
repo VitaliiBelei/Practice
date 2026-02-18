@@ -4,6 +4,7 @@ import { validateRecipe } from "./recipeForm/validation.js";
 import { editFormAdd } from "./recipeForm/events.js";
 import { collectIngredients, collectSteps } from "./recipeForm/data.js";
 import { handleFileInput } from "../utils/fileHandler.js";
+import { extractYouTubeId } from "../utils/youtubeId.js";
 
 // Recipe display components
 
@@ -54,6 +55,22 @@ export function renderRecipeDetail(recipe) {
 
     container.innerHTML = recipeFormHTML(recipe, "view");
 
+    if (recipe.youtubeUrl) {
+        const videoId = extractYouTubeId(recipe.youtubeUrl);
+        if (videoId) {
+            recipe.youtubeUrl = `https://www.youtube.com/embed/${videoId}`;
+            const ytModal = document.getElementById("ytModal");
+            /** @type {HTMLIFrameElement | null} */
+            const ytFrame =/** @type {HTMLIFrameElement | null} */ (document.getElementById("ytFrame"));
+            if (ytFrame) {
+                ytFrame.src = recipe.youtubeUrl;
+                ytModal.classList.remove("hidden");
+            }
+        } else {
+            recipe.youtubeUrl = "";
+        }
+    }
+
     const editBtn = document.querySelector(".edit-btn");
     if (editBtn) {
         editBtn.addEventListener("click", (e) => {
@@ -61,28 +78,6 @@ export function renderRecipeDetail(recipe) {
             renderRecipeEdit(container, recipe);
         });
     }
-
-    // container.innerHTML = `
-    //     <section class="section">
-    //         <div class="container">
-    //             <button id="backToRecipes" class="back-btn">← Back to Recipes</button>
-    //             <h2 class="title">${recipe.title}</h2>
-    //             <div class="recipe-main-image">
-    //                 <img src="${recipe.mainImage ?? 'img/norecipe.png'}" alt="Image of ${recipe.title}">
-    //             </div>
-    //             <p><strong>Time:</strong> ${recipe.time} minutes</p>
-    //             <p><strong>Servings:</strong> ${recipe.servings}</p>
-    //             <h3 class="subtitle">Ingredients:</h3>
-    //             <ul>
-    //                 ${recipe.ingredients.map(ing => `<li>${ing.name}: ${ing.qty} ${ing.unit}</li>`).join("")}
-    //             </ul>
-    //             <h3 class="subtitle">Steps:</h3>
-    //             <ol>
-    //                 ${recipe.steps.map(step => `<li>${step}</li>`).join("")}
-    //             </ol>
-    //         </div>
-    //     </section>
-    // `;
 
     // Add back button functionality
     const backButton = document.getElementById('backToRecipes');
@@ -117,7 +112,9 @@ function renderRecipeEdit(container, recipe) {
     const editIngredients = /** @type {HTMLElement | null} */ (document.getElementById(`editIngredients-${id}`));
     /** @type {HTMLElement | null} */
     const editSteps = /** @type {HTMLElement | null} */ (document.getElementById(`editSteps-${id}`));
-    if (!editForm || !editTitle || !editTime || !editCategory || !editServings || !editIngredients || !editSteps) return;
+    /** @type {HTMLInputElement | null} */
+    const editYoutubeUrl = /** @type {HTMLInputElement | null} */ (document.getElementById(`editVideoUrl-${id}`));
+    if (!editForm || !editTitle || !editTime || !editCategory || !editServings || !editIngredients || !editSteps || !editYoutubeUrl) return;
 
     let mainImageData = recipe.mainImage ?? "img/norecipe.png";
     /** @type {HTMLInputElement | null} */
@@ -144,7 +141,8 @@ function renderRecipeEdit(container, recipe) {
             servings: Number(editServings.value),
             ingredients: collectIngredients(editIngredients),
             steps: collectSteps(editSteps),
-            mainImage: mainImageData
+            mainImage: mainImageData,
+            youtubeUrl: editYoutubeUrl.value.trim()
         };
 
         const valid = validateRecipe(patch);

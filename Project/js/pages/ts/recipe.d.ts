@@ -16,6 +16,7 @@ export type Recipe = {
   isFavorite: boolean;
   profileId: string;
   mainImage: string;
+  youtubeUrl?: string | null;
   createdAt?: string;
   updatedAt?: string;
 };

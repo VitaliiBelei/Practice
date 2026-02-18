@@ -59,6 +59,10 @@ export function recipeFormHTML(recipe, mode = "edit") {
                     <img src="${recipe.mainImage ?? "img/norecipe.png"}" alt="Image of ${recipe.title}" id="imagePreview-${formId}">
                 </div>
 
+                <div id="ytModal" class="modal hidden">
+                    <iframe id="ytFrame" allowfullscreen></iframe>
+                </div>
+
                 <fieldset name="ingredients">
                     <legend>Ingredients</legend>
                     <div id="editIngredients-${formId}">
@@ -157,6 +161,13 @@ export function recipeFormHTML(recipe, mode = "edit") {
                 <img src="${recipe.mainImage ?? "img/norecipe.png"}" alt="Image preview" id="imagePreview-${formId}">
                 <input type="file" accept="image/*" class="add-mainimage" id="fileInput-${formId}" style="display: none;">
                 <button type="button" class="add-mainimage-btn" data-recipe-id="${formId}">Add image</button>
+            </div>
+
+            <div class='videoUrl-input'>
+                <label for="editVideoUrl-${formId}">
+                    YouTube Video URL (optional)
+                </label>
+                <input id="editVideoUrl-${formId}" name="videoUrl" type="url" placeholder="https://www.youtube.com/watch?v=example" value="${recipe.videoUrl ?? ""}">
             </div>
 
             <fieldset name="ingredients">
