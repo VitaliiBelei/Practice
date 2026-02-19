@@ -90,7 +90,10 @@ export function createNavigation() {
         title.addEventListener("click", () => {
             if (session) {
                 window.location.hash = "#/homeLogin";  
-            } 
+            }
+            else {
+                window.location.hash = "#/home";
+            }
             homePage();
         });
     }

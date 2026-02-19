@@ -37,8 +37,8 @@ export async function recipesPage() {
     const session = loadSession();
     if (!session) return;
     const id = session.profileId;
-    const allRecipes = await loadUserRecipes(id);
-    renderRecipes(allRecipes ?? []);
+    const allRecipes = (await loadUserRecipes(id)) ?? [];
+    renderRecipes(allRecipes);
 
     /** @type {HTMLFormElement | null} */
     const searchForm = /** @type {HTMLFormElement | null} */ (document.getElementById("search-form"));
@@ -50,27 +50,36 @@ export async function recipesPage() {
     const search = /** @type {HTMLInputElement | null} */ (document.getElementById("search-input"));
     if (!searchForm || !category || !onlyFav || !search) return;
 
+    const debouncedSearch = debounce(searchRecipe, 200);
     onlyFav.addEventListener("change", searchRecipe);
     category.addEventListener("change", searchRecipe);
-    search.addEventListener("input", searchRecipe);
+    search.addEventListener("input", debouncedSearch);
 
     searchForm.addEventListener("reset", () => {
         onlyFav.checked = false;
         category.value = "all";
         search.value = "";
+        renderRecipes(allRecipes);
     });
 
-    async function searchRecipe () {
-    const list = await loadUserRecipes(id);
+    function searchRecipe () {
     const q = search.value.trim().toLowerCase();
-    const filtered = (list ?? []).filter(recipe => 
+    const filtered = allRecipes.filter(recipe => 
         (!onlyFav.checked || recipe.isFavorite)   &&
         (category.value === "all" || recipe.category === category.value) &&
         (q === "" || recipe.title.toLowerCase().includes(q))
     );
 
     renderRecipes(filtered);
-    };
+    }
+
+    function debounce(fn, delay) {
+        let timeoutId;
+        return (...args) => {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => fn(...args), delay);
+        };
+    }
 
     recipeFormButtons();
 

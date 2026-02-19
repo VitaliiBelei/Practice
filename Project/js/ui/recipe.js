@@ -1,4 +1,10 @@
 import { recipeFormHTML } from './recipeForm/html.js';
+import { updateRecipe } from "../store.js";
+import { validateRecipe } from "./recipeForm/validation.js";
+import { editFormAdd } from "./recipeForm/events.js";
+import { collectIngredients, collectSteps } from "./recipeForm/data.js";
+import { handleFileInput } from "../utils/fileHandler.js";
+import { extractYouTubeId } from "../utils/youtubeId.js";
 
 // Recipe display components
 
@@ -49,34 +55,29 @@ export function renderRecipeDetail(recipe) {
 
     container.innerHTML = recipeFormHTML(recipe, "view");
 
+    if (recipe.youtubeUrl) {
+        const videoId = extractYouTubeId(recipe.youtubeUrl);
+        if (videoId) {
+            recipe.youtubeUrl = `https://www.youtube.com/embed/${videoId}`;
+            const ytModal = document.getElementById("ytModal");
+            /** @type {HTMLIFrameElement | null} */
+            const ytFrame =/** @type {HTMLIFrameElement | null} */ (document.getElementById("ytFrame"));
+            if (ytFrame) {
+                ytFrame.src = recipe.youtubeUrl;
+                ytModal.classList.remove("hidden");
+            }
+        } else {
+            recipe.youtubeUrl = "";
+        }
+    }
+
     const editBtn = document.querySelector(".edit-btn");
-
-    editBtn.addEventListener('click' , (e) => {
-        e.preventDefault();
-        container.innerHTML = recipeFormHTML(recipe, "edit");
-    })
-
-    // container.innerHTML = `
-    //     <section class="section">
-    //         <div class="container">
-    //             <button id="backToRecipes" class="back-btn">← Back to Recipes</button>
-    //             <h2 class="title">${recipe.title}</h2>
-    //             <div class="recipe-main-image">
-    //                 <img src="${recipe.mainImage ?? 'img/norecipe.png'}" alt="Image of ${recipe.title}">
-    //             </div>
-    //             <p><strong>Time:</strong> ${recipe.time} minutes</p>
-    //             <p><strong>Servings:</strong> ${recipe.servings}</p>
-    //             <h3 class="subtitle">Ingredients:</h3>
-    //             <ul>
-    //                 ${recipe.ingredients.map(ing => `<li>${ing.name}: ${ing.qty} ${ing.unit}</li>`).join("")}
-    //             </ul>
-    //             <h3 class="subtitle">Steps:</h3>
-    //             <ol>
-    //                 ${recipe.steps.map(step => `<li>${step}</li>`).join("")}
-    //             </ol>
-    //         </div>
-    //     </section>
-    // `;
+    if (editBtn) {
+        editBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            renderRecipeEdit(container, recipe);
+        });
+    }
 
     // Add back button functionality
     const backButton = document.getElementById('backToRecipes');
@@ -90,5 +91,71 @@ export function renderRecipeDetail(recipe) {
                 window.location.hash = '#/recipes';
             }
         };
+    }
+}
+
+function renderRecipeEdit(container, recipe) {
+    const id = recipe.id;
+    container.innerHTML = recipeFormHTML(recipe, "edit");
+
+    /** @type {HTMLFormElement | null} */
+    const editForm = /** @type {HTMLFormElement | null} */ (document.getElementById(`edit-form-${id}`));
+    /** @type {HTMLInputElement | null} */
+    const editTitle = /** @type {HTMLInputElement | null} */ (document.getElementById(`editTitle-${id}`));
+    /** @type {HTMLInputElement | null} */
+    const editTime = /** @type {HTMLInputElement | null} */ (document.getElementById(`editTime-${id}`));
+    /** @type {HTMLSelectElement | null} */
+    const editCategory = /** @type {HTMLSelectElement | null} */ (document.getElementById(`editCategory-${id}`));
+    /** @type {HTMLInputElement | null} */
+    const editServings = /** @type {HTMLInputElement | null} */ (document.getElementById(`editServings-${id}`));
+    /** @type {HTMLElement | null} */
+    const editIngredients = /** @type {HTMLElement | null} */ (document.getElementById(`editIngredients-${id}`));
+    /** @type {HTMLElement | null} */
+    const editSteps = /** @type {HTMLElement | null} */ (document.getElementById(`editSteps-${id}`));
+    /** @type {HTMLInputElement | null} */
+    const editYoutubeUrl = /** @type {HTMLInputElement | null} */ (document.getElementById(`editVideoUrl-${id}`));
+    if (!editForm || !editTitle || !editTime || !editCategory || !editServings || !editIngredients || !editSteps || !editYoutubeUrl) return;
+
+    let mainImageData = recipe.mainImage ?? "img/norecipe.png";
+    /** @type {HTMLInputElement | null} */
+    const mainImageInput = /** @type {HTMLInputElement | null} */ (editForm.querySelector(".add-mainimage"));
+    if (mainImageInput) {
+        handleFileInput(mainImageInput, (result) => {
+            mainImageData = result;
+            /** @type {HTMLImageElement | null} */
+            const imagePreview = /** @type {HTMLImageElement | null} */ (document.getElementById(`imagePreview-${id}`));
+            if (imagePreview) imagePreview.src = result;
+        });
+    }
+
+    editFormAdd(id);
+
+    editForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const patch = {
+            id,
+            title: editTitle.value.trim(),
+            time: Number(editTime.value),
+            category: editCategory.value,
+            servings: Number(editServings.value),
+            ingredients: collectIngredients(editIngredients),
+            steps: collectSteps(editSteps),
+            mainImage: mainImageData,
+            youtubeUrl: editYoutubeUrl.value.trim()
+        };
+
+        const valid = validateRecipe(patch);
+        if (!valid) return;
+
+        const updated = await updateRecipe(id, patch);
+        renderRecipeDetail(updated);
+    });
+
+    const cancelButton = document.getElementById(`cancelEdit-${id}`);
+    if (cancelButton) {
+        cancelButton.addEventListener("click", () => {
+            renderRecipeDetail(recipe);
+        });
     }
 }

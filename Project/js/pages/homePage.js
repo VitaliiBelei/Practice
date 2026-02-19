@@ -125,7 +125,7 @@ export function homePage() {
                         
                         try {
                             // Get all profiles from server
-                            const response = await fetch('http://localhost:3001/profiles');
+                            const response = await fetch('http://localhost:3002/profiles');
                             if (!response.ok) throw new Error("Failed to load profiles");
                             const profiles = await response.json();
                             const profile = profiles.find(p => p.email === emailInput.value.trim().toLowerCase());
