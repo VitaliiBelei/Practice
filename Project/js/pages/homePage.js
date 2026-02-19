@@ -3,7 +3,7 @@ import { registerProfile, loginProfile } from "../ui/auth.js";
 import { handleFileInput } from "../utils/fileHandler.js";
 import { validateProfile } from "../ui/recipeForm/validation.js";
 import { createNavigation } from "../ui/navigation.js";
-import { renderRecipes } from "../ui/recipeList.js";
+import { recipeCard } from "../ui/recipe.js";
 
 const app = document.getElementById("app");
 
@@ -167,10 +167,78 @@ export async function homeLogin() {
 }
 
 
-async function loadRecipesFlow() {
-const session = loadSession();
-    if (!session) return;
-    const allRecipes = await loadAllRecipes();
-    renderRecipes(allRecipes ?? [], "flow");
+// async function loadRecipesFlow() {
+// const session = loadSession();
+//     if (!session) return;
+//     const allRecipes = await loadAllRecipes();
+//     const random10 = [...allRecipes].sort(() => 0.5 - Math.random()).slice(0, 10);
+//     renderRecipes(random10 ?? [], "flow");
 
+//     const recipeContainer = document.getElementById("recipe-container");
+//     if (!recipeContainer) return;
+//     const scrollDiv = document.createElement("div");
+//     scrollDiv.id = "scroll-container";
+//     recipeContainer.appendChild(scrollDiv);
+//     scrollDiv.addEventListener("scroll", () => {
+//         if (scrollDiv.scrollTop + scrollDiv.clientHeight >= scrollDiv.scrollHeight - 10) {
+//             const currentCount = recipeContainer.querySelectorAll(".recipe-card").length;
+//             const nextRecipes = allRecipes.slice(currentCount, currentCount + 10);
+//             if (nextRecipes.length > 0) {
+//                 renderRecipes(nextRecipes, "flow");
+//             }
+//         }
+//     });
+
+
+async function loadRecipesFlow() {
+    const session = loadSession();
+    if (!session) return;
+
+    /** @type {Window & { __homeFlowScrollHandler?: EventListener }} */
+    const flowWindow = window;
+
+    if (flowWindow.__homeFlowScrollHandler) {
+        window.removeEventListener("scroll", flowWindow.__homeFlowScrollHandler);
+        flowWindow.__homeFlowScrollHandler = undefined;
+    }
+
+    const allRecipes = await loadAllRecipes();
+    const randomOrderRecipes = [...allRecipes].sort(() => Math.random() - 0.5);
+    let offset = 0;
+    const step = 10;
+    let isLoading = false;
+
+    const recipesRoot = document.getElementById("recipes");
+    if (!recipesRoot) return;
+
+    recipesRoot.innerHTML = `<div id="recipe-container"></div>`;
+    const recipeContainer = document.getElementById("recipe-container");
+    if (!recipeContainer) return;
+
+    function appendNext() {
+        if (isLoading || offset >= randomOrderRecipes.length) return;
+        isLoading = true;
+
+        const nextRecipes = randomOrderRecipes.slice(offset, offset + step);
+        if (nextRecipes.length > 0) {
+            recipeContainer.insertAdjacentHTML(
+                "beforeend",
+                nextRecipes.map((recipe) => recipeCard(recipe, "flow")).join("")
+            );
+            offset += nextRecipes.length;
+        }
+
+        isLoading = false;
+    }
+
+    function onWindowScroll() {
+        const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 120;
+        if (nearBottom) {
+            appendNext();
+        }
+    }
+
+    appendNext();
+    flowWindow.__homeFlowScrollHandler = onWindowScroll;
+    window.addEventListener("scroll", onWindowScroll);
 }
