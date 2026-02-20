@@ -18,14 +18,15 @@ export function homePage() {
 
     function initProfileButtons() {
         app.innerHTML = `
+            <h1>Your Cookbook Social</h1>
             <h2>Welcome to the Recipe App</h2>
             <p>Discover and share amazing recipes!</p>
         `;
         const nav = document.getElementById('nav');
         if (!nav) return;
         nav.innerHTML = `
-            <button id="registerBtn">Register</button>
-            <button id="loginBtn">Login</button>
+            <button class="mainbutton" id="registerBtn">Register</button>
+            <button class="mainbutton" id="loginBtn">Login</button>
         `;
     
         const registerBtn = document.getElementById("registerBtn");

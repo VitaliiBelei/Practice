@@ -6,8 +6,7 @@ export function registerProfile() {
         <h2>Register</h2>
         <form id="registerForm">
             <img src="img/foto.png" alt="Image preview" id="image-preview-profile">
-            <label for="foto">Profile Photo URL:</label>
-            <input type="file" name="foto" accept="image/*">
+            <input class="mainbutton" type="file" name="foto" accept="image/*">
             <label for="name">Name:</label>
             <input type="text" name="name" required>
             <div id='email-register'>

@@ -18,13 +18,13 @@ export function createNavigation() {
         `;
         if (window.location.hash.split('?')[0] !== "#/profile") {
             buttons.innerHTML = `
-            <button id="profileBtn">Profile</button>
-            <button id="logoutBtn">Logout</button> 
+            <button class="mainbutton" id="profileBtn">Profile</button>
+            <button class="mainbutton" id="logoutBtn">Logout</button> 
             `;
         } else {
             buttons.innerHTML = `
-            <button id="editProfileBtn">Edit Profile</button>
-            <button id="settingsBtn">Settings</button>
+            <button class="mainbutton" id="editProfileBtn">Edit Profile</button>
+            <button class="mainbutton" id="settingsBtn">Settings</button>
             `;
         };
         // Add logout functionality
@@ -85,7 +85,7 @@ export function createNavigation() {
         }
     }
     //Add title click functionality
-    const title = document.getElementById("h1");
+    const title = document.getElementById("banner");
     if (title) {
         title.addEventListener("click", () => {
             if (session) {

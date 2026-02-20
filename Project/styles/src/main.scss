@@ -1,0 +1,22 @@
+@import "base/reset";
+@import "abstracts/variables";
+@import "abstracts/mixins";
+@import "components/buttons";
+@import "components/forms";
+@import "layout/header";
+@import "layout/footer";
+
+
+body {
+    background-color: $bg-light;
+    color: $textcolor-primary;
+    font-family: $font-primary;
+    max-width: 100%;
+}
+
+#app {
+    @include flex-center;
+    flex-direction: column;
+    padding: 2rem;
+    color: $textcolor-accent;
+}

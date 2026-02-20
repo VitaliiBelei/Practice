@@ -1,0 +1,15 @@
+#registerForm {
+    @include flex-center;
+    flex-direction: column;
+
+    img {
+        width: auto;
+        max-width: 80%;
+        height: auto;
+    }
+
+    input[type="file"] {
+        width: auto;
+        max-width: 95%;
+    }
+}
