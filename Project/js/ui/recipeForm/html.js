@@ -25,8 +25,8 @@ export function recipeFormHTML(recipe, mode = "edit") {
 
     if (mode === 'view') {
         return `
-            <article id="edit-form-${formId}">
-                <button id="backToRecipes" class="back-btn">← Back to Recipes</button>
+            <article id="edit-form-${formId}" class="recipe-detail recipe-detail--${mode}">
+                <button id="backToRecipes" class="mainbutton">← Back to Recipes</button>
                 <label for="editTitle-${formId}">
                     Title
                 </label>
@@ -65,7 +65,7 @@ export function recipeFormHTML(recipe, mode = "edit") {
 
                 <fieldset name="ingredients">
                     <legend>Ingredients</legend>
-                    <div id="editIngredients-${formId}">
+                    <div id="editIngredients-${formId}" class="ingredients-container">
                         ${(recipe.ingredients ?? []).map((ing, index) => 
                             `
                             <div class="ingredient-row" data-index="${index}">
@@ -112,7 +112,7 @@ export function recipeFormHTML(recipe, mode = "edit") {
     }
 
     else return `
-        <form id="edit-form-${formId}">
+        <form id="edit-form-${formId}" class="recipe-detail recipe-detail--${mode}">
             
                 <label for="editTitle-${formId}">
                     Title
@@ -172,7 +172,7 @@ export function recipeFormHTML(recipe, mode = "edit") {
 
             <fieldset name="ingredients">
                 <legend>Ingredients</legend>
-                <div id="editIngredients-${formId}">
+                <div id="editIngredients-${formId}" class="ingredients-container">
                     ${ingRows}
                 </div>
                 <button type="button" class="add-ingredient" data-recipe-id="${formId}">+ Add ingredient</button>

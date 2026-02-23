@@ -18,8 +18,8 @@ export function homePage() {
 
     function initProfileButtons() {
         app.innerHTML = `
-            <h1>Your Cookbook Social</h1>
-            <h2>Welcome to the Recipe App</h2>
+            <h1 class="page-title">Your Cookbook Social</h1>
+            <h2 class="page-title">Welcome to the Recipe App</h2>
             <p>Discover and share amazing recipes!</p>
         `;
         const nav = document.getElementById('nav');
@@ -160,7 +160,7 @@ export async function homeLogin() {
         const app = document.getElementById("app");
     if (!app) return;
     app.innerHTML = `
-        <h2>Welcome back to the Recipe App!</h2>
+        <h2 class="page-title">Welcome back to the Recipe App!</h2>
         <p>Discover and share amazing recipes!</p>
         <div id="recipes"></div>
     `;

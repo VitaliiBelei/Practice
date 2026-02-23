@@ -15,6 +15,8 @@ export async function recipesPage() {
                     Search recipes
                     <div>
                         <input type="text" id="search-input" placeholder="Recipe">
+                    </div>
+                    <div id="filter-controls">
                         <select id="category">
                             <option value="all">All categories</option>       
                             <option value="breakfasts">Breakfasts</option>
@@ -24,7 +26,7 @@ export async function recipesPage() {
                             <option value="meat">Meat</option>
                             <option value="fish">Fish</option>
                         </select>
-                        <label><input type="checkbox" id="only-fav"> Only favorites</label>
+                        <label><input type="checkbox" id="only-fav"> Favorites</label>
                         <button type="reset" id="reset-btn">Reset</button>
                     </div>
                 </label>     

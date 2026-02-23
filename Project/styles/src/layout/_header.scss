@@ -22,17 +22,27 @@ header {
         display: flex;
         justify-content: space-around;
         align-items: center;
-        padding: 1rem 2rem;
+        flex-direction: column;
+        margin: 0.5rem;
+        width: 100%;
 
         a {
+            display: inline-block;
             color: $textcolor-primary;
             text-decoration: underline;
-            font-size: 3rem;
+            font-size: 2rem;
             margin: 0 1rem;
 
             &:hover {
                 color: darken($textcolor-primary, 10%);
             }
         }
+    }
+
+    #buttons {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 1rem 0;
     }
 }

@@ -16,13 +16,14 @@ export function recipeCard(recipe, mode = "list") {
             <article class="recipe-card" >
             <div>
                 <h2>${recipe.title}</h2>
-                <p><strong>Category:</strong> ${category}</p>
-                <p><strong>Time:</strong> ${recipe.time} minutes</p>
-                <p><strong>Servings:</strong> ${recipe.servings}</p>
-            </div>
-            <div class="recipe-image" data-id="${recipe.id}">
-                <img src="${recipe.mainImage ?? 'img/norecipe.png'}" alt="Image of ${recipe.title}">
-            </div>
+                <div class="recipe-image" data-id="${recipe.id}">
+                    <img src="${recipe.mainImage ?? 'img/norecipe.png'}" alt="Image of ${recipe.title}">
+                </div>
+                <div class="recipe-information">
+                    <p><strong>Category:</strong> ${category}</p>
+                    <p><strong>Time:</strong> ${recipe.time} minutes</p>
+                    <p><strong>Servings:</strong> ${recipe.servings}</p>
+                </div>
         </article>
         `
     }
@@ -30,20 +31,24 @@ export function recipeCard(recipe, mode = "list") {
         <article class="recipe-card" data-id="${recipe.id}">
             <div>
                 <h2>${recipe.title}</h2>
+                <div class="recipe-image" data-id="${recipe.id}">
+                    <img src="${recipe.mainImage ?? 'img/norecipe.png'}" alt="Image of ${recipe.title}">
+                </div>
                 <p><strong>Category:</strong> ${category}</p>
                 <p><strong>Time:</strong> ${recipe.time} minutes</p>
                 <p><strong>Servings:</strong> ${recipe.servings}</p>
-                <div class="button-group">
-                    <button type="button" class="fav-btn" 
+                
+                    <button type="button" class="fav-btn" title="Make favorite" 
                         aria-label="${recipe.isFavorite ? "Unmark as favorite" : "Mark as favorite"}"
                         aria-pressed="${recipe.isFavorite ? "true" : "false"}">
                         ${recipe.isFavorite ? "★" : "☆"}
                     </button>
-                    <button type="button" class="delete-btn btn-error" aria-label="Delete recipe">Delete</button>
-                </div>
-            </div>
-            <div class="recipe-image" data-id="${recipe.id}">
-                <img src="${recipe.mainImage ?? 'img/norecipe.png'}" alt="Image of ${recipe.title}">
+                    <button type="button" class="delete-btn" aria-label="Delete recipe" title="Delete recipe">
+                        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                            <path fill="currentColor" d="M9 3h6l1 2h4v2H4V5h4l1-2zm1 6h2v8h-2V9zm4 0h2v8h-2V9zM7 9h2v8H7V9zm1 12h8a2 2 0 0 0 2-2V7H6v12a2 2 0 0 0 2 2z"/>
+                        </svg>
+                    </button>
+                
             </div>
         </article>
     `;
