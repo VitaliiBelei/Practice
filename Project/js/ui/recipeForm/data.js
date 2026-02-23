@@ -4,7 +4,7 @@ export function collectIngredients(editIngredients) {
     const rows = editIngredients.querySelectorAll(".ingredient-row");
     const ingredients = [];
     rows.forEach(row => {
-        const nameInput = row.querySelector(`input[name^="ing"][name$="[name]"]`); 
+        const nameInput = row.querySelector(`textarea[name^="ing"][name$="[name]"]`); 
         const qtyInput = row.querySelector(`input[name^="ing"][name$="[qty]"]`);
         const unitSelect = row.querySelector(`select[name^="ing"][name$="[unit]"]`);
         const name = nameInput.value.trim();

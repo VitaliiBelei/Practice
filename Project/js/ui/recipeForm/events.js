@@ -23,7 +23,7 @@ export function editFormAdd(id) {
 
     container.insertAdjacentHTML("beforeend", `
         <div class="ingredient-row" data-index="${index}">
-            <input type="text" name="ing[${index}][name]" placeholder="Name">
+            <textarea type="text" name="ing[${index}][name]" placeholder="Name"></textarea>
             <input type="number" name="ing[${index}][qty]" min="0" step="0.01" placeholder="Qty">
             <select name="ing[${index}][unit]">
                 <option value="pcs">pcs</option>

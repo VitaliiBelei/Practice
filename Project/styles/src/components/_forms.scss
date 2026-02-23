@@ -128,10 +128,15 @@
     @include flex-direction-column;
     width: 100%;
     margin: 1rem auto;
-    padding: 1rem;
+    padding: 5px;
     border: 1px solid $textcolor-primary;
     border-radius: 5px;
     font-size: 1.5rem;
+
+    .edit-btn {
+        @include mainbutton;
+        width: auto;
+    }
 
     .mainbutton {
         width: auto;
@@ -139,9 +144,6 @@
 
     input, select, textarea {
         font-size: 1.5rem;
-        color: $textcolor-primary;
-        opacity: 1;
-        -webkit-text-fill-color: $textcolor-primary;
     }
 
     img {
@@ -173,12 +175,39 @@
 
     &--view {
 
+        .modal {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: auto;
+            &.hidden {
+                display: none;
+            }
+            iframe {
+                width: 80vw;
+                height: 60vh;
+            }
+        }
+
+        input, select, textarea {
+            color: $textcolor-primary;
+            opacity: 1;
+            -webkit-text-fill-color: $textcolor-primary;
+            appearance: none;
+            width: 100%;
+        }
+
         fieldset {
             display: flex;
             width: 100%;
             min-width: 0;
             select {
                 appearance: none;
+            }
+
+            div {
+                width: 100%;
             }
 
             .ingredients-container {
@@ -192,12 +221,23 @@
                     width: 100%;
                     min-width: 0;
 
-                    input, select {
-                        width: auto;
+                    input, select, textarea {
+                        flex: 2 1 auto;
                         min-width: 0;
                         max-width: 100%;
                         border-style: none;
                         border-bottom: 1px solid $textcolor-primary;
+                        
+                    }
+                    textarea {
+                        resize: vertical;
+                        width: 60%;
+                    }
+                    input {
+                        width: 20%;
+                    }
+                    select {
+                        width: 20%;
                     }
                 }
             }

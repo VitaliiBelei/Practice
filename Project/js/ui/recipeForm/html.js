@@ -6,7 +6,7 @@ export function recipeFormHTML(recipe, mode = "edit") {
     const ingRows = (recipe.ingredients?.length ? recipe.ingredients : [{ name: "", qty: "", unit: "pcs" }]).map((ing, index) => 
         `
         <div class="ingredient-row" data-index="${index}">
-            <input id="editIngName-${formId}-${index}" name="ing[${index}][name]" type="text" placeholder="Name" value="${ing.name ?? ""}">
+            <textarea type="text" id="editIngName-${formId}-${index}" name="ing[${index}][name]" placeholder="Name">${ing.name ?? ""}</textarea>
             <input id="editIngQty-${formId}-${index}"  name="ing[${index}][qty]"  type="number" placeholder="Qty" min="0" step="0.01" value="${ing.qty ?? ""}">
             <select id="editIngUnit-${formId}-${index}" name="ing[${index}][unit]">
             ${units.map(u => `<option value="${u}" ${ing.unit === u ? "selected" : ""}>${u}</option>`).join("")}
@@ -69,7 +69,7 @@ export function recipeFormHTML(recipe, mode = "edit") {
                         ${(recipe.ingredients ?? []).map((ing, index) => 
                             `
                             <div class="ingredient-row" data-index="${index}">
-                                <input id="editIngName-${formId}-${index}" name="ing[${index}][name]" type="text" placeholder="Name" value="${ing.name ?? ""}" disabled>
+                                <textarea type="text" id="editIngName-${formId}-${index}" name="ing[${index}][name]" placeholder="Name" disabled>${ing.name ?? ""}</textarea>
                                 <input id="editIngQty-${formId}-${index}"  name="ing[${index}][qty]"  type="number" placeholder="Qty" min="0" step="0.01" value="${ing.qty ?? ""}" disabled>
                                 <select id="editIngUnit-${formId}-${index}" name="ing[${index}][unit]" disabled>
                                 ${units.map(u => `<option value="${u}" ${ing.unit === u ? "selected" : ""}>${u}</option>`).join("")}
@@ -104,9 +104,7 @@ export function recipeFormHTML(recipe, mode = "edit") {
                         ${recipe.isFavorite ? '★' : '☆'}
                 </button>
                 
-                <div class = 'editButtons'>
-                    <button type="button" class="edit-btn" aria-label="Edit recipe">Edit</button>
-                </div>
+                <button type="button" class="edit-btn" aria-label="Edit recipe">Edit</button>
             </article>
         `
     }
