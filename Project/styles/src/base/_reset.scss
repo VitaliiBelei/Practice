@@ -1,5 +1,16 @@
+@import "../abstracts/variables";
+
 *,
 *::before,
 *::after {
     box-sizing: border-box;
+}
+
+[data-theme="light"] body {
+    background-color: $bg-light;
+}
+
+
+[data-theme="dark"] body {
+    background-color: $bg-dark;
 }

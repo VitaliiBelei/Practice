@@ -4,11 +4,15 @@ import { handleFileInput } from "../utils/fileHandler.js";
 import { validateProfile } from "../ui/recipeForm/validation.js";
 import { createNavigation } from "../ui/navigation.js";
 import { recipeCard } from "../ui/recipe.js";
+import { applyTheme } from "../utils/theme.js";
+
 
 const app = document.getElementById("app");
 
 export function homePage() {
+    applyTheme();
     const session = loadSession();
+
     if (!session) {
         initProfileButtons();
     } else {
@@ -156,6 +160,7 @@ export function homePage() {
 };
 
 export async function homeLogin() {
+        applyTheme();
         createNavigation();
         const app = document.getElementById("app");
     if (!app) return;

@@ -2,6 +2,7 @@ import { loadSession, loadProfile, clearSession, updateProfile, deleteProfile } 
 import { loadProfilePage, editProfile } from "../ui/profile.js";
 import { createNavigation } from "../ui/navigation.js";
 import { handleFileInput } from "../utils/fileHandler.js";
+import { saveTheme, defaultTheme } from "../utils/theme.js";
 
 // Settings rendering function (moved from ui/settings.js)
 function renderSettings() {
@@ -26,9 +27,9 @@ function renderSettings() {
             <form id="themeForm">
                 <label for="theme">Choose Theme:</label>
                 <select name="theme" id="theme">
+                    <option value="system">System Default</option>
                     <option value="light">Light</option>
                     <option value="dark">Dark</option>
-                    <option value="system">System Default</option>
                 </select>
             </form>
             <form id="valuesForm">
@@ -106,7 +107,8 @@ function setupSettingsForm(profile) {
     /** @type {HTMLButtonElement | null} */
     const saveSettingsBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById("saveSettingsBtn"));
     if (!saveSettingsBtn) return;
-    saveSettingsBtn.addEventListener("click", async () => {
+    saveSettingsBtn.addEventListener("click", async (event) => {
+        event.preventDefault();
         if (!profile) return;
         const newSettings = {
             language: languageSelect.value,
@@ -115,6 +117,13 @@ function setupSettingsForm(profile) {
         };
         try {
             await updateProfile(profile.profileId, { settings: newSettings });
+            profile.settings = newSettings;
+            if (newSettings.theme === "system") {
+                localStorage.removeItem("theme");
+                defaultTheme();
+            } else {
+                saveTheme(newSettings.theme);
+            }
             if (settingsMessage) settingsMessage.textContent = "Settings saved successfully!";
             setTimeout(() => { window.location.hash = "#/profile"; }, 1200);
         } catch (error) {
@@ -126,7 +135,8 @@ function setupSettingsForm(profile) {
     /** @type {HTMLButtonElement | null} */
     const resetSettingsBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById("resetSettingsBtn"));
     if (!resetSettingsBtn) return;
-    resetSettingsBtn.addEventListener("click", async () => {
+    resetSettingsBtn.addEventListener("click", async (event) => {
+        event.preventDefault();
         if (!profile) return;
         const defaultSettings = {
             language: "en",
@@ -135,9 +145,12 @@ function setupSettingsForm(profile) {
         };
         try {
             await updateProfile(profile.profileId, { settings: defaultSettings });
+            profile.settings = defaultSettings;
             languageSelect.value = defaultSettings.language;
             themeSelect.value = defaultSettings.theme;
             unitsSelect.value = defaultSettings.units;
+            localStorage.removeItem("theme");
+            defaultTheme();
             if (settingsMessage) settingsMessage.textContent = "Settings reset to default!";
         } catch (error) {
             console.error("Error resetting settings:", error);
