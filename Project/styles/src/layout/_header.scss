@@ -28,10 +28,12 @@ header {
 
         a {
             display: inline-block;
-            color: $textcolor-primary;
+            color: $textcolor-accent;
             text-decoration: underline;
+            text-transform: uppercase;
+            font-weight: bold;
             font-size: 2rem;
-            margin: 0 1rem;
+            margin: 1rem 1rem;
 
             &:hover {
                 color: darken($textcolor-primary, 10%);

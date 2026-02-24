@@ -37,7 +37,6 @@ html, body {
     @include flex-center;
     flex-direction: column;
     width: 100%;
-    padding: 0 1rem;
     color: $textcolor-accent;
 
     .page-title {
@@ -132,6 +131,48 @@ html, body {
             }
             &.active {
                 background-color: darken($textcolor-accent, 20%);
+            }
+        }
+    }
+
+    .user-profile {
+        @include flex-direction-column;
+        width: 100%;
+        padding: 0 1rem;
+        font-size: 1.5rem;
+
+        #profile-foto {
+            @include flex-direction-column;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+
+            img {
+                width: 60%;
+                height: auto;
+            }
+        }
+    }
+
+    .settings-container {
+        @include flex-direction-column;
+        width: 100%;
+        padding: 0 1rem;
+        font-size: 1.5rem;
+
+        button {
+            @extend .mainbutton;
+            width: 100%;
+            margin: 0.5rem 0;
+        }
+
+        form {
+            margin: 1rem 0;
+            font-size: 1.5rem;
+            width: 100%;
+
+            select {
+                font-size: 1.5rem;
             }
         }
     }

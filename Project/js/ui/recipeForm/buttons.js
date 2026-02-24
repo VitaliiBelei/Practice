@@ -5,27 +5,37 @@ import { editFormAdd } from "./events.js";
 import { collectIngredients, collectSteps } from "./data.js";
 import { handleFileInput } from "../../utils/fileHandler.js";
 
+let recipeFormButtonsBound = false;
+
 // Handle buttons in recipe cards: favorite, delete, edit
 export function recipeFormButtons() {
-    const recipesContainer = document.getElementById("recipes");
-    if (!recipesContainer) return;
-    recipesContainer.addEventListener("click", async event => {
+    if (recipeFormButtonsBound) return;
+    recipeFormButtonsBound = true;
+
+    document.addEventListener("click", async event => {
         const btn = event.target instanceof Element ? event.target.closest("button") : null;
         if (!btn) return;
+        const isInRecipesList = Boolean(btn.closest("#recipes"));
 
         if (btn.classList.contains("fav-btn")) {
-            const article = btn.closest("article");
-            if (!article) return;
-            const id = article.dataset.id;
+            event.preventDefault();
+            event.stopPropagation();
+            const recipeContainer = btn.closest("article[data-id], form[data-id]");
+            if (!recipeContainer) return;
+            const id = recipeContainer.getAttribute("data-id");
             if (!id) return;
-            await toggleFavorite(id);
+            const updatedRecipe = await toggleFavorite(id);
+            btn.setAttribute("aria-label", updatedRecipe.isFavorite ? "Unmark as favorite" : "Mark as favorite");
+            btn.setAttribute("aria-pressed", updatedRecipe.isFavorite ? "true" : "false");
+            btn.textContent = updatedRecipe.isFavorite ? "★" : "☆";
             return;
         }
 
         else if (btn.classList.contains("delete-btn")) {
+            if (!isInRecipesList) return;
             const article = btn.closest("article");
             if (!article) return;
-            const id = article.dataset.id;
+            const id = article.getAttribute("data-id");
             if (!id) return;
             if (confirm("Delete recipe?")) {
             await deleteRecipe(id);
@@ -34,9 +44,10 @@ export function recipeFormButtons() {
         }
 
         else if (btn.classList.contains("edit-btn")) {
+            if (!isInRecipesList) return;
             const article = btn.closest("article");
             if (!article) return;
-            const id = article.dataset.id;
+            const id = article.getAttribute("data-id");
             const recipe = await getRecipeById(id);
             const existingForm = document.querySelector('[id^="edit-form-"]');
             if (existingForm) existingForm.remove();
@@ -114,5 +125,5 @@ export function recipeFormButtons() {
             });
             
         }
-    })
+    });
 }

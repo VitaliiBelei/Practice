@@ -25,7 +25,7 @@ export function recipeFormHTML(recipe, mode = "edit") {
 
     if (mode === 'view') {
         return `
-            <article id="edit-form-${formId}" class="recipe-detail recipe-detail--${mode}">
+            <article id="edit-form-${formId}" class="recipe-detail recipe-detail--${mode}" data-id="${formId}">
                 <button id="backToRecipes" class="mainbutton">← Back to Recipes</button>
                 <label for="editTitle-${formId}">
                     Title
@@ -110,7 +110,7 @@ export function recipeFormHTML(recipe, mode = "edit") {
     }
 
     else return `
-        <form id="edit-form-${formId}" class="recipe-detail recipe-detail--${mode}">
+        <form id="edit-form-${formId}" class="recipe-detail recipe-detail--${mode}" data-id="${formId}">
             
                 <label for="editTitle-${formId}">
                     Title
@@ -138,18 +138,6 @@ export function recipeFormHTML(recipe, mode = "edit") {
                     Servings
                 </label>
                 <input id="editServings-${formId}" name="servings" type="number" value="${recipe.servings ?? 1}">
-            
-            
-                <button 
-                    type="button" 
-                    class="fav-btn" 
-                    title="Mark/Unmark as favorite"
-                    id="favBtn-${formId}"
-                    aria-label="${recipe.isFavorite ? 'Unmark as favorite' : 'Mark as favorite'}"
-                    aria-pressed="${recipe.isFavorite ? 'true' : 'false'}"
-                >
-                    ${recipe.isFavorite ? '★' : '☆'}
-                </button>
             </div>
 
             <div class="main-image-input">
@@ -183,10 +171,20 @@ export function recipeFormHTML(recipe, mode = "edit") {
                 </div>
                 <button type="button" class="add-step" data-recipe-id="${formId}">+ Add step</button>
             </fieldset>
+
+            <button 
+                type="button" 
+                class="fav-btn" 
+                title="Mark/Unmark as favorite"
+                id="favBtn-${formId}"
+                aria-label="${recipe.isFavorite ? 'Unmark as favorite' : 'Mark as favorite'}"
+                aria-pressed="${recipe.isFavorite ? 'true' : 'false'}"
+            >
+                ${recipe.isFavorite ? '★' : '☆'}
+            </button>
             
             <div class = 'editButtons'>
                 <button type="submit" class="editButton" id="editButton-${formId}">${mode === "add" ? "Add recipe" : "Confirm"}</button>
-
                 <button type="button" class="editButton" id="cancelEdit-${formId}">Cancel</button>
             </div>
         </form>

@@ -40,7 +40,8 @@ export function recipeCard(recipe, mode = "list") {
                 
                     <button type="button" class="fav-btn" title="Make favorite" 
                         aria-label="${recipe.isFavorite ? "Unmark as favorite" : "Mark as favorite"}"
-                        aria-pressed="${recipe.isFavorite ? "true" : "false"}">
+                        aria-pressed="${recipe.isFavorite ? "true" : "false"}"
+                    >
                         ${recipe.isFavorite ? "★" : "☆"}
                     </button>
                     <button type="button" class="delete-btn" aria-label="Delete recipe" title="Delete recipe">
