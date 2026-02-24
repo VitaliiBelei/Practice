@@ -43,7 +43,7 @@ app.post("/recipes", async (req, res) => {
   res.status(201).json(created);
 });
 
-app.put("/recipes/:id", async (req, res) => {
+app.patch("/recipes/:id", async (req, res) => {
   const updated = await updateRecipe(req.params.id, req.body);
   if (!updated) return res.status(404).json({ message: "Recipe not found" });
   res.json(updated);
@@ -72,7 +72,7 @@ app.post("/profiles", async (req, res) => {
   res.status(201).json(created);
 });
 
-app.put("/profiles/:id", async (req, res) => {
+app.patch("/profiles/:id", async (req, res) => {
   const updated = await updateProfileById(req.params.id, req.body);
   if (!updated) return res.status(404).json({ message: "Profile not found" });
   res.json(updated);

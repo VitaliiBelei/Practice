@@ -121,20 +121,13 @@ export async function getRecipeById(id) {
 
 export async function updateRecipe(id, patch) {
     try {
-        const response = await fetch(`${API_URL}/recipes/${id}`);
-        if (!response.ok) throw new Error("Error loading recipe");
-        const recipe = await response.json();
-        
-        const updatedRecipe = {
-            ...recipe,
-            ...patch,
-            updatedAt: new Date().toISOString()
-        };
-
         const updateResponse = await fetch(`${API_URL}/recipes/${id}`, {
-            method: "PUT",
+            method: "PATCH",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(updatedRecipe)
+            body: JSON.stringify({
+                ...patch,
+                updatedAt: new Date().toISOString()
+            })
         });
 
         if (!updateResponse.ok) throw new Error("Error updating recipe");
@@ -165,17 +158,14 @@ export async function toggleFavorite(id) {
         const response = await fetch(`${API_URL}/recipes/${id}`);
         if (!response.ok) throw new Error("Error loading recipe");
         const recipe = await response.json();
-        
-        const updatedRecipe = {
-            ...recipe,
-            isFavorite: !recipe.isFavorite,
-            updatedAt: new Date().toISOString()
-        };
 
         const updateResponse = await fetch(`${API_URL}/recipes/${id}`, {
-            method: "PUT",
+            method: "PATCH",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(updatedRecipe)
+            body: JSON.stringify({
+                isFavorite: !recipe.isFavorite,
+                updatedAt: new Date().toISOString()
+            })
         });
 
         if (!updateResponse.ok) throw new Error("Error updating recipe");
@@ -234,16 +224,13 @@ export async function updateProfile(profileId, patch) {
         
         if (!profiles[0]) throw new Error("Profile not found");
         
-        const updatedProfile = {
-            ...profiles[0],
-            ...patch,
-            updatedAt: new Date().toISOString()
-        };
-
         const updateResponse = await fetch(`${API_URL}/profiles/${profiles[0].id}`, {
-            method: "PUT",
+            method: "PATCH",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(updatedProfile)
+            body: JSON.stringify({
+                ...patch,
+                updatedAt: new Date().toISOString()
+            })
         });
 
         if (!updateResponse.ok) throw new Error("Error updating profile");
