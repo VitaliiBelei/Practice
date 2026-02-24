@@ -2,7 +2,7 @@ import { loadSession, loadProfile, clearSession, updateProfile, deleteProfile } 
 import { loadProfilePage, editProfile } from "../ui/profile.js";
 import { createNavigation } from "../ui/navigation.js";
 import { handleFileInput } from "../utils/fileHandler.js";
-import { saveTheme, defaultTheme } from "../utils/theme.js";
+import { saveTheme, defaultTheme, applyTheme } from "../utils/theme.js";
 
 // Settings rendering function (moved from ui/settings.js)
 function renderSettings() {
@@ -160,14 +160,16 @@ function setupSettingsForm(profile) {
 
     const cancelBtn = document.getElementById("cancelBtn");
     if (cancelBtn) {
-        cancelBtn.addEventListener("click", () => {
+        cancelBtn.addEventListener("click", (event) => {
+            event.preventDefault();
             window.location.hash = "#/profile";
         });
     }
 
     const deleteAccountBtn = document.getElementById("deleteAccountBtn");
     if (deleteAccountBtn) {
-        deleteAccountBtn.addEventListener("click", async () => {
+        deleteAccountBtn.addEventListener("click", async (event) => {
+            event.preventDefault();
             if (!profile) return;
             const confirmed = confirm("Are you sure you want to delete your account? This action cannot be undone.");
             if (!confirmed) return;
@@ -184,6 +186,7 @@ function setupSettingsForm(profile) {
 }
 
 export async function profilePage(){
+    await applyTheme();
     createNavigation();
     
     const session = loadSession();
@@ -217,7 +220,8 @@ export async function profilePage(){
         /** @type {HTMLButtonElement | null} */
         const logoutBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById("logoutBtn"));
         if (logoutBtn) {
-            logoutBtn.onclick = () => {
+            logoutBtn.onclick = (event) => {
+                event.preventDefault();
                 clearSession();
                 loadProfilePage(null, "unlogin");
                 initProfileButtons(null, {status: "unlogin"});
@@ -227,7 +231,8 @@ export async function profilePage(){
         /** @type {HTMLButtonElement | null} */
         const settingsBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById("settingsBtn"));
         if (settingsBtn) {
-            settingsBtn.onclick = () => {
+            settingsBtn.onclick = (event) => {
+                event.preventDefault();
                 renderSettings();
                 setTimeout(() => {
                     setupSettingsForm(profile);
@@ -238,7 +243,8 @@ export async function profilePage(){
         /** @type {HTMLButtonElement | null} */
         const editProfileBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById("editProfileBtn"));
         if (editProfileBtn) {
-            editProfileBtn.onclick = () => {
+            editProfileBtn.onclick = (event) => {
+                event.preventDefault();
                 if (!profile) return;
                 editProfile(profile);
                 setTimeout(() => {
@@ -299,7 +305,8 @@ export async function profilePage(){
     initProfileButtons(profile, session);
     const profilePageLoad = document.getElementById("profilePage");
     if (profilePageLoad) {
-        profilePageLoad.addEventListener("click", async () => {
+        profilePageLoad.addEventListener("click", async (event) => {
+            event.preventDefault();
             await profilePage();
         });
     }
@@ -307,7 +314,8 @@ export async function profilePage(){
     /** @type {HTMLButtonElement | null} */
     const settingsBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById("settingsBtn"));
     if (settingsBtn) {
-        settingsBtn.onclick = () => {
+        settingsBtn.onclick = (event) => {
+            event.preventDefault();
             renderSettings();
             setTimeout(() => {
                 setupSettingsForm(profile);

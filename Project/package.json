@@ -4,7 +4,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "live-server --port=3301",
-    "api": "nodemon Server/index.js",
+    "api": "nodemon --ignore \"Server/Data/**\" Server/index.js",
     "sass": "sass styles/src/main.scss styles/dist/main.css",
     "sass:watch": "sass --watch styles/src/main.scss styles/dist/main.css",
     "dev": "npm-run-all --parallel serve api sass:watch lint:js:watch lint:css:watch",

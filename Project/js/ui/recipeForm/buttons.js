@@ -32,6 +32,7 @@ export function recipeFormButtons() {
         }
 
         else if (btn.classList.contains("delete-btn")) {
+            event.preventDefault();
             if (!isInRecipesList) return;
             const article = btn.closest("article");
             if (!article) return;
@@ -44,6 +45,7 @@ export function recipeFormButtons() {
         }
 
         else if (btn.classList.contains("edit-btn")) {
+            event.preventDefault();
             if (!isInRecipesList) return;
             const article = btn.closest("article");
             if (!article) return;
@@ -116,7 +118,8 @@ export function recipeFormButtons() {
             });
 
             const cancelButton = document.getElementById(`cancelEdit-${id}`);
-            if (cancelButton) cancelButton.addEventListener("click", () => {
+            if (cancelButton) cancelButton.addEventListener("click", (event) => {
+                event.preventDefault();
                 editForm.remove();
                 const editButton = document.querySelector(`article[data-id="${id}"] .edit-btn`);
                 if (editButton instanceof HTMLElement) {

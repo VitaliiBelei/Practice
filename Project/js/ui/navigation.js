@@ -30,7 +30,8 @@ export function createNavigation() {
         // Add logout functionality
         const logoutBtn = document.getElementById("logoutBtn");
         if (logoutBtn) {
-            logoutBtn.addEventListener("click", async () => {
+            logoutBtn.addEventListener("click", async (e) => {
+                e.preventDefault();
                 clearSession();
                 loadProfilePage(null, "unlogin");
                 createNavigation(); // Recreate navigation
@@ -40,7 +41,8 @@ export function createNavigation() {
 
         const profileBtn = document.getElementById("profileBtn");
         if (profileBtn) {
-            profileBtn.addEventListener("click", () => {
+            profileBtn.addEventListener("click", (e) => {
+                e.preventDefault();
                 window.location.hash = "#/profile";
             });
         }
@@ -48,7 +50,8 @@ export function createNavigation() {
         // Add edit profile functionality
         const editProfileBtn = document.getElementById("editProfileBtn");
         if (editProfileBtn) {
-            editProfileBtn.addEventListener("click", () => {
+            editProfileBtn.addEventListener("click", (e) => {
+                e.preventDefault();
                 window.location.hash = "#/profile?action=edit";
             });
         }
@@ -56,7 +59,8 @@ export function createNavigation() {
         // Add settings functionality
         const settingsBtn = document.getElementById("settingsBtn");
         if (settingsBtn) {
-            settingsBtn.addEventListener("click", () => {
+            settingsBtn.addEventListener("click", (e) => {
+                e.preventDefault();
                 window.location.hash = "#/profile?action=settings";
             });
         }
@@ -71,7 +75,8 @@ export function createNavigation() {
         // Add register functionality
         const registerBtn = document.getElementById("registerBtn");
         if (registerBtn) {
-            registerBtn.addEventListener("click", () => {
+            registerBtn.addEventListener("click", (e) => {
+                e.preventDefault();
                 registerProfile();
             });
         }
@@ -79,7 +84,8 @@ export function createNavigation() {
         // Add login functionality
         const loginBtn = document.getElementById("loginBtn");
         if (loginBtn) {
-            loginBtn.addEventListener("click", () => {
+            loginBtn.addEventListener("click", (e) => {
+                e.preventDefault();
                 loginProfile();
             });
         }

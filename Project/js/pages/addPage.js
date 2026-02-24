@@ -6,8 +6,10 @@ import { collectIngredients, collectSteps } from "../ui/recipeForm/data.js";
 import { validateRecipe } from "../ui/recipeForm/validation.js";
 import { createNavigation } from "../ui/navigation.js";
 import { handleFileInput } from "../utils/fileHandler.js";
+import { applyTheme } from "../utils/theme.js";
 
 export async function addPage() {
+    applyTheme();
     createNavigation();
     
     const session = loadSession();
@@ -37,7 +39,8 @@ export async function addPage() {
     `;
     editFormAdd("new");
 
-    document.getElementById("cancelEdit-new").addEventListener("click", () => {
+    document.getElementById("cancelEdit-new").addEventListener("click", (e) => {
+        e.preventDefault();
         window.location.hash = "#/profile";
     });
 
@@ -50,7 +53,8 @@ export async function addPage() {
     let isFavorite = false;
 
     if (favBtn) {
-        favBtn.addEventListener("click", () => {
+        favBtn.addEventListener("click", (e) => {
+            e.preventDefault();
             isFavorite = !isFavorite;
             favBtn.textContent = isFavorite ? "★" : "☆";
             favBtn.setAttribute("aria-pressed", String(isFavorite));

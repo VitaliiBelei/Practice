@@ -10,14 +10,16 @@ export function editFormAdd(id) {
     const fileInput = editForm.querySelector(".add-mainimage");
     
     if (addImageBtn && fileInput) {
-        addImageBtn.addEventListener("click", () => {
+        addImageBtn.addEventListener("click", (e) => {
+            e.preventDefault();
             fileInput.click();
         });
     }
     
     const addIngBtn = editForm.querySelector(".add-ingredient");
 
-    addIngBtn.addEventListener("click", () => {
+    addIngBtn.addEventListener("click", (e) => {
+    e.preventDefault();
     const container = editForm.querySelector(`#editIngredients-${id}`);
     const index = container.querySelectorAll(".ingredient-row").length;
 
@@ -38,7 +40,8 @@ export function editFormAdd(id) {
 });
 
     const addStepBtn = editForm.querySelector(".add-step");
-    addStepBtn.addEventListener("click", () => {
+    addStepBtn.addEventListener("click", (e) => {
+        e.preventDefault();
         const container = editForm.querySelector(`#editSteps-${id}`);
         const index = container.querySelectorAll(".step-row").length;
         container.insertAdjacentHTML("beforeend", `

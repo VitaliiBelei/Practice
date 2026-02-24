@@ -35,7 +35,8 @@ export function homePage() {
     
         const registerBtn = document.getElementById("registerBtn");
         if (registerBtn) {
-            registerBtn.addEventListener("click", () => {
+            registerBtn.addEventListener("click", (e) => {
+                e.preventDefault();
                 registerProfile();
                 setTimeout(() => {
                     const registerForm = document.getElementById("registerForm");
@@ -114,7 +115,8 @@ export function homePage() {
 
         const loginBtn = document.getElementById("loginBtn");
         if (loginBtn) {
-            loginBtn.addEventListener("click", () => {
+            loginBtn.addEventListener("click", (e) => {
+                e.preventDefault();
                 loginProfile();
                 setTimeout(() => {
                     const loginForm = document.getElementById("loginForm");

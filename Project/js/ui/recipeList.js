@@ -62,6 +62,7 @@ export function renderRecipes(recipes, mode = "list") {
             if (!(e.target instanceof Element)) return;
             const btn = e.target.closest('.page-btn');
             if (!(btn instanceof HTMLButtonElement)) return;
+            e.preventDefault();
             currentPage = Number(btn.dataset.page);
             showPage(currentPage);
             window.scrollTo({ top: 0, behavior: 'smooth' });

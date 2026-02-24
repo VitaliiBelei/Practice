@@ -2,8 +2,10 @@ import { loadSession, loadUserRecipes, getRecipeById } from "../store.js";
 import { recipeFormButtons } from "../ui/recipeForm/buttons.js";
 import { createNavigation } from "../ui/navigation.js";
 import { renderRecipes } from "../ui/recipeList.js";
+import { applyTheme } from "../utils/theme.js";
 
 export async function recipesPage() {
+    applyTheme();
     createNavigation();
     
     const app = document.getElementById("app");

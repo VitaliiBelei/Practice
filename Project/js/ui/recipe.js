@@ -88,7 +88,8 @@ export function renderRecipeDetail(recipe) {
     // Add back button functionality
     const backButton = document.getElementById('backToRecipes');
     if (backButton) {
-        backButton.onclick = async () => {
+        backButton.onclick = async (e) => {
+            e.preventDefault();
             try {
                 const { recipesPage } = await import('../app.js');
                 recipesPage();
@@ -160,7 +161,8 @@ function renderRecipeEdit(container, recipe) {
 
     const cancelButton = document.getElementById(`cancelEdit-${id}`);
     if (cancelButton) {
-        cancelButton.addEventListener("click", () => {
+        cancelButton.addEventListener("click", (event) => {
+            event.preventDefault();
             renderRecipeDetail(recipe);
         });
     }

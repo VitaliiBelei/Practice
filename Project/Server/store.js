@@ -1,10 +1,11 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile, writeFile, rename } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const DB_PATH = path.join(__dirname, "Data", "db.json");
+const DB_TMP_PATH = path.join(__dirname, "Data", "db.tmp.json");
 
 let dbCache = null;
 let writeQueue = Promise.resolve();
@@ -50,7 +51,10 @@ async function writeDb(db) {
   dbCache = db;
   rebuildRecipeIndexes(dbCache.recipes ?? []);
   const payload = JSON.stringify(dbCache, null, 2);
-  writeQueue = writeQueue.then(() => writeFile(DB_PATH, payload, "utf-8"));
+  writeQueue = writeQueue.then(async () => {
+    await writeFile(DB_TMP_PATH, payload, "utf-8");
+    await rename(DB_TMP_PATH, DB_PATH);
+  });
   await writeQueue;
 }
 
