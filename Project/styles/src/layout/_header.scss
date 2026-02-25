@@ -1,3 +1,7 @@
+@use "sass:color";
+@use "../abstracts/mixins" as *;
+@use "../abstracts/variables" as *;
+
 header {
     display: flex;
     flex-direction: column;
@@ -35,7 +39,7 @@ header {
             margin: 1rem 1rem;
 
             &:hover {
-                color: darken($textcolor-primary, 10%);
+                color: color.scale($textcolor-primary, $lightness: -10%);
             }
         }
     }

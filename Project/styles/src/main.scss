@@ -1,10 +1,11 @@
-@import "base/reset";
-@import "abstracts/variables";
-@import "abstracts/mixins";
-@import "components/buttons";
-@import "components/forms";
-@import "layout/header";
-@import "layout/footer";
+@use "sass:color";
+@use "./base/reset" as *; 
+@use "./abstracts/mixins" as *;
+@use "./abstracts/variables" as *;
+@use "./components/buttons" as *;
+@use "./components/forms" as *;
+@use "./layout/footer" as *;
+@use "./layout/header" as *;
 
 
 html, body {
@@ -20,15 +21,12 @@ html, body {
         }
 }
 
-@media (min-width: 768px) {
-    html, body {
-        scrollbar-width: auto;
-        -ms-overflow-style: auto;
-        scrollbar-color: #888 #e5e5e5;
+main {
+    display: flex;
+    flex-direction: row;
 
-            &::-webkit-scrollbar {
-                display: block
-            }
+    aside {
+        display: none;
     }
 }
 
@@ -74,7 +72,7 @@ html, body {
                         cursor: pointer;
 
                         &:hover {
-                            color: darken($textcolor-primary, 10%);
+                            color: color.scale($textcolor-primary, $lightness: -10%);
                         }
                     }
 
@@ -120,16 +118,16 @@ html, body {
             
 
             &:hover {
-                background-color: darken($textcolor-accent, 10%);
+                background-color: color.scale($textcolor-accent, $lightness: -10%);
             }
 
             &:focus,
             &:focus-visible {
-                background-color: darken($textcolor-accent, 15%);
+                background-color: color.scale($textcolor-accent, $lightness: -15%);
                 outline: none;
             }
             &.active {
-                background-color: darken($textcolor-accent, 20%);
+                background-color: color.scale($textcolor-accent, $lightness: -20%);
             }
         }
     }
@@ -183,6 +181,33 @@ html, body {
         button {
             @extend .mainbutton;
             align-self: center;
+        }
+    }
+}
+
+
+@media (min-width: 768px) {
+    html, body {
+        scrollbar-width: auto;
+        -ms-overflow-style: auto;
+        scrollbar-color: #888 #e5e5e5;
+
+            &::-webkit-scrollbar {
+                display: block
+            }
+        main aside {
+            display: flex;
+            flex-direction: column;
+            width: 20%;
+
+            img {
+                width: 100%;
+                height: auto;
+            }
+        }
+
+        #app {
+            width: 60%;
         }
     }
 }

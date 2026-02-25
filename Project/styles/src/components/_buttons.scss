@@ -1,3 +1,7 @@
+@use "../abstracts/mixins" as *;
+@use "../abstracts/variables" as *;
+@use "sass:color";
+
 .mainbutton {
     background-color: $textcolor-accent;
     color: rgb(32, 1, 1);
@@ -10,6 +14,6 @@
     width: 40vw;
 
     &:hover {
-        background-color: darken($textcolor-accent, 10%);
+        background-color: color.scale($textcolor-accent, $lightness: -10%);
     }
 }

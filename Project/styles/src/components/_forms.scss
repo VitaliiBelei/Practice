@@ -1,3 +1,6 @@
+@use "../abstracts/mixins" as *;
+@use "../abstracts/variables" as *;
+
 #registerForm {
     @include flex-center;
     flex-direction: column;
@@ -110,7 +113,6 @@
                     align-items: center;
                     flex-direction: row;
                     width: auto;
-                    color: $textcolor-primary;
 
                     input {
                         padding: 0;
@@ -118,6 +120,14 @@
                         width: auto;
                         height: auto;
                     }
+                }
+
+                button {
+                    @include mainbutton;
+                    height: auto;
+                    width: auto;
+                    font-size: 1rem;
+                    padding: 5px 10px;
                 }
             }
         }
@@ -306,6 +316,7 @@
 
         input, select, textarea {
             color: $textcolor-primary;
+            background-color: $bg-light;
             opacity: 1;
             -webkit-text-fill-color: $textcolor-primary;
             appearance: none;
