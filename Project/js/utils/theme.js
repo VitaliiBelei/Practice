@@ -1,6 +1,7 @@
 import { loadProfile, loadSession } from "../store.js";
 
 let systemThemeListenerAdded = false;
+const session = loadSession();
 
 export async function applyTheme() {
     let curentTheme = localStorage.getItem("theme");
@@ -8,30 +9,19 @@ export async function applyTheme() {
         saveTheme(curentTheme);
         return;
     }
-
-    const session = loadSession();
-    if (session && session.profileId) {
+    
+    else if (session && session.profileId) {
         const profile = await loadProfile(session.profileId);
         if (profile?.settings?.theme) {
             curentTheme = profile.settings.theme;
+            saveTheme(curentTheme);
         }
-    }
-
-    // Prevent stale async result from overwriting a user-selected theme just saved.
-    const latestLocalTheme = localStorage.getItem("theme");
-    if (latestLocalTheme && latestLocalTheme !== "system") {
-        saveTheme(latestLocalTheme);
         return;
     }
 
-    if (curentTheme) {
-        if (curentTheme === "system") {
-            defaultTheme();
-        } else {
-            saveTheme(curentTheme);
-        }
-    } else {
+    else if(curentTheme === "system" || !curentTheme) {
         defaultTheme();
+        return;
     }
 }
 
@@ -40,7 +30,6 @@ export function defaultTheme() {
     const systemTheme = media.matches ? "dark" : "light";
 
     saveTheme(systemTheme);
-    applyBannerTheme(systemTheme);
 
     if (!systemThemeListenerAdded) {
         media.addEventListener("change", (e) => {
@@ -52,7 +41,6 @@ export function defaultTheme() {
 }
 
 export function saveTheme(theme) {
-    if (!theme || theme === "system") return;
     localStorage.removeItem("theme");
     localStorage.setItem("theme", theme);
     document.documentElement.setAttribute('data-theme', theme);

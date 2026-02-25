@@ -115,21 +115,20 @@ function setupSettingsForm(profile) {
             theme: themeSelect.value,
             units: unitsSelect.value
         };
+        if (newSettings.theme !=="system") {
+            saveTheme(newSettings.theme);
+        }
+        else {
+            defaultTheme();
+        }
         try {
-            await updateProfile(profile.profileId, { settings: newSettings });
-            profile.settings = newSettings;
-            if (newSettings.theme === "system") {
-                localStorage.removeItem("theme");
-                defaultTheme();
-            } else {
-                saveTheme(newSettings.theme);
-            }
+            await updateProfile(profile.profileId, { settings: newSettings });            
             if (settingsMessage) settingsMessage.textContent = "Settings saved successfully!";
             setTimeout(() => { window.location.hash = "#/profile"; }, 1200);
         } catch (error) {
             console.error("Error saving settings:", error);
             if (settingsMessage) settingsMessage.textContent = "Failed to save settings.";
-        }
+        } 
     });
 
     /** @type {HTMLButtonElement | null} */

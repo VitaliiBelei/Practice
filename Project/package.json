@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "live-server --port=3301",
+    "serve": "live-server --port=3301 --ignore=node_modules,.git,.eslintcache,Server/Data",
     "api": "nodemon --ignore \"Server/Data/**\" Server/index.js",
     "sass": "sass styles/src/main.scss styles/dist/main.css",
     "sass:watch": "sass --watch styles/src/main.scss styles/dist/main.css",
