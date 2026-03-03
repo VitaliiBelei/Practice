@@ -21,6 +21,7 @@
     #register-values {
         width: 100%;
         max-width: 400px;
+        
         @include flex-direction-column;
         align-items: center;
         padding: 0 1rem;

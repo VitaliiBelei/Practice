@@ -1,3 +1,4 @@
+import "../styles/src/main.scss";
 import {recipesPage, profilePage, addPage, homePage, homeLogin} from "./app.js";
 
 const app = document.getElementById("app");
